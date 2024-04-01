@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "652440343004",
+    "project_id": "meat-shop-b4d6d",
+    "storage_bucket": "meat-shop-b4d6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652440343004:android:f859a5e2f723d683ac3f19",
+        "android_client_info": {
+          "package_name": "com.flit.meat_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO4udhXfWJhZ5cNGmL_Kaq2cZ2BatvM9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652440343004:android:18ec3eba39ee2c70ac3f19",
+        "android_client_info": {
+          "package_name": "com.flit.meat_shop_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO4udhXfWJhZ5cNGmL_Kaq2cZ2BatvM9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

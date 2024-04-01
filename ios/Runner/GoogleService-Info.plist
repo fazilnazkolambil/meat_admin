@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDlRBz_4Y1L8SaX8432ZmW0HM95hxLUaxU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>911634406146</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.flit.meatAdmin</string>
+	<key>PROJECT_ID</key>
+	<string>meatshop-b4f95</string>
+	<key>STORAGE_BUCKET</key>
+	<string>meatshop-b4f95.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:911634406146:ios:ba1658d448a98916e3801b</string>
+</dict>
+</plist>
