@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meat_admin/CategoryPage.dart';
 import 'package:meat_admin/colorPage.dart';
 import 'package:meat_admin/main.dart';
 
@@ -24,22 +25,27 @@ class _MeatsPageState extends State<MeatsPage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              height: scrHeight*0.06,
-              width: scrHeight*0.3,
-              decoration: BoxDecoration(
-                  color: colorConst.primaryColor,
-                  borderRadius: BorderRadius.circular(scrHeight*0.03),
-                  border: Border.all(color: colorConst.mainColor),
-                  boxShadow: [
-                    BoxShadow(
-                        color: colorConst.secondaryColor.withOpacity(0.5),
-                        blurRadius: 4,
-                        offset: Offset(0, 2)
-                    )
-                  ]
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(),));
+              },
+              child: Container(
+                height: scrHeight*0.06,
+                width: scrHeight*0.3,
+                decoration: BoxDecoration(
+                    color: colorConst.primaryColor,
+                    borderRadius: BorderRadius.circular(scrHeight*0.03),
+                    border: Border.all(color: colorConst.mainColor),
+                    boxShadow: [
+                      BoxShadow(
+                          color: colorConst.secondaryColor.withOpacity(0.5),
+                          blurRadius: 4,
+                          offset: Offset(0, 2)
+                      )
+                    ]
+                ),
+                child: Center(child: Text("Categories"),),
               ),
-              child: Center(child: Text("Categories"),),
             ),
           ],
         ),
