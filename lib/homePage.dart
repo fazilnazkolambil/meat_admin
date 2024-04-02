@@ -63,7 +63,6 @@ class _homePageState extends State<homePage> {
                 ),
                 child: Center(child: Text("Banner"),),
               ),
-
               InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => MeatsPage(),));
