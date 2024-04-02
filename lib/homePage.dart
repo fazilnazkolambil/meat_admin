@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:meat_admin/MeatsPage.dart';
 import 'package:meat_admin/colorPage.dart';
 import 'package:meat_admin/imageConst.dart';
 
@@ -42,7 +43,67 @@ class _homePageState extends State<homePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(width: scrHeight*0.4,
-          child: Image(image: AssetImage(imageConst.logo),),),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: scrHeight*0.06,
+                width: scrHeight*0.3,
+                decoration: BoxDecoration(
+                    color: colorConst.primaryColor,
+                    borderRadius: BorderRadius.circular(scrHeight*0.03),
+                    border: Border.all(color: colorConst.mainColor),
+                    boxShadow: [
+                      BoxShadow(
+                          color: colorConst.secondaryColor.withOpacity(0.5),
+                          blurRadius: 4,
+                          offset: Offset(0, 2)
+                      )
+                    ]
+                ),
+                child: Center(child: Text("Banner"),),
+              ),
+              Container(
+                height: scrHeight*0.06,
+                width: scrHeight*0.3,
+                  decoration: BoxDecoration(
+                      color: colorConst.primaryColor,
+                      borderRadius: BorderRadius.circular(scrHeight*0.03),
+                      border: Border.all(color: colorConst.mainColor),
+                      boxShadow: [
+                        BoxShadow(
+                            color: colorConst.secondaryColor.withOpacity(0.5),
+                            blurRadius: 4,
+                            offset: Offset(0, 2)
+                        )
+                      ]
+                  ),
+                child: Center(child: Text("Categories"),),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MeatsPage(),));
+                },
+                child: Container(
+                  height: scrHeight*0.06,
+                  width: scrHeight*0.3,
+                    decoration: BoxDecoration(
+                        color: colorConst.primaryColor,
+                        borderRadius: BorderRadius.circular(scrHeight*0.03),
+                        border: Border.all(color: colorConst.mainColor),
+                        boxShadow: [
+                          BoxShadow(
+                              color: colorConst.secondaryColor.withOpacity(0.5),
+                              blurRadius: 4,
+                              offset: Offset(0, 2)
+                          )
+                        ]
+                    ),
+                  child: Center(child: Text("Add Meat"),),
+                ),
+              ),
+            ],
+          )),
           Expanded(
             child: ListView.builder(
               itemCount: 1,
@@ -76,7 +137,7 @@ class _homePageState extends State<homePage> {
                               fontSize: scrHeight*0.02,
                               fontWeight: FontWeight.w700,
                               color: colorConst.secondaryColor
-            
+
                           ),),
                           Text("15 Mar 2024 - 11 PM"),
                           Row(
@@ -102,7 +163,7 @@ class _homePageState extends State<homePage> {
                 }
             ),
           ),
-          SizedBox(width: scrHeight*0.4)
+
         ],
       ),
     );
