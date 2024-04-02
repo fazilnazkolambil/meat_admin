@@ -63,23 +63,7 @@ class _homePageState extends State<homePage> {
                 ),
                 child: Center(child: Text("Banner"),),
               ),
-              Container(
-                height: scrHeight*0.06,
-                width: scrHeight*0.3,
-                  decoration: BoxDecoration(
-                      color: colorConst.primaryColor,
-                      borderRadius: BorderRadius.circular(scrHeight*0.03),
-                      border: Border.all(color: colorConst.mainColor),
-                      boxShadow: [
-                        BoxShadow(
-                            color: colorConst.secondaryColor.withOpacity(0.5),
-                            blurRadius: 4,
-                            offset: Offset(0, 2)
-                        )
-                      ]
-                  ),
-                child: Center(child: Text("Categories"),),
-              ),
+
               InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => MeatsPage(),));

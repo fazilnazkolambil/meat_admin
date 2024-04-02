@@ -18,63 +18,89 @@ class _MeatsPageState extends State<MeatsPage> {
         backgroundColor: colorConst.mainColor,
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            height: scrHeight*0.06,
-            width: scrHeight*0.3,
-            decoration: BoxDecoration(
-                color: colorConst.primaryColor,
-                borderRadius: BorderRadius.circular(scrHeight*0.03),
-                border: Border.all(color: colorConst.mainColor),
-                boxShadow: [
-                  BoxShadow(
-                      color: colorConst.secondaryColor.withOpacity(0.5),
-                      blurRadius: 4,
-                      offset: Offset(0, 2)
-                  )
-                ]
+      body: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: scrHeight*0.06,
+              width: scrHeight*0.3,
+              decoration: BoxDecoration(
+                  color: colorConst.primaryColor,
+                  borderRadius: BorderRadius.circular(scrHeight*0.03),
+                  border: Border.all(color: colorConst.mainColor),
+                  boxShadow: [
+                    BoxShadow(
+                        color: colorConst.secondaryColor.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: Offset(0, 2)
+                    )
+                  ]
+              ),
+              child: Center(child: Text("Categories"),),
             ),
-            child: Center(child: Text("Beef"),),
-          ),
-          Container(
-            height: scrHeight*0.06,
-            width: scrHeight*0.3,
-            decoration: BoxDecoration(
-                color: colorConst.primaryColor,
-                borderRadius: BorderRadius.circular(scrHeight*0.03),
-                border: Border.all(color: colorConst.mainColor),
-                boxShadow: [
-                  BoxShadow(
-                      color: colorConst.secondaryColor.withOpacity(0.5),
-                      blurRadius: 4,
-                      offset: Offset(0, 2)
-                  )
-                ]
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: scrHeight*0.06,
+              width: scrHeight*0.3,
+              decoration: BoxDecoration(
+                  color: colorConst.primaryColor,
+                  borderRadius: BorderRadius.circular(scrHeight*0.03),
+                  border: Border.all(color: colorConst.mainColor),
+                  boxShadow: [
+                    BoxShadow(
+                        color: colorConst.secondaryColor.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: Offset(0, 2)
+                    )
+                  ]
+              ),
+              child: Center(child: Text("Beef"),),
             ),
-            child: Center(child: Text("Mutton"),),
-          ),
-          Container(
-            height: scrHeight*0.06,
-            width: scrHeight*0.3,
-            decoration: BoxDecoration(
-                color: colorConst.primaryColor,
-                borderRadius: BorderRadius.circular(scrHeight*0.03),
-                border: Border.all(color: colorConst.mainColor),
-                boxShadow: [
-                  BoxShadow(
-                      color: colorConst.secondaryColor.withOpacity(0.5),
-                      blurRadius: 4,
-                      offset: Offset(0, 2)
-                  )
-                ]
+            Container(
+              height: scrHeight*0.06,
+              width: scrHeight*0.3,
+              decoration: BoxDecoration(
+                  color: colorConst.primaryColor,
+                  borderRadius: BorderRadius.circular(scrHeight*0.03),
+                  border: Border.all(color: colorConst.mainColor),
+                  boxShadow: [
+                    BoxShadow(
+                        color: colorConst.secondaryColor.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: Offset(0, 2)
+                    )
+                  ]
+              ),
+              child: Center(child: Text("Mutton"),),
             ),
-            child: Center(child: Text("Chicken"),),
-          ),
-        ],
-      ),),
+            Container(
+              height: scrHeight*0.06,
+              width: scrHeight*0.3,
+              decoration: BoxDecoration(
+                  color: colorConst.primaryColor,
+                  borderRadius: BorderRadius.circular(scrHeight*0.03),
+                  border: Border.all(color: colorConst.mainColor),
+                  boxShadow: [
+                    BoxShadow(
+                        color: colorConst.secondaryColor.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: Offset(0, 2)
+                    )
+                  ]
+              ),
+              child: Center(child: Text("Chicken"),),
+            ),
+          ],
+        ),
+      ],
+            ),
     );
   }
 }
