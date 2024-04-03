@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:meat_admin/features/addingPages/AddMeats.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
+import 'package:meat_admin/features/listPages/MeatList.dart';
 
 import 'main.dart';
 
@@ -27,10 +28,15 @@ class _homePageState extends State<homePage> {
               fontSize: scrHeight*0.03,
               color: colorConst.mainColor
             )),
-            Text("Meats",style: TextStyle(
-                fontSize: scrHeight*0.03,
-                color: colorConst.mainColor
-            )),
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MeatList(),));
+              },
+              child: Text("Meats",style: TextStyle(
+                  fontSize: scrHeight*0.03,
+                  color: colorConst.mainColor
+              )),
+            ),
           ],
         ),
       ),
