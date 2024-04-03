@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/MeatModel.dart';
-import 'package:meat_admin/colorPage.dart';
-import 'package:meat_admin/imageConst.dart';
+import 'package:meat_admin/core/colorPage.dart';
+import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
 
 class BeefPage extends StatefulWidget {

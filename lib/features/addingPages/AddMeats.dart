@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meat_admin/BeefPage.dart';
-import 'package:meat_admin/CategoryPage.dart';
-import 'package:meat_admin/colorPage.dart';
+import 'package:meat_admin/features/addingPages/AddBeef.dart';
+import 'package:meat_admin/features/addingPages/CategoryPage.dart';
+import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/main.dart';
 
 class MeatsPage extends StatefulWidget {

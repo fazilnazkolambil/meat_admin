@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meat_admin/MeatsPage.dart';
-import 'package:meat_admin/colorPage.dart';
-import 'package:meat_admin/imageConst.dart';
+import 'package:meat_admin/features/addingPages/AddMeats.dart';
+import 'package:meat_admin/core/colorPage.dart';
+import 'package:meat_admin/core/imageConst.dart';
 
 import 'main.dart';
 
