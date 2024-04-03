@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -82,51 +83,62 @@ class _BeefPageState extends State<BeefPage> {
              ),
              SizedBox(height: scrHeight*0.03,),
              Center(
-               child: Container(
-                 height:scrHeight*0.06,
-                 width:scrHeight*0.4 ,
-                 padding: EdgeInsets.only(left: 16,right: 16),
-                 decoration: BoxDecoration(
-                   color: colorConst.primaryColor,
-                   border: Border.all(color: colorConst.mainColor,),
-                   borderRadius: BorderRadius.circular(scrWidth*0.03),
-                     boxShadow: [
-                       BoxShadow(
-                           color: colorConst.mainColor.withOpacity(0.1),
-                           blurRadius: 5,
-                           offset: Offset(0, 4),
-                           spreadRadius: 0
-                       )
-                     ]
-                 ),
-                 child: DropdownButton(
-                   hint: Text("Category : ",
-                   style: TextStyle(
-                       color: colorConst.secondaryColor,
-                       fontWeight: FontWeight.w700),),
-                   dropdownColor: colorConst.primaryColor,
-                   icon: Icon(Icons.arrow_drop_down),
-                   iconSize: 36,
-                   isExpanded: true,
-                   underline: SizedBox(),
-                   style: TextStyle(
-                     color: colorConst.secondaryColor,
-                     // fontSize: 20
-                   ),
-                   value: valueChoose,
-         
-                   items:category.map((valueItem){
-                     return DropdownMenuItem(
-                       value: valueItem,
-                       child: Text(valueItem),
-                     );
-                   }).toList(),
-                   onChanged: (value) {
-                     setState(() {
-                       valueChoose=value.toString();
-                     });
-                   },
-                 ),
+               child: StreamBuilder<QuerySnapshot>(
+                 stream: FirebaseFirestore.instance.collection('category').snapshots(),
+                 builder: (context, snapshot) {
+                   if(!snapshot.hasData){
+                     return Text('No data found!');
+                   }
+                   var data = snapshot.data!.docs;
+                   return data.length==0
+                       ? Text("No category found!"):
+                   Container(
+                     height:scrHeight*0.06,
+                     width:scrHeight*0.4 ,
+                     padding: EdgeInsets.only(left: 16,right: 16),
+                     decoration: BoxDecoration(
+                       color: colorConst.primaryColor,
+                       border: Border.all(color: colorConst.mainColor,),
+                       borderRadius: BorderRadius.circular(scrWidth*0.03),
+                         boxShadow: [
+                           BoxShadow(
+                               color: colorConst.mainColor.withOpacity(0.1),
+                               blurRadius: 5,
+                               offset: Offset(0, 4),
+                               spreadRadius: 0
+                           )
+                         ]
+                     ),
+                     child: DropdownButton(
+                       hint: Text("Category : ",
+                       style: TextStyle(
+                           color: colorConst.secondaryColor,
+                           fontWeight: FontWeight.w700),),
+                       dropdownColor: colorConst.primaryColor,
+                       icon: Icon(Icons.arrow_drop_down),
+                       iconSize: 36,
+                       isExpanded: true,
+                       underline: SizedBox(),
+                       style: TextStyle(
+                         color: colorConst.secondaryColor,
+                         // fontSize: 20
+                       ),
+                       value: valueChoose,
+                            
+                       items: List.generate(data.length, (index) => data[index]['category']).map((valueItem){
+                         return DropdownMenuItem(
+                           value: valueItem,
+                           child: Text(valueItem),
+                         );
+                       }).toList(),
+                       onChanged: (value) {
+                         setState(() {
+                           valueChoose=value.toString();
+                         });
+                       },
+                     ),
+                   );
+                 }
                ),
              ),
              SizedBox(height: scrHeight*0.02,),
