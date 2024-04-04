@@ -143,6 +143,65 @@ class _BeefPageState extends State<BeefPage> {
                  }
                ),
              ),
+             Center(
+               child: StreamBuilder<QuerySnapshot>(
+                 stream: FirebaseFirestore.instance.collection('meatTypes').snapshots(),
+                 builder: (context, snapshot) {
+                   if(!snapshot.hasData){
+                     return Text('No data found!');
+                   }
+                   var data = snapshot.data!.docs;
+                   return data.length==0
+                       ? Text("No Types found!"):
+                   Container(
+                     height:scrHeight*0.06,
+                     width:scrHeight*0.4 ,
+                     padding: EdgeInsets.only(left: 16,right: 16),
+                     decoration: BoxDecoration(
+                       color: colorConst.primaryColor,
+                       border: Border.all(color: colorConst.mainColor,),
+                       borderRadius: BorderRadius.circular(scrWidth*0.03),
+                         boxShadow: [
+                           BoxShadow(
+                               color: colorConst.mainColor.withOpacity(0.1),
+                               blurRadius: 5,
+                               offset: Offset(0, 4),
+                               spreadRadius: 0
+                           )
+                         ]
+                     ),
+                     child: DropdownButton(
+                       hint: Text("Meat Type : ",
+                       style: TextStyle(
+                           color: colorConst.secondaryColor,
+                           fontWeight: FontWeight.w700),),
+                       dropdownColor: colorConst.primaryColor,
+                       icon: Icon(Icons.arrow_drop_down),
+                       iconSize: 36,
+                       isExpanded: true,
+                       underline: SizedBox(),
+                       style: TextStyle(
+                         color: colorConst.secondaryColor,
+                         // fontSize: 20
+                       ),
+                       value: valueChoose1,
+
+                       items: List.generate(data.length, (index) => data[index]['type']).map((valueItem){
+                         return DropdownMenuItem(
+                           value: valueItem,
+                           child: Text(valueItem),
+                         );
+                       }).toList(),
+                       onChanged: (value) {
+                         setState(() {
+                           valueChoose1=value.toString();
+                         });
+                       },
+                     ),
+                   );
+                 }
+               ),
+             ),
              SizedBox(height: scrHeight*0.02,),
              Container(
                height:scrHeight*0.078 ,
@@ -417,7 +476,7 @@ class _BeefPageState extends State<BeefPage> {
                    FirebaseFirestore.instance.collection("meats").add(
                        MeatModel(
                            image: mainImage,
-                           // meatType: valueChoose1,
+                           type: valueChoose1,
                            category: valueChoose,
                            name: nameController.text,
                            ingredients: ingredientsController.text,
@@ -431,6 +490,8 @@ class _BeefPageState extends State<BeefPage> {
                        "id" : value.id
                      });
                    }).then((value) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("submitted successfully")));
+                   }).then((value) {
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => BeefPage(),));
                    });
                  }
                  else{
