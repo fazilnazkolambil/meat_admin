@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:meat_admin/features/addingPages/AddBeef.dart';
-import 'package:meat_admin/features/addingPages/CategoryPage.dart';
+import 'package:meat_admin/features/addingPages/AddCategory.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/main.dart';
 
-import 'MeatPage.dart';
+import 'AddMeatTypes.dart';
 
 class MeatsPage extends StatefulWidget {
   const MeatsPage({super.key});
@@ -96,7 +96,7 @@ class _MeatsPageState extends State<MeatsPage> {
                       )
                     ]
                 ),
-                child: Center(child: Text("Beef"),),
+                child: Center(child: Text("Beef")),
               ),
             ),
             Container(
