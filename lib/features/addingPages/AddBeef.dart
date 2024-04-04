@@ -8,13 +8,17 @@ import 'package:meat_admin/models/MeatModel.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
+
 class BeefPage extends StatefulWidget {
   const BeefPage({super.key});
+
   @override
   State<BeefPage> createState() => _BeefPageState();
 }
+
 class _BeefPageState extends State<BeefPage> {
   String? valueChoose;
+  String? valueChoose1;
   //List category=["Beef Cut","Boneless Beef","Liver","Botti"];
 
   TextEditingController nameController=TextEditingController();
@@ -400,24 +404,48 @@ class _BeefPageState extends State<BeefPage> {
              SizedBox(height: scrHeight*0.04,),
              InkWell(
                onTap: () {
-                FirebaseFirestore.instance.collection("meats").add(
-                  MeatModel(
-                      image: mainImage,
-                      category: valueChoose,
-                      name: nameController.text,
-                      ingredients: ingredientsController.text,
-                      rate: rateController.text,
-                      quantity: quantityController.text,
-                      description: descriptionController.text,
-                      id: ""
-                  ).toMap()
+                 if(
+                  mainImage != ""&&
+                  nameController.text!="" &&
+                  ingredientsController.text!="" &&
+                  rateController.text!="" &&
+                  quantityController.text!="" &&
+                  descriptionController.text!="" &&
+                  valueChoose!=null &&
+                  valueChoose1!=null
+                 ){
+                   FirebaseFirestore.instance.collection("meats").add(
+                       MeatModel(
+                           image: mainImage,
+                           // meatType: valueChoose1,
+                           category: valueChoose,
+                           name: nameController.text,
+                           ingredients: ingredientsController.text,
+                           rate: rateController.text,
+                           quantity: quantityController.text,
+                           description: descriptionController.text
+                       ).toMap()
 
-                ).then((value) {
-                  value.update({
-                    "id" : value.id
-                  });
-                });
-               },
+                   ).then((value) {
+                     value.update({
+                       "id" : value.id
+                     });
+                   }).then((value) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("submitted successfully")));
+                   });
+                 }
+                 else{
+                   mainImage == null?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please upload Image"))):
+                   valueChoose == null? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please choose Category"))):
+                   valueChoose1 == null? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please choose Type"))):
+                   nameController.text=="" ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter name"))):
+                   ingredientsController.text=="" ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter ingredients"))):
+                   rateController.text=="" ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter rate"))):
+                   quantityController.text=="" ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter quantity"))):
+                   descriptionController.text=="" ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter description"))):
+                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter a valid details")));
+                 }
+
+                 },
                child: Container(
                  height:scrHeight*0.07,
                  width:scrHeight*0.2 ,
