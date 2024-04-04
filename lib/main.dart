@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         textTheme:GoogleFonts.manropeTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home:BeefList(),
+      home:homePage(),
     );
   }
 }

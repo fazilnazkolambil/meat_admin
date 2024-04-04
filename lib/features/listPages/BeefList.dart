@@ -107,9 +107,14 @@ class _BeefListState extends State<BeefList> {
                       height: scrHeight * 0.8,
                       width: scrHeight * 1.3,
                       child: StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('meats')
-                              .snapshots(),
+                          stream: selectCategory == ""
+                              ? FirebaseFirestore.instance
+                                  .collection('meats')
+                                  .snapshots()
+                              : FirebaseFirestore.instance
+                                  .collection("meats")
+                                  .where("category", isEqualTo: selectCategory)
+                                  .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return CircularProgressIndicator();
@@ -117,8 +122,7 @@ class _BeefListState extends State<BeefList> {
                             var data = snapshot.data!.docs;
                             return data.length == 0
                                 ? Text("No Meats found!")
-                                :
-                            ListView.separated(
+                                : ListView.separated(
                                     itemCount: data.length,
                                     shrinkWrap: true,
                                     itemBuilder:
@@ -158,35 +162,45 @@ class _BeefListState extends State<BeefList> {
                                                         .spaceEvenly,
                                                 children: [
                                                   Text(
-                                                      "NAME:${data[index]["name"]}",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: scrWidth*0.01
-                                                  ),),
-                                                  Text(
-                                                      "INGREDIENTS:${data[index]["ingredients"]}",
+                                                    "NAME:${data[index]["name"]}",
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: scrWidth*0.01
-                                                    ),),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
                                                   Text(
-                                                      "PRICE:${data[index]["rate"]}",
+                                                    "INGREDIENTS:${data[index]["ingredients"]}",
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: scrWidth*0.01
-                                                    ),),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
                                                   Text(
-                                                      "QUANTITY:${data[index]["quantity"]}",
+                                                    "PRICE:${data[index]["rate"]}",
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: scrWidth*0.01
-                                                    ),),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
                                                   Text(
-                                                      "DESCRIPTION:${data[index]["description"]}",
+                                                    "QUANTITY:${data[index]["quantity"]}",
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: scrWidth*0.01
-                                                    ),),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
+                                                  Text(
+                                                    "DESCRIPTION:${data[index]["description"]}",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
                                                 ],
                                               ),
                                             ),
