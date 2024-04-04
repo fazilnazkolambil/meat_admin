@@ -8,14 +8,11 @@ import 'package:meat_admin/models/MeatModel.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
-
 class BeefPage extends StatefulWidget {
   const BeefPage({super.key});
-
   @override
   State<BeefPage> createState() => _BeefPageState();
 }
-
 class _BeefPageState extends State<BeefPage> {
   String? valueChoose;
   //List category=["Beef Cut","Boneless Beef","Liver","Botti"];
@@ -405,13 +402,14 @@ class _BeefPageState extends State<BeefPage> {
                onTap: () {
                 FirebaseFirestore.instance.collection("meats").add(
                   MeatModel(
-                      image: "",
+                      image: mainImage,
                       category: valueChoose,
                       name: nameController.text,
                       ingredients: ingredientsController.text,
                       rate: rateController.text,
                       quantity: quantityController.text,
-                      description: descriptionController.text
+                      description: descriptionController.text,
+                      id: ""
                   ).toMap()
 
                 ).then((value) {

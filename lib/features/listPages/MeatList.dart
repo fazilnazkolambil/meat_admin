@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/features/listPages/BeefList.dart';
 
@@ -16,7 +19,7 @@ class _MeatListState extends State<MeatList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Types of Meats",style: TextStyle(color: colorConst.primaryColor)),
+        title: Text("Meat List",style: TextStyle(color: colorConst.primaryColor)),
         backgroundColor: colorConst.mainColor,
         centerTitle: true,
       ),
@@ -25,66 +28,39 @@ class _MeatListState extends State<MeatList> {
           SizedBox(
             width: scrHeight*0.5,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => BeefList(),));
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance.collection("meatTypes").snapshots(),
+              builder: (context, snapshot) {
+                return ListView.separated(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: scrHeight*0.06,
+                      width: scrHeight*0.3,
+                      decoration: BoxDecoration(
+                          color: colorConst.primaryColor,
+                          borderRadius: BorderRadius.circular(scrHeight*0.03),
+                          border: Border.all(color: colorConst.mainColor),
+                          boxShadow: [
+                            BoxShadow(
+                                color: colorConst.secondaryColor.withOpacity(0.5),
+                                blurRadius: 4,
+                                offset: Offset(0, 2)
+                            )
+                          ]
+                      ),
+                      child: Center(child: Text("Beef"),),
+                    );
+                  }, separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(height: scrHeight*0.04,);
                 },
-                child: Container(
-                  height: scrHeight*0.06,
-                  width: scrHeight*0.3,
-                  decoration: BoxDecoration(
-                      color: colorConst.primaryColor,
-                      borderRadius: BorderRadius.circular(scrHeight*0.03),
-                      border: Border.all(color: colorConst.mainColor),
-                      boxShadow: [
-                        BoxShadow(
-                            color: colorConst.secondaryColor.withOpacity(0.5),
-                            blurRadius: 4,
-                            offset: Offset(0, 2)
-                        )
-                      ]
-                  ),
-                  child: Center(child: Text("Beef"),),
-                ),
-              ),
-              Container(
-                height: scrHeight*0.06,
-                width: scrHeight*0.3,
-                decoration: BoxDecoration(
-                    color: colorConst.primaryColor,
-                    borderRadius: BorderRadius.circular(scrHeight*0.03),
-                    border: Border.all(color: colorConst.mainColor),
-                    boxShadow: [
-                      BoxShadow(
-                          color: colorConst.secondaryColor.withOpacity(0.5),
-                          blurRadius: 4,
-                          offset: Offset(0, 2)
-                      )
-                    ]
-                ),
-                child: Center(child: Text("Mutton"),),
-              ),
-              Container(
-                height: scrHeight*0.06,
-                width: scrHeight*0.3,
-                decoration: BoxDecoration(
-                    color: colorConst.primaryColor,
-                    borderRadius: BorderRadius.circular(scrHeight*0.03),
-                    border: Border.all(color: colorConst.mainColor),
-                    boxShadow: [
-                      BoxShadow(
-                          color: colorConst.secondaryColor.withOpacity(0.5),
-                          blurRadius: 4,
-                          offset: Offset(0, 2)
-                      )
-                    ]
-                ),
-                child: Center(child: Text("Chicken"),),
-              ),
-            ],
+                );
+              }
+            ),
+          ),
+          SizedBox(
+            width: scrHeight*0.5,
           ),
         ],
       ),

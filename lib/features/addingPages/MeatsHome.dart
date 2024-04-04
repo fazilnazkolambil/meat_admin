@@ -96,7 +96,7 @@ class _MeatsPageState extends State<MeatsPage> {
                       )
                     ]
                 ),
-                child: Center(child: Text("Beef")),
+                child: Center(child: Text("Beef"),),
               ),
             ),
             Container(
