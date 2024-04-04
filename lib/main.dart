@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         textTheme:GoogleFonts.manropeTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home:  homePage(),
+      home:BeefPage(),
     );
   }
 }
