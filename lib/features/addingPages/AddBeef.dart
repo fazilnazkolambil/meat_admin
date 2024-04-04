@@ -18,7 +18,7 @@ class BeefPage extends StatefulWidget {
 
 class _BeefPageState extends State<BeefPage> {
   String? valueChoose;
-  List category=["Beef Cut","Boneless Beef","Liver","Botti"];
+  //List category=["Beef Cut","Boneless Beef","Liver","Botti"];
 
   TextEditingController nameController=TextEditingController();
   TextEditingController ingredientsController=TextEditingController();
@@ -403,7 +403,7 @@ class _BeefPageState extends State<BeefPage> {
              SizedBox(height: scrHeight*0.04,),
              InkWell(
                onTap: () {
-                FirebaseFirestore.instance.collection("meats").doc("beef").set(
+                FirebaseFirestore.instance.collection("meats").add(
                   MeatModel(
                       image: "",
                       category: valueChoose,
@@ -414,7 +414,11 @@ class _BeefPageState extends State<BeefPage> {
                       description: descriptionController.text
                   ).toMap()
 
-                );
+                ).then((value) {
+                  value.update({
+                    "id" : value.id
+                  });
+                });
                },
                child: Container(
                  height:scrHeight*0.07,
