@@ -2,8 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
+import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/BeefList.dart';
+import 'package:meat_admin/features/listPages/ChickenList.dart';
+import 'package:meat_admin/features/listPages/MuttonList.dart';
 
 import '../../main.dart';
 
@@ -32,25 +36,39 @@ class _MeatListState extends State<MeatList> {
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance.collection("meatTypes").snapshots(),
               builder: (context, snapshot) {
-                return ListView.separated(
-                  itemCount: 3,
+                if(!snapshot.hasData){
+                  return Center(child: Text("No Data Found"));
+                }
+                var data = snapshot.data!.docs;
+                return data.length == 0? Lottie.asset(gifs.loadingGif)
+                :ListView.separated(
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      height: scrHeight*0.06,
-                      width: scrHeight*0.3,
-                      decoration: BoxDecoration(
-                          color: colorConst.primaryColor,
-                          borderRadius: BorderRadius.circular(scrHeight*0.03),
-                          border: Border.all(color: colorConst.mainColor),
-                          boxShadow: [
-                            BoxShadow(
-                                color: colorConst.secondaryColor.withOpacity(0.5),
-                                blurRadius: 4,
-                                offset: Offset(0, 2)
-                            )
-                          ]
+                    return InkWell(
+                      onTap: () {
+                        data[index]["type"] == "Beef"?
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => BeefList(),)):
+                            data[index]["type"] == "Mutton"?
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MuttonList(),)):
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChickenList(),));
+                      },
+                      child: Container(
+                        height: scrHeight*0.06,
+                        width: scrHeight*0.3,
+                        decoration: BoxDecoration(
+                            color: colorConst.primaryColor,
+                            borderRadius: BorderRadius.circular(scrHeight*0.03),
+                            border: Border.all(color: colorConst.mainColor),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: colorConst.secondaryColor.withOpacity(0.5),
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2)
+                              )
+                            ]
+                        ),
+                        child: Center(child: Text(data[index]["type"]),),
                       ),
-                      child: Center(child: Text("Beef"),),
                     );
                   }, separatorBuilder: (BuildContext context, int index) {
                     return SizedBox(height: scrHeight*0.04,);

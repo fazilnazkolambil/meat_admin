@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meat_admin/features/addingPages/AddBeef.dart';
+import 'package:meat_admin/features/listPages/MeatList.dart';
 import 'package:meat_admin/firebase_options.dart';
 import 'package:meat_admin/homePage.dart';
 
