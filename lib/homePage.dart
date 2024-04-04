@@ -5,6 +5,7 @@ import 'package:meat_admin/features/addingPages/MeatsHome.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/MeatList.dart';
+import 'package:meat_admin/features/listPages/UsersPage.dart';
 
 import 'main.dart';
 
@@ -24,10 +25,15 @@ class _homePageState extends State<homePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Image(image: AssetImage(imageConst.logo)),
-            Text("Users",style: TextStyle(
-              fontSize: scrHeight*0.03,
-              color: colorConst.mainColor
-            )),
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => UsersPage(),));
+              },
+              child: Text("Users",style: TextStyle(
+                fontSize: scrHeight*0.03,
+                color: colorConst.mainColor
+              )),
+            ),
             InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => MeatList(),));
