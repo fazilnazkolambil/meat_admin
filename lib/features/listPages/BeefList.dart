@@ -72,7 +72,7 @@ class _BeefListState extends State<BeefList> {
                                           data[index]['category'],
                                           style: TextStyle(
                                               color: selectIndex == index
-                                                  ? colorConst.secondaryColor
+                                                  ? colorConst.primaryColor
                                                   : colorConst.secondaryColor
                                                       .withOpacity(0.5),
                                               fontWeight: FontWeight.w600),
@@ -117,7 +117,8 @@ class _BeefListState extends State<BeefList> {
                             var data = snapshot.data!.docs;
                             return data.length == 0
                                 ? Text("No Meats found!")
-                                : ListView.separated(
+                                :
+                            ListView.separated(
                                     itemCount: data.length,
                                     shrinkWrap: true,
                                     itemBuilder:
@@ -157,15 +158,35 @@ class _BeefListState extends State<BeefList> {
                                                         .spaceEvenly,
                                                 children: [
                                                   Text(
-                                                      "NAME:${data[index]["name"]}"),
+                                                      "NAME:${data[index]["name"]}",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: scrWidth*0.01
+                                                  ),),
                                                   Text(
-                                                      "INGREDIENTS:${data[index]["ingredients"]}"),
+                                                      "INGREDIENTS:${data[index]["ingredients"]}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: scrWidth*0.01
+                                                    ),),
                                                   Text(
-                                                      "PRICE:${data[index]["rate"]}"),
+                                                      "PRICE:${data[index]["rate"]}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: scrWidth*0.01
+                                                    ),),
                                                   Text(
-                                                      "QUANTITY:${data[index]["quantity"]}"),
+                                                      "QUANTITY:${data[index]["quantity"]}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: scrWidth*0.01
+                                                    ),),
                                                   Text(
-                                                      "DESCRIPTION:${data[index]["description"]}"),
+                                                      "DESCRIPTION:${data[index]["description"]}",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: scrWidth*0.01
+                                                    ),),
                                                 ],
                                               ),
                                             ),
