@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
+import 'package:meat_admin/main.dart';
 
 class MeatPage extends StatefulWidget {
   const MeatPage({super.key});
@@ -32,6 +34,9 @@ class _MeatPageState extends State<MeatPage> {
       body: Column(
         children: [
           ListTile(
+            leading: CircleAvatar(
+              
+            ),
             title: TextFormField(
               controller: meat_controller,
               onFieldSubmitted: (value) {
