@@ -9,14 +9,14 @@ import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
 
-class BeefPage extends StatefulWidget {
-  const BeefPage({super.key});
+class AddMeats extends StatefulWidget {
+  const AddMeats({super.key});
 
   @override
-  State<BeefPage> createState() => _BeefPageState();
+  State<AddMeats> createState() => _AddMeatsState();
 }
 
-class _BeefPageState extends State<BeefPage> {
+class _AddMeatsState extends State<AddMeats> {
   String? valueChoose;
   String? valueChoose1;
   //List category=["Beef Cut","Boneless Beef","Liver","Botti"];
@@ -491,7 +491,7 @@ class _BeefPageState extends State<BeefPage> {
                      });
                    }).then((value) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("submitted successfully")));
                    }).then((value) {
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => BeefPage(),));
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => AddMeats(),));
                    });
                  }
                  else{

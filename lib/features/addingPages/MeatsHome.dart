@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meat_admin/features/addingPages/AddBeef.dart';
+import 'package:meat_admin/features/addingPages/AddMeats.dart';
 import 'package:meat_admin/features/addingPages/AddCategory.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/main.dart';
@@ -52,7 +52,7 @@ class _MeatsPageState extends State<MeatsPage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MeatPage(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddMeatTypes(),));
               },
               child: Container(
                 height: scrHeight*0.06,
@@ -69,7 +69,7 @@ class _MeatsPageState extends State<MeatsPage> {
                       )
                     ]
                 ),
-                child: Center(child: Text("Meats")),
+                child: Center(child: Text("Meat Types")),
               ),
             ),
           ],
@@ -79,11 +79,11 @@ class _MeatsPageState extends State<MeatsPage> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BeefPage(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddMeats(),));
               },
               child: Container(
-                height: scrHeight*0.06,
-                width: scrHeight*0.3,
+                height: scrHeight*0.15,
+                width: scrHeight*0.15,
                 decoration: BoxDecoration(
                     color: colorConst.primaryColor,
                     borderRadius: BorderRadius.circular(scrHeight*0.03),
@@ -96,42 +96,14 @@ class _MeatsPageState extends State<MeatsPage> {
                       )
                     ]
                 ),
-                child: Center(child: Text("Beef"),),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Center(child: Text("Add Meat"),),
+                    Icon(Icons.forward)
+                  ],
+                ),
               ),
-            ),
-            Container(
-              height: scrHeight*0.06,
-              width: scrHeight*0.3,
-              decoration: BoxDecoration(
-                  color: colorConst.primaryColor,
-                  borderRadius: BorderRadius.circular(scrHeight*0.03),
-                  border: Border.all(color: colorConst.mainColor),
-                  boxShadow: [
-                    BoxShadow(
-                        color: colorConst.secondaryColor.withOpacity(0.5),
-                        blurRadius: 4,
-                        offset: Offset(0, 2)
-                    )
-                  ]
-              ),
-              child: Center(child: Text("Mutton"),),
-            ),
-            Container(
-              height: scrHeight*0.06,
-              width: scrHeight*0.3,
-              decoration: BoxDecoration(
-                  color: colorConst.primaryColor,
-                  borderRadius: BorderRadius.circular(scrHeight*0.03),
-                  border: Border.all(color: colorConst.mainColor),
-                  boxShadow: [
-                    BoxShadow(
-                        color: colorConst.secondaryColor.withOpacity(0.5),
-                        blurRadius: 4,
-                        offset: Offset(0, 2)
-                    )
-                  ]
-              ),
-              child: Center(child: Text("Chicken"),),
             ),
           ],
         ),

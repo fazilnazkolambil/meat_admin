@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,22 +9,54 @@ import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
 
-class MeatPage extends StatefulWidget {
-  const MeatPage({super.key});
+class AddMeatTypes extends StatefulWidget {
+  const AddMeatTypes({super.key});
 
   @override
-  State<MeatPage> createState() => _MeatPageState();
+  State<AddMeatTypes> createState() => _AddMeatTypesState();
 }
 
-class _MeatPageState extends State<MeatPage> {
+class _AddMeatTypesState extends State<AddMeatTypes> {
   TextEditingController meat_controller = TextEditingController();
   int num = 1;
   dataSubmit(){
     FirebaseFirestore.instance.collection("meatTypes").doc(meat_controller.text).set({
-      "type" : meat_controller.text
+      "type" : meat_controller.text,
+      "mainImage": mainImage
     }).then((value) =>
         meat_controller.clear()
     );
+  }
+  PlatformFile? pickFile;
+  Future selectfile (String name)async{
+    final result = await FilePicker.platform.pickFiles();
+    if(result == null) return;
+    pickFile = result.files.first;
+    final fileBytes = result.files.first.bytes;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Uploading...")));
+    uploadFileToFirebase(name, fileBytes);
+    setState(() {
+
+    });
+  }
+  
+  UploadTask? uploadTask;
+  String? mainImage;
+  bool loading = false;
+  Future uploadFileToFirebase(String name, file) async {
+    loading = true;
+    setState(() {
+
+    });
+    uploadTask = FirebaseStorage.instance
+        .ref('Meats')
+        .child(DateTime.now().toString())
+        .putData(file, SettableMetadata(contentType: 'image/jpeg'));
+    final snapshot = await uploadTask?.whenComplete(() {});
+    mainImage = await snapshot?.ref.getDownloadURL();
+    setState(() {
+      loading = false;
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -34,8 +68,17 @@ class _MeatPageState extends State<MeatPage> {
       body: Column(
         children: [
           ListTile(
-            leading: CircleAvatar(
-              
+            leading: InkWell(
+              onTap: () {
+                selectfile("name");
+              },
+              child: mainImage != null?
+              CircleAvatar(
+                backgroundImage: NetworkImage(mainImage!),
+              ):
+                  CircleAvatar(
+                    child: Icon(Icons.add_a_photo),
+                  )
             ),
             title: TextFormField(
               controller: meat_controller,
@@ -54,11 +97,13 @@ class _MeatPageState extends State<MeatPage> {
               child: InkWell(
                   onTap: () {
                     if(
-                    meat_controller.text !=""
+                    meat_controller.text !="" &&
+                    mainImage != null
                     ){
                       dataSubmit();
                     }else{
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Enter Data!")));
+                      mainImage == null ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Select an Image!"))):
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Data!")));
                     }
 
                   },
