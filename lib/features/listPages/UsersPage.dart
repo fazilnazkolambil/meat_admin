@@ -67,7 +67,7 @@ class _UsersPageState extends State<UsersPage> {
                             children: [
                               Center(
                                 child: CircleAvatar(
-                                  backgroundImage: AssetImage(""),
+                                  backgroundImage: NetworkImage("${data?[index]["image"]}"),
                                   radius: 40,
                                 ),
                               ),
