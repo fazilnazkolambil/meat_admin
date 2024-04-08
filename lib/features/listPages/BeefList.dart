@@ -13,7 +13,7 @@ class BeefList extends StatefulWidget {
 }
 
 class _BeefListState extends State<BeefList> {
-  int selectIndex = 0;
+  int selectIndex = -1;
   String selectCategory = '';
   List beefmeat = ["Beef cut", "Boneless Cut", "Liver", "Botti"];
   @override
@@ -57,9 +57,6 @@ class _BeefListState extends State<BeefList> {
                                     onTap: () {
                                       selectIndex = index;
                                       selectCategory = data[index]["category"];
-                                      if (selectCategory == "All") {
-                                        selectCategory = "";
-                                      }
                                       setState(() {});
                                     },
                                     child: Container(
@@ -110,10 +107,12 @@ class _BeefListState extends State<BeefList> {
                           stream: selectCategory == ""
                               ? FirebaseFirestore.instance
                                   .collection('meats')
+                                  .where('type', isEqualTo: "Beef")
                                   .snapshots()
                               : FirebaseFirestore.instance
                                   .collection("meats")
-                                  .where("category", isEqualTo: selectCategory)
+                                  .where('type', isEqualTo: "Beef")
+                                  .where('category', isEqualTo: selectCategory)
                                   .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
@@ -195,6 +194,22 @@ class _BeefListState extends State<BeefList> {
                                                   ),
                                                   Text(
                                                     "DESCRIPTION:${data[index]["description"]}",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
+                                                  Text(
+                                                    "Type:${data[index]["type"]}",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            scrWidth * 0.01),
+                                                  ),
+                                                  Text(
+                                                    "Category:${data[index]["category"]}",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
