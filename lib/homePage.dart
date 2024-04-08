@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meat_admin/features/addingPages/MeatsHome.dart';
+import 'package:meat_admin/features/addingPages/meatTypes.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/MeatList.dart';
@@ -77,7 +77,7 @@ class _homePageState extends State<homePage> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MeatsPage(),));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MeatTypes(),));
                 },
                 child: Container(
                   height: scrHeight*0.06,

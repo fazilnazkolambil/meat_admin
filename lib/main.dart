@@ -8,7 +8,7 @@ import 'package:meat_admin/features/listPages/MeatList.dart';
 import 'package:meat_admin/firebase_options.dart';
 import 'package:meat_admin/homePage.dart';
 
-import 'features/addingPages/MeatsHome.dart';
+import 'features/addingPages/meatTypes.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         textTheme:GoogleFonts.manropeTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home:homePage(),
+      home:MeatTypes(),
     );
   }
 }
