@@ -5,20 +5,21 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/listPages/BeefList.dart';
+
 import 'package:meat_admin/features/listPages/ChickenList.dart';
+import 'package:meat_admin/features/listPages/BeefList.dart';
 import 'package:meat_admin/features/listPages/MuttonList.dart';
 
 import '../../main.dart';
 
-class MeatList extends StatefulWidget {
-  const MeatList({super.key});
+class MeatTypeList extends StatefulWidget {
+  const MeatTypeList({super.key, required type});
 
   @override
-  State<MeatList> createState() => _MeatListState();
+  State<MeatTypeList> createState() => _MeatTypeListState();
 }
 
-class _MeatListState extends State<MeatList> {
+class _MeatTypeListState extends State<MeatTypeList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,31 +31,34 @@ class _MeatListState extends State<MeatList> {
       body:  Row(
         children: [
           SizedBox(
-            width: scrHeight*0.5,
+            height: scrHeight*0.9,
+            width: scrWidth*0.5,
           ),
           Expanded(
-            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection("meatTypes").snapshots(),
               builder: (context, snapshot) {
                 if(!snapshot.hasData){
-                  return Center(child: Text("No Data Found"));
+                  return Lottie.asset(gifs.loadingGif);
                 }
+
                 var data = snapshot.data!.docs;
-                return data.length == 0? Lottie.asset(gifs.loadingGif)
+                return data.length == 0?
+                Center(child: Text("No Types Found"),)
                 :ListView.separated(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
+
+
                     return InkWell(
                       onTap: () {
-                        data[index]["type"] == "Beef"?
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BeefList(),)):
-                            data[index]["type"] == "Mutton"?
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MuttonList(),)):
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChickenList(),));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => BeefList(type: data[index]['type'],
+
+                        )));
                       },
                       child: Container(
-                        height: scrHeight*0.06,
-                        width: scrHeight*0.3,
+                        height: scrHeight*0.2,
+                        width: scrWidth*0.3,
                         decoration: BoxDecoration(
                             color: colorConst.primaryColor,
                             borderRadius: BorderRadius.circular(scrHeight*0.03),
@@ -67,7 +71,20 @@ class _MeatListState extends State<MeatList> {
                               )
                             ]
                         ),
-                        child: Center(child: Text(data[index]["type"]),),
+                        child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircleAvatar(
+                              radius: scrHeight*0.09,
+                              backgroundImage: NetworkImage(data[index]["mainImage"]),
+                            ),
+                            Center(child: Text("Add ${data[index]["type"]}",style: TextStyle(
+                                fontSize: scrHeight*0.025,
+                                fontWeight: FontWeight.w700
+                            ),)),
+                            Icon(CupertinoIcons.forward)
+                          ],
+                        )
                       ),
                     );
                   }, separatorBuilder: (BuildContext context, int index) {
@@ -76,9 +93,6 @@ class _MeatListState extends State<MeatList> {
                 );
               }
             ),
-          ),
-          SizedBox(
-            width: scrHeight*0.5,
           ),
         ],
       ),

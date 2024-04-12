@@ -65,4 +65,5 @@ class iconConst{
 class gifs{
   static const loadingGif="assets/gifs/Animation - 1711515095512.json";
   static const tickGif="assets/gifs/Animation - 1711377831660.json";
+  static const comingSoon="assets/gifs/coming Soon.json";
 }
