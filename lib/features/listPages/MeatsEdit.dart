@@ -389,7 +389,8 @@ class _MeatsEditState extends State<MeatsEdit> {
                             image: meatImage,
                             name: nameController.text,
                             ingredients: ingredientsController.text,
-                            rate: rateController.text,
+                            rate: int.parse(rateController.text),
+                            quantity: 1,
                             description: descriptionController.text,
                             id: '',
                           ).toMap())

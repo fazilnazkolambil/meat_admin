@@ -59,32 +59,24 @@ class _AddMeatsState extends State<AddMeats> {
     });
   }
 
+
   List? meatMap = [];
-  getMeatData() async {
-    var meats = await FirebaseFirestore.instance
-        .collection("meatTypes")
-        .where("type", isEqualTo: widget.type)
-        .get();
+  getMeatData()async{
+    var meats = await FirebaseFirestore.instance.collection("meatTypes").where("type",isEqualTo: widget.type).get();
     meatMap = meats.docs;
   }
-
-  addCategory() async {
-    FirebaseFirestore.instance
-        .collection("meatTypes")
-        .doc(widget.type)
-        .collection(widget.type)
-        .doc(categoryController.text)
-        .set({"category": categoryController.text}).then((value) {
+  addCategory()async{
+    FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).doc(categoryController.text).set({
+      "category" : categoryController.text
+    }).then((value){
       categoryController.clear();
     });
   }
-
   @override
   void initState() {
     getMeatData();
     super.initState();
   }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -133,11 +125,7 @@ class _AddMeatsState extends State<AddMeats> {
                 ),
                 Expanded(
                   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: FirebaseFirestore.instance
-                          .collection("meatTypes")
-                          .doc(widget.type)
-                          .collection(widget.type)
-                          .snapshots(),
+                      stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: Lottie.asset(gifs.loadingGif));
@@ -154,11 +142,8 @@ class _AddMeatsState extends State<AddMeats> {
                                     trailing: InkWell(
                                         onTap: () {
                                           FirebaseFirestore.instance
-                                              .collection("meatTypes")
-                                              .doc(widget.type)
-                                              .collection(widget.type)
-                                              .doc(data[index]["category"])
-                                              .delete();
+                                              .collection("meatTypes").doc(widget.type)
+                                              .collection(widget.type).doc(data[index]["category"]).delete();
                                         },
                                         child: Icon(CupertinoIcons.delete)),
                                   );
@@ -176,9 +161,9 @@ class _AddMeatsState extends State<AddMeats> {
               children: [
                 loading
                     ? SizedBox(
-                        height: scrHeight * 0.2,
-                        width: scrWidth * 0.2,
-                        child: Lottie.asset(gifs.loadingGif))
+                    height: scrHeight * 0.2,
+                    width: scrWidth * 0.2,
+                    child: Lottie.asset(gifs.loadingGif))
                     : InkWell(
                         onTap: () {
                           selectfile("name");
@@ -193,11 +178,7 @@ class _AddMeatsState extends State<AddMeats> {
                                 child: Icon(Icons.add_a_photo_outlined),
                               )),
                 StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("meatTypes")
-                        .doc(widget.type)
-                        .collection(widget.type)
-                        .snapshots(),
+                    stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData)
                         return SizedBox(
@@ -229,8 +210,7 @@ class _AddMeatsState extends State<AddMeats> {
                                       color: colorConst.secondaryColor),
                                   value: chooseCategory,
                                   items: List.generate(data.length,
-                                          (index) => data[index]["category"])
-                                      .map((e) {
+                                      (index) => data[index]["category"]).map((e) {
                                     return DropdownMenuItem(
                                         value: e, child: Text(e));
                                   }).toList(),
@@ -358,62 +338,47 @@ class _AddMeatsState extends State<AddMeats> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (meatImage != null &&
-                        chooseCategory != null &&
-                        nameController.text.isNotEmpty &&
-                        ingredientsController.text.isNotEmpty &&
-                        rateController.text.isNotEmpty &&
-                        descriptionController.text.isNotEmpty) {
-                      FirebaseFirestore.instance
-                          .collection("meatTypes")
-                          .doc(widget.type)
-                          .collection(widget.type)
-                          .doc(chooseCategory)
-                          .collection(widget.type)
-                          .add(MeatModel(
-                            image: meatImage,
-                            name: nameController.text,
-                            ingredients: ingredientsController.text,
-                            rate: rateController.text,
-                            description: descriptionController.text,
-                            id: '',
-                          ).toMap())
-                          .then((value) {
-                        value.update({"id": value.id}).then((value) {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MeatTypes(),
-                              ),
-                              (route) => false);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Item Added!")));
+                    if(
+                    meatImage != null &&
+                    chooseCategory != null &&
+                    nameController.text.isNotEmpty &&
+                    ingredientsController.text.isNotEmpty &&
+                    rateController.text.isNotEmpty &&
+                    descriptionController.text.isNotEmpty
+                    ){
+                      FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type)
+                      .doc(chooseCategory).collection(widget.type).add(
+                        MeatModel(
+                          image: meatImage,
+                          name: nameController.text,
+                          ingredients: ingredientsController.text,
+                          rate: int.parse(rateController.text),
+                          quantity: 1,
+                          description: descriptionController.text,
+                          id: '',
+                        ).toMap()
+                      ).then((value){
+                        value.update({
+                          "id" : value.id
+                        }).then((value){
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypes(),), (route) => false);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
                         });
                       });
-                    } else {
-                      meatImage == null
-                          ? ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Select an Image!")))
-                          : chooseCategory == null
-                              ? ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Select a Category!")))
-                              : nameController.text.isEmpty
-                                  ? ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Enter a Name!")))
-                                  : ingredientsController.text.isEmpty
-                                      ? ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content:
-                                                  Text("Enter Ingredients!")))
-                                      : rateController.text.isEmpty
-                                          ? ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content:
-                                                      Text("Enter the Rate!")))
-                                          : ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      "Enter the description!")));
+
+
+                    }else{
+                      meatImage == null?
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select an Image!"))):
+                      chooseCategory == null?
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select a Category!"))):
+                      nameController.text.isEmpty?
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter a Name!"))):
+                      ingredientsController.text.isEmpty?
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter Ingredients!"))):
+                      rateController.text.isEmpty?
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter the Rate!"))):
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter the description!")));
                     }
                   },
                   child: Container(
