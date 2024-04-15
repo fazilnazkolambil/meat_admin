@@ -1,7 +1,8 @@
 class MeatModel{
-  String? image, name, ingredients, description, id;
-  int? quantity, rate;
-  MeatModel({ this.image, this.name, this.ingredients, this.rate, this.description, this.id, this.quantity});
+  String image, name, ingredients, description, id;
+  int quantity;
+  double rate;
+  MeatModel({ required this.image, required this.name, required this.ingredients, required this.rate, required this.description, required this.id, required this.quantity});
 
   Map <String, dynamic> toMap(){
     return {

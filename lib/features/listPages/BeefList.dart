@@ -44,6 +44,7 @@ class _BeefListState extends State<BeefList> {
   @override
   void initState() {
     getMeats();
+
     // TODO: implement initState
     super.initState();
   }
@@ -289,7 +290,11 @@ class _BeefListState extends State<BeefList> {
                                                                     ingredients: data[index]['ingredients'],
                                                                     description: data[index]['description'],
                                                                     quantity: data[index]['quantity'].toString(),
-                                                                            type: "qwertyuiop",
+                                                                    category: selectCategory.isEmpty?
+                                                                    categoryCollection[0]["category"]
+                                                                            :selectCategory,
+                                                                            type: widget.type,
+
                                                                   ),
                                                                 ));
                                                           },

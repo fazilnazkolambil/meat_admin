@@ -78,7 +78,7 @@ class _MeatTypeListState extends State<MeatTypeList> {
                               radius: scrHeight*0.09,
                               backgroundImage: NetworkImage(data[index]["mainImage"]),
                             ),
-                            Center(child: Text("Add ${data[index]["type"]}",style: TextStyle(
+                            Center(child: Text("List ${data[index]["type"]}",style: TextStyle(
                                 fontSize: scrHeight*0.025,
                                 fontWeight: FontWeight.w700
                             ),)),

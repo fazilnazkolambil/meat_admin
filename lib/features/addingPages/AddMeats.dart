@@ -72,6 +72,8 @@ class _AddMeatsState extends State<AddMeats> {
       categoryController.clear();
     });
   }
+
+
   @override
   void initState() {
     getMeatData();
@@ -337,7 +339,7 @@ class _AddMeatsState extends State<AddMeats> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     if(
                     meatImage != null &&
                     chooseCategory != null &&
@@ -347,16 +349,16 @@ class _AddMeatsState extends State<AddMeats> {
                     descriptionController.text.isNotEmpty
                     ){
                       FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type)
-                      .doc(chooseCategory).collection(widget.type).add(
-                        MeatModel(
-                          image: meatImage,
-                          name: nameController.text,
-                          ingredients: ingredientsController.text,
-                          rate: int.parse(rateController.text),
-                          quantity: 1,
-                          description: descriptionController.text,
-                          id: '',
-                        ).toMap()
+                          .doc(chooseCategory).collection(widget.type).add(
+                          MeatModel(
+                            image: meatImage.toString(),
+                            name: nameController.text,
+                            ingredients: ingredientsController.text,
+                            rate: double.parse(rateController.text),
+                            quantity: 1,
+                            description: descriptionController.text,
+                            id: '',
+                          ).toMap()
                       ).then((value){
                         value.update({
                           "id" : value.id
@@ -365,8 +367,6 @@ class _AddMeatsState extends State<AddMeats> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
                         });
                       });
-
-
                     }else{
                       meatImage == null?
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select an Image!"))):

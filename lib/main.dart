@@ -9,6 +9,7 @@ import 'package:meat_admin/features/listPages/BeefList.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import 'package:meat_admin/firebase_options.dart';
 import 'package:meat_admin/homePage.dart';
+import 'package:meat_admin/models/MeatModel.dart';
 
 import 'features/addingPages/meatTypes.dart';
 
@@ -19,6 +20,7 @@ Future <void> main() async {
   );
   runApp(const MyApp());
 }
+MeatModel? currentMeatModel;
  var scrWidth;
  var scrHeight;
 class MyApp extends StatelessWidget {
