@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/addingPages/AddMeats.dart';
-import 'package:meat_admin/features/addingPages/AddCategory.dart';
+import 'package:meat_admin/unWanted/AddCategory.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/main.dart';
 

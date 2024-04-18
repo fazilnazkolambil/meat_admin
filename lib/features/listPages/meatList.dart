@@ -8,15 +8,15 @@ import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/MeatsEdit.dart';
 import 'package:meat_admin/main.dart';
 
-class BeefList extends StatefulWidget {
+class MeatList extends StatefulWidget {
   final String type;
-  const BeefList({super.key, required this.type});
+  const MeatList({super.key, required this.type});
 
   @override
-  State<BeefList> createState() => _BeefListState();
+  State<MeatList> createState() => _MeatListState();
 }
 
-class _BeefListState extends State<BeefList> {
+class _MeatListState extends State<MeatList> {
   int selectIndex = -1;
   String selectCategory = '';
   List beefmeat = ["Beef cut", "Boneless Cut", "Liver", "Botti"];
@@ -302,23 +302,65 @@ class _BeefListState extends State<BeefList> {
                                                               Icon(Icons.edit)),
                                                       InkWell(
                                                           onTap: () {
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'meatTypes')
-                                                                .doc(
-                                                                    widget.type)
-                                                                .collection(
-                                                                    widget.type)
-                                                                .doc(categoryCollection[
-                                                                        index][
-                                                                    'category'])
-                                                                .collection(
-                                                                    widget.type)
-                                                                .doc(data[index]
-                                                                    .id)
-                                                                .delete();
+                                                            showDialog(
+                                                              barrierDismissible: false,
+                                                              context: context,
+                                                              builder: (context) {
+                                                                return AlertDialog(
+                                                                  title: Text("Are you sure you want to delete this Item?",
+                                                                    textAlign: TextAlign.center,
+                                                                    style: TextStyle(
+                                                                        fontSize: scrHeight*0.02,
+                                                                        fontWeight: FontWeight.w600
+                                                                    ),),
+                                                                  content: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                    children: [
+                                                                      InkWell(
+                                                                        onTap: () {
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                        child: Container(
+                                                                          height: scrHeight*0.04,
+                                                                          width: scrWidth*0.1,
+                                                                          decoration: BoxDecoration(
+                                                                            color: Colors.blueGrey,
+                                                                            borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                                          ),
+                                                                          child: Center(child: Text("No",
+                                                                            style: TextStyle(
+                                                                                color: Colors.white
+                                                                            ),)),
+                                                                        ),
+                                                                      ),
+                                                                      InkWell(
+                                                                        onTap: () {
+                                                                          FirebaseFirestore.instance.collection('meatTypes').doc(widget.type)
+                                                                              .collection(widget.type).doc(selectCategory)
+                                                                              .collection(widget.type).doc(data[index]["id"])
+                                                                              .delete();
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                        child: Container(
+                                                                          height: scrHeight*0.04,
+                                                                          width: scrWidth*0.1,
+                                                                          decoration: BoxDecoration(
+                                                                            color: colorConst.mainColor,
+                                                                            borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                                          ),
+                                                                          child: Center(child: Text("Yes",
+                                                                            style: TextStyle(
+                                                                                color: Colors.white
+                                                                            ),)),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              },
+                                                            );
                                                           },
+
                                                           child: Icon(
                                                               Icons.delete)),
                                                     ],

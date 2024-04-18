@@ -2,23 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meat_admin/core/colorPage.dart';
 
-import '../../main.dart';
+import '../main.dart';
 
-class MuttonList extends StatefulWidget {
-  const MuttonList({super.key});
+class ChickenList extends StatefulWidget {
+  const ChickenList({super.key});
 
   @override
-  State<MuttonList> createState() => _MuttonListState();
+  State<ChickenList> createState() => _ChickenListState();
 }
 
-class _MuttonListState extends State<MuttonList> {
+class _ChickenListState extends State<ChickenList> {
   int selectIndex = -1;
   String selectCategory = '';
+  List beefmeat = ["Beef cut", "Boneless Cut", "Parts"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mutton List",
+        title: Text("Chicken List",
             style: TextStyle(color: colorConst.primaryColor)),
         backgroundColor: colorConst.mainColor,
         centerTitle: true,
@@ -104,13 +105,12 @@ class _MuttonListState extends State<MuttonList> {
                       child: StreamBuilder<QuerySnapshot>(
                           stream: selectCategory == ""
                               ? FirebaseFirestore.instance
-                                  .collection('meats')
-                                  .where('type', isEqualTo: "Mutton")
+                                  .collection('meats').where('type',isEqualTo: "Chicken")
                                   .snapshots()
                               : FirebaseFirestore.instance
                                   .collection("meats")
-                                  .where('type', isEqualTo: "Mutton")
-                                  .where('category', isEqualTo: selectCategory)
+                                  .where('type', isEqualTo: "Chicken")
+                                      .where('category', isEqualTo: selectCategory)
                                   .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
@@ -202,17 +202,17 @@ class _MuttonListState extends State<MuttonList> {
                                                     "Type:${data[index]["type"]}",
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                        FontWeight.w600,
                                                         fontSize:
-                                                            scrWidth * 0.01),
+                                                        scrWidth * 0.01),
                                                   ),
                                                   Text(
                                                     "Category:${data[index]["category"]}",
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                        FontWeight.w600,
                                                         fontSize:
-                                                            scrWidth * 0.01),
+                                                        scrWidth * 0.01),
                                                   ),
                                                 ],
                                               ),

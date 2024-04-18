@@ -6,9 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 
-import 'package:meat_admin/features/listPages/ChickenList.dart';
-import 'package:meat_admin/features/listPages/BeefList.dart';
-import 'package:meat_admin/features/listPages/MuttonList.dart';
+import 'package:meat_admin/unWanted/ChickenList.dart';
+import 'package:meat_admin/features/listPages/meatList.dart';
+import 'package:meat_admin/unWanted/MuttonList.dart';
 
 import '../../main.dart';
 
@@ -52,7 +52,7 @@ class _MeatTypeListState extends State<MeatTypeList> {
 
                     return InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => BeefList(type: data[index]['type'],
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MeatList(type: data[index]['type'],
 
                         )));
                       },
