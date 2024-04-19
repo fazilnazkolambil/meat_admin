@@ -4,29 +4,61 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
+import 'package:meat_admin/models/CategoryModel.dart';
 
-class AddMeatTypes extends StatefulWidget {
+import '../add_meat_types/controller/controller_page.dart';
+
+class AddMeatTypes extends ConsumerStatefulWidget {
   const AddMeatTypes({super.key});
 
   @override
-  State<AddMeatTypes> createState() => _AddMeatTypesState();
+  ConsumerState<AddMeatTypes> createState() => _AddMeatTypesState();
 }
 
-class _AddMeatTypesState extends State<AddMeatTypes> {
+class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
+
+
+
+
+
+
+
+
+
+
   TextEditingController meat_controller = TextEditingController();
   int num = 1;
+
+
+
+
   dataSubmit(){
-    FirebaseFirestore.instance.collection("meatTypes").doc(meat_controller.text).set({
-      "type" : meat_controller.text,
-      "mainImage": mainImage
-    }).then((value) =>
-        meat_controller.clear()
-    );
+    CategoryModel categoryModel = CategoryModel(type: meat_controller.text, mainImage: mainImage.toString());
+
+    ref.watch(meatTypesController).meatAdd(categoryModel);
+
+    meat_controller.clear();
+    mainImage=null;
+    setState(() {
+
+    });
+    // FirebaseFirestore.instance.collection("meatTypes").doc(meat_controller.text).set({
+    //   "type" : meat_controller.text,
+    //   "mainImage": mainImage
+    // }).then((value) =>
+    //     meat_controller.clear()
+    // );
+
   }
+
+
+
+
   PlatformFile? pickFile;
   Future selectfile (String name)async{
     final result = await FilePicker.platform.pickFiles();
@@ -72,7 +104,7 @@ class _AddMeatTypesState extends State<AddMeatTypes> {
               onTap: () {
                 selectfile("name");
               },
-              child: mainImage != null?
+              child: mainImage != null ?
               CircleAvatar(
                 backgroundImage: NetworkImage(mainImage!),
               ):
@@ -110,22 +142,17 @@ class _AddMeatTypesState extends State<AddMeatTypes> {
                   child: Icon(Icons.add)),
             ),
           ),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance.collection("meatTypes").snapshots(),
-                builder: (context, snapshot) {
-                  if(!snapshot.hasData){
-                    return Center(child: Lottie.asset(gifs.loadingGif));
-                  }
-                  var data = snapshot.data!.docs;
-                  return data.length == 0?
-                  Center(child: Text("No Data!"))
-                      :ListView.builder(
+
+          ref.watch(streamCategoryProvider).when(
+              data: (data) {
+                return
+                Expanded(
+                  child: ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           leading:Text("${index+1}."),
-                          title: Text(data[index]["type"]),
+                          title: Text(data[index].type),
                           trailing: InkWell(
                               onTap: () {
                                 showDialog(
@@ -161,7 +188,8 @@ class _AddMeatTypesState extends State<AddMeatTypes> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              FirebaseFirestore.instance.collection("meatTypes").doc(data[index]["type"]).delete();
+                                              FirebaseFirestore.instance.collection("meatTypes").doc(data[index].type).delete();
+                                              Navigator.pop(context);
                                             },
                                             child: Container(
                                               height: scrHeight*0.04,
@@ -182,13 +210,14 @@ class _AddMeatTypesState extends State<AddMeatTypes> {
                                   },
                                 );
                               },
-
+                  
                               child: Icon(CupertinoIcons.delete)),
                         );
-                      });
-                }
-            ),
-          )
+                      }),
+                );
+              },
+              error: (error, stackTrace) => Text(error.toString()),
+              loading: () => CircularProgressIndicator(),)
         ],
       ),
     );

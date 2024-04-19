@@ -22,6 +22,12 @@ class AddMeats extends StatefulWidget {
 }
 
 class _AddMeatsState extends State<AddMeats> {
+
+
+
+
+
+
   String? chooseCategory;
 
   TextEditingController nameController = TextEditingController();
