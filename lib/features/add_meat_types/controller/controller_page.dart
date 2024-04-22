@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meat_admin/models/CategoryModel.dart';
 
-import '../repository/meat_types_repository.dart';
+import '../repository/Meat_types_repository.dart';
 
 
 final meatTypesController=Provider((ref) => MeatTypesController(repository: ref.watch(meatTypesRepository)));

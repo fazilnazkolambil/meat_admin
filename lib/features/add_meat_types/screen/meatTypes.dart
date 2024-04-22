@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/add_meat_types/controller/controller_page.dart';
-import 'package:meat_admin/features/addingPages/AddMeats.dart';
+import 'package:meat_admin/features/addingPages/screen/AddMeats.dart';
 import 'package:meat_admin/unWanted/AddCategory.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/main.dart';
 
-import '../add_meat_types/screen/AddMeatTypes.dart';
+import 'AddMeatTypes.dart';
 
 class MeatTypes extends ConsumerStatefulWidget {
   const MeatTypes({super.key});

@@ -6,22 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:meat_admin/features/addingPages/meatTypes.dart';
+import 'package:meat_admin/features/add_meat_types/screen/meatTypes.dart';
+import 'package:meat_admin/features/addingPages/controller/controller_page.dart';
 import 'package:meat_admin/models/MeatModel.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
 
-class AddMeats extends StatefulWidget {
+class AddMeats extends ConsumerStatefulWidget {
   final String type;
   const AddMeats({super.key, required this.type});
 
   @override
-  State<AddMeats> createState() => _AddMeatsState();
+  ConsumerState<AddMeats> createState() => _AddMeatsState();
 }
 
-class _AddMeatsState extends State<AddMeats> {
+class _AddMeatsState extends ConsumerState<AddMeats> {
 
 
 
@@ -71,14 +73,23 @@ class _AddMeatsState extends State<AddMeats> {
     var meats = await FirebaseFirestore.instance.collection("meatTypes").where("type",isEqualTo: widget.type).get();
     meatMap = meats.docs;
   }
-  addCategory()async{
-    FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).doc(categoryController.text).set({
-      "category" : categoryController.text
-    }).then((value){
-      categoryController.clear();
-    });
-  }
 
+
+  // addCategory()async{
+  //   FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).doc(categoryController.text).set({
+  //     "category" : categoryController.text
+  //   }).then((value){
+  //     categoryController.clear();
+  //   });
+  // }
+
+  addCategory(){
+    ref.watch(meatCategoryController).meatCategory(
+        type: widget.type,
+        categoryName: categoryController.text);
+
+    categoryController.clear();
+  }
 
   @override
   void initState() {

@@ -10,7 +10,7 @@ import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 
 import '../../main.dart';
 import '../../models/MeatModel.dart';
-import '../addingPages/meatTypes.dart';
+import '../add_meat_types/screen/meatTypes.dart';
 
 class MeatsEdit extends StatefulWidget {
   final String type;
