@@ -11,7 +11,7 @@ import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
 import 'package:meat_admin/models/CategoryModel.dart';
 
-import '../add_meat_types/controller/controller_page.dart';
+import '../controller/controller_page.dart';
 
 class AddMeatTypes extends ConsumerStatefulWidget {
   const AddMeatTypes({super.key});
@@ -217,7 +217,7 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
                 );
               },
               error: (error, stackTrace) => Text(error.toString()),
-              loading: () => CircularProgressIndicator(),)
+              loading: () => Lottie.asset(gifs.loadingGif),)
         ],
       ),
     );
