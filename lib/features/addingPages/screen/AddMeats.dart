@@ -204,51 +204,60 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                                 radius: scrHeight * 0.1,
                                 child: Icon(Icons.add_a_photo_outlined),
                               )),
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData)
-                        return SizedBox(
-                            height: scrHeight * 0.1,
-                            width: scrWidth * 0.1,
-                            child: Lottie.asset(gifs.loadingGif));
-                      var data = snapshot.data!.docs;
-                      return data.isEmpty
-                          ? Text("No Categories Found!")
-                          : Container(
-                              height: scrHeight * 0.06,
-                              width: scrWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(scrHeight * 0.03),
-                                  border:
-                                      Border.all(color: colorConst.mainColor)),
-                              child: Center(
-                                child: DropdownButton(
-                                  padding: EdgeInsets.all(scrHeight * 0.01),
-                                  isExpanded: true,
-                                  underline: SizedBox(),
-                                  hint: Text(
-                                    "Select Category",
-                                    style: TextStyle(
-                                        color: colorConst.secondaryColor),
-                                  ),
-                                  style: TextStyle(
-                                      color: colorConst.secondaryColor),
-                                  value: chooseCategory,
-                                  items: List.generate(data.length,
-                                      (index) => data[index]["category"]).map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    chooseCategory = value.toString();
-                                    setState(() {});
-                                  },
-                                ),
-                              ),
-                            );
-                    }),
+                // StreamBuilder(
+                //     stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
+                //     builder: (context, snapshot) {
+                //       if (!snapshot.hasData)
+                //         return SizedBox(
+                //             height: scrHeight * 0.1,
+                //             width: scrWidth * 0.1,
+                //             child: Lottie.asset(gifs.loadingGif));
+                //       var data = snapshot.data!.docs;
+                //       return data.isEmpty
+                //           ? Text("No Categories Found!")
+                //           :
+                //     }),
+                ref.watch(streamCategoryControllerProvider(widget.type)).when(
+                    data: (data) {
+                      return
+                      data.isEmpty?
+                          Text("No Categories found!"):
+                      Container(
+                        height: scrHeight * 0.06,
+                        width: scrWidth * 0.3,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(scrHeight * 0.03),
+                            border:
+                            Border.all(color: colorConst.mainColor)),
+                        child: Center(
+                          child: DropdownButton(
+                            padding: EdgeInsets.all(scrHeight * 0.01),
+                            isExpanded: true,
+                            underline: SizedBox(),
+                            hint: Text(
+                              "Select Category",
+                              style: TextStyle(
+                                  color: colorConst.secondaryColor),
+                            ),
+                            style: TextStyle(
+                                color: colorConst.secondaryColor),
+                            value: chooseCategory,
+                            items: List.generate(data.length,
+                                    (index) => data[index].category).map((e) {
+                              return DropdownMenuItem(
+                                  value: e, child: Text(e));
+                            }).toList(),
+                            onChanged: (value) {
+                              chooseCategory = value.toString();
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    error: (error, stackTrace) => Text(error.toString()),
+                    loading: () => Lottie.asset(gifs.loadingGif),),
                 SizedBox(
                   height: scrHeight * 0.06,
                   width: scrWidth * 0.3,

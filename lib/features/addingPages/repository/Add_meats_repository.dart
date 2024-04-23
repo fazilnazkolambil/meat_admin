@@ -26,4 +26,5 @@ class AddmeatCategoryRepository{
     .map((e) => CategoryModel.fromMap(e.data() as Map<String,dynamic>)).toList()
     );
   }
+
 }
