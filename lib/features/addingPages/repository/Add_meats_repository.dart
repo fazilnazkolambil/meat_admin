@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meat_admin/core/provider/provider_page.dart';
+import 'package:meat_admin/models/CategoryModel.dart';
 
 final meatCategoryRepository=
     Provider((ref) => AddmeatCategoryRepository(firestore: ref.watch(firestoreprovider)));
@@ -20,9 +21,9 @@ class AddmeatCategoryRepository{
     });
   }
   
-  // meatCategoryStream(){
-  //   return _meatcategory.snapshots().map((data) => data.docs
-  //   .map((e) => null)
-  //   );
-  // }
+  Stream<List<CategoryModel>> meatCategoryStream({required String type}){
+    return _meatcategory.doc(type).collection(type).snapshots().map((data) => data.docs
+    .map((e) => CategoryModel.fromMap(e.data() as Map<String,dynamic>)).toList()
+    );
+  }
 }

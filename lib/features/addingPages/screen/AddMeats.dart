@@ -142,33 +142,41 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         child: Icon(Icons.add)),
                   ),
                 ),
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: Lottie.asset(gifs.loadingGif));
-                        }
-                        var data = snapshot.data!.docs;
-                        return data.length == 0
-                            ? Center(child: Text("No Data!"))
-                            : ListView.builder(
-                                itemCount: data.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    leading: Text("${index + 1}."),
-                                    title: Text(data[index]["category"]),
-                                    trailing: InkWell(
-                                        onTap: () {
-                                          FirebaseFirestore.instance
-                                              .collection("meatTypes").doc(widget.type)
-                                              .collection(widget.type).doc(data[index]["category"]).delete();
-                                        },
-                                        child: Icon(CupertinoIcons.delete)),
-                                  );
-                                });
-                      }),
-                )
+                // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                //     stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
+                //     builder: (context, snapshot) {
+                //       if (!snapshot.hasData) {
+                //         return Center(child: Lottie.asset(gifs.loadingGif));
+                //       }
+                //       var data = snapshot.data!.docs;
+                //       return data.length == 0
+                //           ? Center(child: Text("No Data!"))
+                //           :
+                //     })
+                ref.watch(streamCategoryControllerProvider(widget.type)).when(
+                    data: (data) {
+                      print(data);
+                      return
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: Text("${index + 1}."),
+                                title: Text(data[index].category),
+                                trailing: InkWell(
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection("meatTypes").doc(widget.type)
+                                          .collection(widget.type).doc(data[index].category).delete();
+                                    },
+                                    child: Icon(CupertinoIcons.delete)),
+                              );
+                            }),
+                      );
+                    },
+                    error: (error, stackTrace) => Text(error.toString()),
+                    loading: () => Lottie.asset(gifs.loadingGif)),
               ],
             ),
           ),
