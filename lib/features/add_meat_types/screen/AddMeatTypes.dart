@@ -11,7 +11,7 @@ import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
 import 'package:meat_admin/models/MeatTypeModel.dart';
 
-import '../controller/controller_page.dart';
+import '../controller/controller_meatType_page.dart';
 
 class AddMeatTypes extends ConsumerStatefulWidget {
   const AddMeatTypes({super.key});
@@ -143,7 +143,7 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
             ),
           ),
 
-          ref.watch(streamCategoryProvider).when(
+          ref.watch(streamMeatTypeProvider).when(
               data: (data) {
                 return
                 Expanded(

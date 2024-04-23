@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/add_meat_types/controller/controller_page.dart';
+import 'package:meat_admin/features/add_meat_types/controller/controller_meatType_page.dart';
 import 'package:meat_admin/features/addingPages/screen/AddMeats.dart';
 import 'package:meat_admin/unWanted/AddCategory.dart';
 import 'package:meat_admin/core/colorPage.dart';
@@ -84,7 +84,7 @@ class _MeatTypesState extends ConsumerState<MeatTypes> {
               //     Center(child: Text("No Types Found"),):
               //
               //   }
-          ref.watch(streamCategoryProvider).when(
+          ref.watch(streamMeatTypeProvider).when(
               data: (data) {
                 return
                 ListView.separated(
