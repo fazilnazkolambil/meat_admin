@@ -91,6 +91,21 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
     categoryController.clear();
   }
 
+  addMeats(){
+    MeatModel meatModel=MeatModel(
+        image: meatImage.toString(),
+        name: nameController.text,
+        ingredients: ingredientsController.text,
+        rate: double.parse(rateController.text),
+        description: descriptionController.text,
+        id: "",
+        quantity: 1);
+    ref.watch(addMeatController).addMeats(type: widget.type, chooseCategory:chooseCategory! , meatModel: meatModel);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypes(),), (route) => false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
+
+  }
+
   @override
   void initState() {
     getMeatData();
@@ -382,25 +397,26 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     rateController.text.isNotEmpty &&
                     descriptionController.text.isNotEmpty
                     ){
-                      FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type)
-                          .doc(chooseCategory).collection(widget.type).add(
-                          MeatModel(
-                            image: meatImage.toString(),
-                            name: nameController.text,
-                            ingredients: ingredientsController.text,
-                            rate: double.parse(rateController.text),
-                            quantity: 1,
-                            description: descriptionController.text,
-                            id: '',
-                          ).toMap()
-                      ).then((value){
-                        value.update({
-                          "id" : value.id
-                        }).then((value){
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypes(),), (route) => false);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
-                        });
-                      });
+                      addMeats();
+                      // FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type)
+                      //     .doc(chooseCategory).collection(widget.type).add(
+                      //     MeatModel(
+                      //       image: meatImage.toString(),
+                      //       name: nameController.text,
+                      //       ingredients: ingredientsController.text,
+                      //       rate: double.parse(rateController.text),
+                      //       quantity: 1,
+                      //       description: descriptionController.text,
+                      //       id: '',
+                      //     ).toMap()
+                      // ).then((value){
+                      //   value.update({
+                      //     "id" : value.id
+                      //   }).then((value){
+                      //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypes(),), (route) => false);
+                      //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
+                      //   });
+                      // });
                     }else{
                       meatImage == null?
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select an Image!"))):

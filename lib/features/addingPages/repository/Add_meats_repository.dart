@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meat_admin/core/provider/provider_page.dart';
 import 'package:meat_admin/models/CategoryModel.dart';
+import 'package:meat_admin/models/MeatModel.dart';
 
 final meatCategoryRepository=
     Provider((ref) => AddmeatCategoryRepository(firestore: ref.watch(firestoreprovider)));
@@ -26,5 +27,15 @@ class AddmeatCategoryRepository{
     .map((e) => CategoryModel.fromMap(e.data() as Map<String,dynamic>)).toList()
     );
   }
+
+  addMeats({required String type,required String chooseCategory, required MeatModel meatModel}){
+    _meatcategory.doc(type).collection(type)
+        .doc(chooseCategory).collection(type).add(meatModel.toMap()).then((value){
+      value.update({
+        "id" : value.id
+      });
+    });
+  }
+
 
 }
