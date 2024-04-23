@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/main.dart';
-import 'package:meat_admin/models/CategoryModel.dart';
+import 'package:meat_admin/models/MeatTypeModel.dart';
 
 import '../controller/controller_page.dart';
 
@@ -38,7 +38,7 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
 
 
   dataSubmit(){
-    CategoryModel categoryModel = CategoryModel(type: meat_controller.text, mainImage: mainImage.toString());
+    MeatTypeModel categoryModel = MeatTypeModel(type: meat_controller.text, mainImage: mainImage.toString());
 
     ref.watch(meatTypesController).meatAdd(categoryModel);
 

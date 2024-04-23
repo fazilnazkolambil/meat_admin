@@ -1,7 +1,7 @@
-class CategoryModel{
+class MeatTypeModel{
   String type;
   String mainImage;
-  CategoryModel({
+  MeatTypeModel({
     required this.type,
     required this.mainImage
 });
@@ -11,18 +11,18 @@ class CategoryModel{
       "mainImage":this.mainImage,
     };
   }
-  factory CategoryModel.fromMap(Map<String,dynamic>map){
-    return CategoryModel(
+  factory MeatTypeModel.fromMap(Map<String,dynamic>map){
+    return MeatTypeModel(
         type: map["type"]??"",
         mainImage: map["mainImage"]??"",
     );
   }
-  CategoryModel copyWith({
+  MeatTypeModel copyWith({
     String? type,
     String? mainImage
 })
   {
-    return CategoryModel(
+    return MeatTypeModel(
         type: type??this.type,
         mainImage: mainImage??this.mainImage);
   }

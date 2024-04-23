@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meat_admin/core/provider/provider_page.dart';
-import 'package:meat_admin/models/CategoryModel.dart';
+import 'package:meat_admin/models/MeatTypeModel.dart';
 import 'package:meat_admin/models/MeatModel.dart';
 
 final meatTypesRepository =
@@ -16,7 +16,7 @@ class TypesRepository {
 
   CollectionReference get _meattypes => _firestore.collection("meatTypes");
 
-  meatTypes(CategoryModel categoryModel) {
+  meatTypes(MeatTypeModel categoryModel) {
     //
     // CategoryModel categoryModel=CategoryModel(
     //     type: meatController,
@@ -25,9 +25,9 @@ class TypesRepository {
     _meattypes.doc(categoryModel.type).set(categoryModel.toMap());
   }
 
-  Stream<List<CategoryModel>> meatTypesStream() {
+  Stream<List<MeatTypeModel>> meatTypesStream() {
     return _meattypes.snapshots().map((data) => data.docs
-        .map((e) => CategoryModel.fromMap(e.data() as Map<String, dynamic>))
+        .map((e) => MeatTypeModel.fromMap(e.data() as Map<String, dynamic>))
         .toList());
   }
 

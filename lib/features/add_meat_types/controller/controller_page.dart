@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meat_admin/models/CategoryModel.dart';
+import 'package:meat_admin/models/MeatTypeModel.dart';
 
 import '../repository/Meat_types_repository.dart';
 
@@ -13,11 +13,11 @@ class MeatTypesController{
   MeatTypesController({required TypesRepository repository}):_repository=repository;
 
 
-  meatAdd(CategoryModel categoryModel){
+  meatAdd(MeatTypeModel categoryModel){
     _repository.meatTypes(categoryModel);
   }
 
-  Stream<List<CategoryModel>>streamCategory(){
+  Stream<List<MeatTypeModel>>streamCategory(){
     return _repository.meatTypesStream();
   }
 
