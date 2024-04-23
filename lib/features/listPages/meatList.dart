@@ -40,11 +40,34 @@ class _MeatListState extends State<MeatList> {
     categoryCollection = category.docs;
     setState(() {});
   }
-
+  var users;
+  var fav;
+  List favUserId = [];
+  List favId = [];
+getUsers() async {
+  var userCollection = await FirebaseFirestore.instance.collection("users").get();
+  users = userCollection.docs;
+  for (int i = 0; i < users.length; i++){
+    fav = users[i]["favourites"];
+    if (fav.isEmpty){
+      //print("$i is empty");
+    }else{
+      favUserId.add(users[i]['id']);
+      for (int j = 0; j < fav.length; j++){
+        favId.add(fav[j]["id"]);
+      }
+    }
+    //   if(data[index]["id"].contains(users[i]["favourites"][i]["id"])){
+    //    print("yesssssss");
+    //   }else{
+    //     print("nooooooooo");
+    //   }
+  }
+}
   @override
   void initState() {
     getMeats();
-
+    getUsers();
     // TODO: implement initState
     super.initState();
   }
@@ -153,231 +176,235 @@ class _MeatListState extends State<MeatList> {
                                 var data = snapshot.data!.docs;
                                 return data.length == 0
                                     ? Text("No Meats Available!")
-                                    : Expanded(
-                                        child: ListView.separated(
-                                          itemCount: data.length,
-                                          shrinkWrap: true,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Container(
-                                              height: scrHeight * 0.3,
-                                              width: scrHeight * 1.7,
-                                              decoration: BoxDecoration(
+                                    : ListView.separated(
+                                      itemCount: data.length,
+                                      shrinkWrap: true,
+                                      itemBuilder: (BuildContext context,
+                                          int index) {
+                                        return Container(
+                                          height: scrHeight * 0.3,
+                                          width: scrHeight * 1.7,
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  colorConst.primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      scrHeight * 0.03),
+                                              border: Border.all(
                                                   color:
-                                                      colorConst.primaryColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          scrHeight * 0.03),
-                                                  border: Border.all(
-                                                      color:
-                                                          colorConst.mainColor),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        color: colorConst
-                                                            .secondaryColor
-                                                            .withOpacity(0.5),
-                                                        blurRadius: 4,
-                                                        offset: Offset(0, 2))
-                                                  ]),
-                                              child: Row(
+                                                      colorConst.mainColor),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: colorConst
+                                                        .secondaryColor
+                                                        .withOpacity(0.5),
+                                                    blurRadius: 4,
+                                                    offset: Offset(0, 2))
+                                              ]),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
+                                            children: [
+                                              CircleAvatar(
+                                                radius: scrHeight * 0.13,
+                                                backgroundImage:
+                                                    NetworkImage(data[index]
+                                                        ["Image"]),
+                                              ),
+                                              SingleChildScrollView(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Text(
+                                                      "NAME:${data[index]["name"]}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize:
+                                                              scrWidth *
+                                                                  0.01),
+                                                    ),
+                                                    Text(
+                                                      "INGREDIENTS:${data[index]["ingredients"]}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize:
+                                                              scrWidth *
+                                                                  0.01),
+                                                    ),
+                                                    Text(
+                                                      "PRICE:${data[index]["rate"]}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize:
+                                                              scrWidth *
+                                                                  0.01),
+                                                    ),
+                                                    Text(
+                                                      "QUANTITY: 1 KG - ",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize:
+                                                              scrWidth *
+                                                                  0.01),
+                                                    ),
+                                                    Text(
+                                                      "DESCRIPTION:${data[index]["description"]}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize:
+                                                              scrWidth *
+                                                                  0.01),
+                                                    ),
+                                                    // Text(
+                                                    //   "Type:${data[index]["type"]}",
+                                                    //   style: TextStyle(
+                                                    //       fontWeight:
+                                                    //           FontWeight.w600,
+                                                    //       fontSize:
+                                                    //           scrWidth * 0.01),
+                                                    // ),
+                                                    // Text(
+                                                    //   "Category:${data[index]["category"]}",
+                                                    //   style: TextStyle(
+                                                    //       fontWeight:
+                                                    //           FontWeight.w600,
+                                                    //       fontSize:
+                                                    //           scrWidth * 0.01),
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceEvenly,
                                                 children: [
-                                                  CircleAvatar(
-                                                    radius: scrHeight * 0.13,
-                                                    backgroundImage:
-                                                        NetworkImage(data[index]
-                                                            ["Image"]),
-                                                  ),
-                                                  SingleChildScrollView(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Text(
-                                                          "NAME:${data[index]["name"]}",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize:
-                                                                  scrWidth *
-                                                                      0.01),
-                                                        ),
-                                                        Text(
-                                                          "INGREDIENTS:${data[index]["ingredients"]}",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize:
-                                                                  scrWidth *
-                                                                      0.01),
-                                                        ),
-                                                        Text(
-                                                          "PRICE:${data[index]["rate"]}",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize:
-                                                                  scrWidth *
-                                                                      0.01),
-                                                        ),
-                                                        Text(
-                                                          "QUANTITY: 1 KG - ",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize:
-                                                                  scrWidth *
-                                                                      0.01),
-                                                        ),
-                                                        Text(
-                                                          "DESCRIPTION:${data[index]["description"]}",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize:
-                                                                  scrWidth *
-                                                                      0.01),
-                                                        ),
-                                                        // Text(
-                                                        //   "Type:${data[index]["type"]}",
-                                                        //   style: TextStyle(
-                                                        //       fontWeight:
-                                                        //           FontWeight.w600,
-                                                        //       fontSize:
-                                                        //           scrWidth * 0.01),
-                                                        // ),
-                                                        // Text(
-                                                        //   "Category:${data[index]["category"]}",
-                                                        //   style: TextStyle(
-                                                        //       fontWeight:
-                                                        //           FontWeight.w600,
-                                                        //       fontSize:
-                                                        //           scrWidth * 0.01),
-                                                        // ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          MeatsEdit(
-                                                                    id: data[index].id,
-                                                                    Image: data[index]['Image'],
-                                                                    name: data[index]['name'],
-                                                                    rate: data[index]['rate'].toString(),
-                                                                    ingredients: data[index]['ingredients'],
-                                                                    description: data[index]['description'],
-                                                                    quantity: data[index]['quantity'].toString(),
-                                                                    category: selectCategory.isEmpty?
-                                                                    categoryCollection[0]["category"]
-                                                                            :selectCategory,
-                                                                            type: widget.type,
+                                                  InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      MeatsEdit(
+                                                                id: data[index].id,
+                                                                Image: data[index]['Image'],
+                                                                name: data[index]['name'],
+                                                                rate: data[index]['rate'].toString(),
+                                                                ingredients: data[index]['ingredients'],
+                                                                description: data[index]['description'],
+                                                                quantity: data[index]['quantity'].toString(),
+                                                                category: selectCategory.isEmpty?
+                                                                categoryCollection[0]["category"]
+                                                                        :selectCategory,
+                                                                        type: widget.type,
 
-                                                                  ),
-                                                                ));
-                                                          },
-                                                          child:
-                                                              Icon(Icons.edit)),
-                                                      InkWell(
-                                                          onTap: () {
-                                                            showDialog(
-                                                              barrierDismissible: false,
-                                                              context: context,
-                                                              builder: (context) {
-                                                                return AlertDialog(
-                                                                  title: Text("Are you sure you want to delete this Item?",
-                                                                    textAlign: TextAlign.center,
-                                                                    style: TextStyle(
-                                                                        fontSize: scrHeight*0.02,
-                                                                        fontWeight: FontWeight.w600
-                                                                    ),),
-                                                                  content: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                    children: [
-                                                                      InkWell(
-                                                                        onTap: () {
-                                                                          Navigator.pop(context);
-                                                                        },
-                                                                        child: Container(
-                                                                          height: scrHeight*0.04,
-                                                                          width: scrWidth*0.1,
-                                                                          decoration: BoxDecoration(
-                                                                            color: Colors.blueGrey,
-                                                                            borderRadius: BorderRadius.circular(scrWidth*0.03),
-                                                                          ),
-                                                                          child: Center(child: Text("No",
-                                                                            style: TextStyle(
-                                                                                color: Colors.white
-                                                                            ),)),
-                                                                        ),
+                                                              ),
+                                                            ));
+                                                      },
+                                                      child:
+                                                          Icon(Icons.edit)),
+                                                  InkWell(
+                                                      onTap: () {
+                                                        showDialog(
+                                                          barrierDismissible: false,
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Text("Are you sure you want to delete this Item?",
+                                                                textAlign: TextAlign.center,
+                                                                style: TextStyle(
+                                                                    fontSize: scrHeight*0.02,
+                                                                    fontWeight: FontWeight.w600
+                                                                ),),
+                                                              content: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                    child: Container(
+                                                                      height: scrHeight*0.04,
+                                                                      width: scrWidth*0.1,
+                                                                      decoration: BoxDecoration(
+                                                                        color: Colors.blueGrey,
+                                                                        borderRadius: BorderRadius.circular(scrWidth*0.03),
                                                                       ),
-                                                                      InkWell(
-                                                                        onTap: () {
-                                                                          FirebaseFirestore.instance.collection('meatTypes').doc(widget.type)
-                                                                              .collection(widget.type).doc(selectCategory)
-                                                                              .collection(widget.type).doc(data[index]["id"])
-                                                                              .delete();
-                                                                          Navigator.pop(context);
-                                                                        },
-                                                                        child: Container(
-                                                                          height: scrHeight*0.04,
-                                                                          width: scrWidth*0.1,
-                                                                          decoration: BoxDecoration(
-                                                                            color: colorConst.mainColor,
-                                                                            borderRadius: BorderRadius.circular(scrWidth*0.03),
-                                                                          ),
-                                                                          child: Center(child: Text("Yes",
-                                                                            style: TextStyle(
-                                                                                color: Colors.white
-                                                                            ),)),
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                                      child: Center(child: Text("No",
+                                                                        style: TextStyle(
+                                                                            color: Colors.white
+                                                                        ),)),
+                                                                    ),
                                                                   ),
-                                                                );
-                                                              },
+                                                                  InkWell(
+                                                                    onTap: () async {
+                                                                      // FirebaseFirestore.instance.collection('meatTypes').doc(widget.type)
+                                                                      //     .collection(widget.type).doc(selectCategory)
+                                                                      //     .collection(widget.type).doc(data[index]["id"])
+                                                                      //     .delete();
+
+                                                                      if (favId.contains(data[index]["id"])){
+
+                                                                      }else{
+                                                                        print("NOOOOOOOOOOO");
+                                                                      }
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                    child: Container(
+                                                                      height: scrHeight*0.04,
+                                                                      width: scrWidth*0.1,
+                                                                      decoration: BoxDecoration(
+                                                                        color: colorConst.mainColor,
+                                                                        borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                                      ),
+                                                                      child: Center(child: Text("Yes",
+                                                                        style: TextStyle(
+                                                                            color: Colors.white
+                                                                        ),)),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             );
                                                           },
+                                                        );
+                                                      },
 
-                                                          child: Icon(
-                                                              Icons.delete)),
-                                                    ],
-                                                  )
+                                                      child: Icon(
+                                                          Icons.delete)),
                                                 ],
-                                              ),
-                                            );
-                                          },
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                                  int index) {
-                                            return SizedBox(
-                                              width: scrHeight * 0.05,
-                                            );
-                                          },
-                                        ),
-                                      );
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder:
+                                          (BuildContext context,
+                                              int index) {
+                                        return SizedBox(
+                                          width: scrHeight * 0.05,
+                                        );
+                                      },
+                                    );
                               }),
                     ),
                   ),
