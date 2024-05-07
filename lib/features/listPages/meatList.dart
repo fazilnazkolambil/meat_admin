@@ -41,33 +41,27 @@ class _MeatListState extends State<MeatList> {
     setState(() {});
   }
   var users;
-  var fav;
-  List favUserId = [];
-  List favId = [];
-getUsers() async {
+deleteProduct(String productId) async {
   var userCollection = await FirebaseFirestore.instance.collection("users").get();
   users = userCollection.docs;
   for (int i = 0; i < users.length; i++){
-    fav = users[i]["favourites"];
-    if (fav.isEmpty){
-      //print("$i is empty");
-    }else{
-      favUserId.add(users[i]['id']);
-      for (int j = 0; j < fav.length; j++){
-        favId.add(fav[j]["id"]);
+    var favourites = users[i]["favourites"];
+    if (favourites.isNotEmpty){
+      for(int j=0;j<favourites.length;j++){
+        if(favourites[j]["id"]==productId){
+          favourites.remove(favourites[j]);
+          FirebaseFirestore.instance.collection("users").doc(users[i]["id"]).update({
+            "favourites": favourites
+          });
+        }
       }
     }
-    //   if(data[index]["id"].contains(users[i]["favourites"][i]["id"])){
-    //    print("yesssssss");
-    //   }else{
-    //     print("nooooooooo");
-    //   }
   }
 }
   @override
   void initState() {
     getMeats();
-    getUsers();
+    // getUsers();
     // TODO: implement initState
     super.initState();
   }
@@ -148,7 +142,7 @@ getUsers() async {
               Column(
                 children: [
                   SingleChildScrollView(
-                    child: Container(
+                    child: SizedBox(
                       height: scrHeight * 0.8,
                       width: scrHeight * 1.7,
                       child: categoryCollection.isEmpty
@@ -357,16 +351,22 @@ getUsers() async {
                                                                   ),
                                                                   InkWell(
                                                                     onTap: () async {
-                                                                      // FirebaseFirestore.instance.collection('meatTypes').doc(widget.type)
-                                                                      //     .collection(widget.type).doc(selectCategory)
-                                                                      //     .collection(widget.type).doc(data[index]["id"])
-                                                                      //     .delete();
-
-                                                                      if (favId.contains(data[index]["id"])){
-
-                                                                      }else{
-                                                                        print("NOOOOOOOOOOO");
-                                                                      }
+                                                                      FirebaseFirestore.instance.collection('meatTypes').doc(widget.type)
+                                                                          .collection(widget.type).doc(selectCategory)
+                                                                          .collection(widget.type).doc(data[index]["id"])
+                                                                          .delete();
+                                                                      // for(var keys in favouriteMap.keys){
+                                                                      //   for(int k = 0; k<favouriteMap[keys].length; k++){
+                                                                      //       print('${favouriteMap[keys][k]["id"]}');
+                                                                      //     //print(data[index]["id"]);
+                                                                      //     if(data[index]["id"] == favouriteMap[keys][k]["id"]){
+                                                                      //       print("YESSSSSSSSS");
+                                                                      //     }else{
+                                                                      //       print("NOOOOOOOOOO");
+                                                                      //     }
+                                                                      //   }
+                                                                      // }
+                                                                      deleteProduct(data[index]["id"]);
                                                                       Navigator.pop(context);
                                                                     },
                                                                     child: Container(

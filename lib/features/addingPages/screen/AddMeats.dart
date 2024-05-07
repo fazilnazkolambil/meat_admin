@@ -25,11 +25,6 @@ class AddMeats extends ConsumerStatefulWidget {
 
 class _AddMeatsState extends ConsumerState<AddMeats> {
 
-
-
-
-
-
   String? chooseCategory;
 
   TextEditingController nameController = TextEditingController();
@@ -211,14 +206,19 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                           selectfile("name");
                         },
                         child: meatImage != null
-                            ? CircleAvatar(
-                                radius: scrHeight * 0.1,
-                                backgroundImage: NetworkImage(meatImage!),
+                            ? Container(
+                                height: scrHeight*0.2,
+                                width: scrWidth*0.1,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(image: NetworkImage(meatImage!))
+                                ),
                               )
-                            : CircleAvatar(
-                                radius: scrHeight * 0.1,
-                                child: Icon(Icons.add_a_photo_outlined),
-                              )),
+                            : Container(
+                          height: scrHeight*0.2,
+                          width: scrWidth*0.1,
+                          child: Icon(Icons.add_a_photo_outlined),
+                        )
+                ),
                 // StreamBuilder(
                 //     stream: FirebaseFirestore.instance.collection("meatTypes").doc(widget.type).collection(widget.type).snapshots(),
                 //     builder: (context, snapshot) {

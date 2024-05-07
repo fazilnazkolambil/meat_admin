@@ -97,7 +97,27 @@ class _MeatsEditState extends State<MeatsEdit> {
       categoryController.clear();
     });
   }
-
+  MeatModel? updateMeat;
+  var users;
+  editMeats() async {
+    var userCollection = await FirebaseFirestore.instance.collection("users").get();
+    users = userCollection.docs;
+    for (int i = 0; i < users.length; i++){
+      var favourites = users[i]["favourites"];
+      if (favourites.isNotEmpty){
+        for(int j = 0; j < favourites.length; j++){
+          if(favourites[j]["id"] == widget.id){
+            //favourites = favourites.map((value) => updateMeat!.toMap());
+            favourites[j] = updateMeat!.toMap();
+            print(favourites);
+            FirebaseFirestore.instance.collection("users").doc(users[i]["id"]).update({
+                "favourites" : favourites
+            });
+          }
+        }
+      }
+    }
+  }
   @override
   void initState() {
     getMeatData();
@@ -385,21 +405,24 @@ class _MeatsEditState extends State<MeatsEdit> {
                 ),
                 InkWell(
                   onTap: () {
-
-                    MeatModel updateMeat = MeatModel(image: meatImage.toString(), name: nameController.text, ingredients: ingredientsController.text, rate:double.parse(rateController.text), description: descriptionController.text, id: widget.id, quantity: 1);
-
-
+                    updateMeat = MeatModel(
+                        image: meatImage.toString(),
+                        name: nameController.text,
+                        ingredients: ingredientsController.text,
+                        rate:double.parse(rateController.text),
+                        description: descriptionController.text,
+                        id: widget.id,
+                        quantity: 1);
 
                     FirebaseFirestore.instance
                         .collection("meatTypes")
                         .doc(widget.type)
                         .collection(widget.type)
                         .doc(chooseCategory)
-                        .collection(widget.type).doc(widget.id).update(updateMeat.toMap()).then((value) {
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypeList(type: widget.type,),), (route) => false);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Updated!")));
-                    });
-                   
+                        .collection(widget.type).doc(widget.id).update(updateMeat!.toMap());
+                    editMeats();
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypeList(type: widget.type,),), (route) => false);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Updated!")));
                   },
                   child: Container(
                     height: scrHeight * 0.07,
