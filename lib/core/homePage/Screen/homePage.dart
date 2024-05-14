@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:meat_admin/features/add_meat_types/screen/meatTypes.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
-import 'features/listPages/UsersStream/Screen/UsersPage.dart';
-import 'main.dart';
+import '../../../features/listPages/UsersStream/Screen/UsersPage.dart';
+import '../../../main.dart';
 
 class homePage extends StatefulWidget {
   const homePage({super.key});
@@ -98,64 +100,73 @@ class _homePageState extends State<homePage> {
               ),
             ],
           )),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 1,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: scrHeight*0.1,
-                  width: scrHeight*0.4,
-                  margin: EdgeInsets.all(scrHeight*0.01),
-                  decoration: BoxDecoration(
-                      color: colorConst.primaryColor,
-                      borderRadius: BorderRadius.circular(scrHeight*0.03),
-                      border: Border.all(color: colorConst.mainColor),
-                      boxShadow: [
-                        BoxShadow(
-                            color: colorConst.secondaryColor.withOpacity(0.5),
-                            blurRadius: 4,
-                            offset: Offset(0, 2)
-                        )
-                      ]
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CircleAvatar(
-                        radius: scrHeight*0.045,
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection("orderDetails").snapshots(),
+              builder: (context, snapshot) {
+                if(!snapshot.hasData){
+                  return CircularProgressIndicator();
+                }
+                var data=snapshot.data?.docs;
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: data?.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: scrHeight*0.1,
+                      width: scrHeight*0.4,
+                      margin: EdgeInsets.all(scrHeight*0.01),
+                      decoration: BoxDecoration(
+                          color: colorConst.primaryColor,
+                          borderRadius: BorderRadius.circular(scrHeight*0.03),
+                          border: Border.all(color: colorConst.mainColor),
+                          boxShadow: [
+                            BoxShadow(
+                                color: colorConst.secondaryColor.withOpacity(0.5),
+                                blurRadius: 4,
+                                offset: Offset(0, 2)
+                            )
+                          ]
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("Order ID:#23584",style: TextStyle(
-                              fontSize: scrHeight*0.02,
-                              fontWeight: FontWeight.w700,
-                              color: colorConst.secondaryColor
-
-                          ),),
-                          Text("15 Mar 2024 - 11 PM"),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          CircleAvatar(
+                            radius: scrHeight*0.045,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                width: scrHeight*0.07,
-                                height: scrHeight*0.03,
-                                child: Center(child: Text("Cancel",style: TextStyle(color:colorConst.red),),),
-                              ),
-                              SizedBox(
-                                width: scrHeight*0.07,
-                                height: scrHeight*0.03,
-                                child: Center(child: Text("Done",style: TextStyle(color:colorConst.green))),
-                              ),
+                              Text("Order ID: ${data?[index]["orderId"]}",style: TextStyle(
+                                  fontSize: scrHeight*0.02,
+                                  fontWeight: FontWeight.w700,
+                                  color: colorConst.secondaryColor
+              
+                              ),),
+                              Text("15 Mar 2024 - 11 PM"),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: scrHeight*0.07,
+                                    height: scrHeight*0.03,
+                                    child: Center(child: Text("Cancel",style: TextStyle(color:colorConst.red),),),
+                                  ),
+                                  SizedBox(
+                                    width: scrHeight*0.07,
+                                    height: scrHeight*0.03,
+                                    child: Center(child: Text("Done",style: TextStyle(color:colorConst.green))),
+                                  ),
+                                ],
+                              )
                             ],
                           )
                         ],
-                      )
-                    ],
-                  ),
-                );
-                }
-            ),
+                      ),
+                    );
+                    }
+                ),
+              );
+            }
           ),
 
         ],

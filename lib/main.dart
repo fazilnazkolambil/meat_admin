@@ -2,24 +2,21 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:meat_admin/features/addingPages/screen/AddMeats.dart';
-import 'package:meat_admin/features/listPages/meatList.dart';
-import 'package:meat_admin/features/listPages/meatList.dart';
+// import 'package:meat_admin/features/addingPages/AddMeats.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import 'package:meat_admin/firebase_options.dart';
-import 'package:meat_admin/homePage.dart';
+import 'package:meat_admin/core/homePage/Screen/homePage.dart';
 import 'package:meat_admin/models/MeatModel.dart';
 
-import 'features/add_meat_types/screen/meatTypes.dart';
+// import 'features/addingPages/meatTypes.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const MyApp());
 }
 MeatModel? currentMeatModel;
  var scrWidth;
