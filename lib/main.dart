@@ -2,6 +2,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:meat_admin/features/addingPages/AddMeats.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
@@ -16,7 +17,7 @@ Future <void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child:  MyApp()));
 }
 MeatModel? currentMeatModel;
  var scrWidth;
