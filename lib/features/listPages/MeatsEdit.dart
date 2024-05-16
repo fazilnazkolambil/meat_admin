@@ -412,7 +412,10 @@ class _MeatsEditState extends State<MeatsEdit> {
                         rate:double.parse(rateController.text),
                         description: descriptionController.text,
                         id: widget.id,
-                        quantity: 1);
+                        quantity: 1,
+                        category: categoryController.text,
+                        type: widget.type
+                    );
 
                     FirebaseFirestore.instance
                         .collection("meatTypes")

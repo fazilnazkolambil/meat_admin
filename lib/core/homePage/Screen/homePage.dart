@@ -106,10 +106,10 @@ class _homePageState extends State<homePage> {
                 if(!snapshot.hasData){
                   return CircularProgressIndicator();
                 }
-                var data=snapshot.data?.docs;
+                var data=snapshot.data!.docs;
               return Expanded(
                 child: ListView.builder(
-                  itemCount: data?.length,
+                  itemCount: data.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       height: scrHeight*0.1,
@@ -136,7 +136,7 @@ class _homePageState extends State<homePage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Order ID: ${data?[index]["orderId"]}",style: TextStyle(
+                              Text("Order ID: ${data[index]["orderId"]}",style: TextStyle(
                                   fontSize: scrHeight*0.02,
                                   fontWeight: FontWeight.w700,
                                   color: colorConst.secondaryColor

@@ -94,7 +94,10 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
         rate: double.parse(rateController.text),
         description: descriptionController.text,
         id: "",
-        quantity: 1);
+        quantity: 1,
+        category: chooseCategory.toString(),
+        type: widget.type
+    );
     ref.watch(addMeatController).addMeats(type: widget.type, chooseCategory:chooseCategory! , meatModel: meatModel);
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypes(),), (route) => false);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));

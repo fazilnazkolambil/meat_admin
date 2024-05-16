@@ -1,8 +1,18 @@
 class MeatModel{
-  String image, name, ingredients, description, id;
+  String image, name, ingredients, description, id, category, type;
   int quantity;
   double rate;
-  MeatModel({ required this.image, required this.name, required this.ingredients, required this.rate, required this.description, required this.id, required this.quantity});
+  MeatModel({
+    required this.image,
+    required this.name,
+    required this.ingredients,
+    required this.rate,
+    required this.description,
+    required this.id,
+    required this.quantity,
+    required this.category,
+    required this.type,
+  });
 
   Map <String, dynamic> toMap(){
     return {
@@ -13,6 +23,8 @@ class MeatModel{
       "description" : this.description,
       "id" : this.id,
       "quantity" : this.quantity,
+      "category" : this.category,
+      "type" : this.type,
     };
 }
 factory MeatModel.fromMap(Map <String, dynamic> map){
@@ -24,11 +36,14 @@ factory MeatModel.fromMap(Map <String, dynamic> map){
       description: map["description"] ?? "",
       id: map["id"] ?? "",
       quantity: map["quantity"] ?? "",
+      category: map["category"] ?? "",
+      type: map["type"] ?? "",
     );
 }
 MeatModel copyWith({
     String? image, category, type, name, ingredients, description, id,
-    int? quantity, rate
+    int? quantity,
+    double? rate
 }){
     return MeatModel(
       image: image ?? this.image,
@@ -38,6 +53,8 @@ MeatModel copyWith({
       description: description ?? this.description,
       id: id ?? this.id,
       quantity: quantity ?? this.quantity,
+      category: category ?? this.category,
+      type: type ?? this.type,
     );
 }
 }
