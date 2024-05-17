@@ -11,14 +11,20 @@ import '../../../features/listPages/UsersStream/Screen/UsersPage.dart';
 import '../../../main.dart';
 
 class homePage extends StatefulWidget {
-  const homePage({super.key});
+
+
+  const homePage({super.key,   });
 
   @override
   State<homePage> createState() => _homePageState();
 }
 
 class _homePageState extends State<homePage> {
+  String? userId;
+
   @override
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
@@ -28,6 +34,7 @@ class _homePageState extends State<homePage> {
             Image(image: AssetImage(imageConst.logo)),
             InkWell(
               onTap: (){
+
                 Navigator.push(context, MaterialPageRoute(builder: (context) => UsersPage(),));
               },
               child: Text("Users",style: TextStyle(
@@ -100,74 +107,117 @@ class _homePageState extends State<homePage> {
               ),
             ],
           )),
-          StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection("orderDetails").snapshots(),
-              builder: (context, snapshot) {
-                if(!snapshot.hasData){
-                  return CircularProgressIndicator();
-                }
-                var data=snapshot.data!.docs;
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: scrHeight*0.1,
-                      width: scrHeight*0.4,
-                      margin: EdgeInsets.all(scrHeight*0.01),
-                      decoration: BoxDecoration(
-                          color: colorConst.primaryColor,
-                          borderRadius: BorderRadius.circular(scrHeight*0.03),
-                          border: Border.all(color: colorConst.mainColor),
-                          boxShadow: [
-                            BoxShadow(
-                                color: colorConst.secondaryColor.withOpacity(0.5),
-                                blurRadius: 4,
-                                offset: Offset(0, 2)
-                            )
-                          ]
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                            radius: scrHeight*0.045,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Order ID: ${data[index]["orderId"]}",style: TextStyle(
-                                  fontSize: scrHeight*0.02,
-                                  fontWeight: FontWeight.w700,
-                                  color: colorConst.secondaryColor
-              
-                              ),),
-                              Text("15 Mar 2024 - 11 PM"),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: scrHeight*0.07,
-                                    height: scrHeight*0.03,
-                                    child: Center(child: Text("Cancel",style: TextStyle(color:colorConst.red),),),
-                                  ),
-                                  SizedBox(
-                                    width: scrHeight*0.07,
-                                    height: scrHeight*0.03,
-                                    child: Center(child: Text("Done",style: TextStyle(color:colorConst.green))),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    );
+
+
+                StreamBuilder<QuerySnapshot>(
+                    stream:  FirebaseFirestore.instance.collection("orderDetails").snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircularProgressIndicator();
+                      }
+                      var data = snapshot.data!.docs;
+
+                      return Expanded(
+                        child: ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                height: scrHeight * 0.15,
+                                width: scrHeight * 0.4,
+                                margin: EdgeInsets.all(scrHeight * 0.01),
+                                decoration: BoxDecoration(
+                                    color: colorConst.primaryColor,
+                                    borderRadius: BorderRadius.circular(
+                                        scrHeight * 0.03),
+                                    border: Border.all(
+                                        color: colorConst.mainColor),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: colorConst.secondaryColor
+                                              .withOpacity(0.5),
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2)
+                                      )
+                                    ]
+                                ),
+
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceEvenly,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: scrHeight * 0.045,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      children: [
+
+                                        Text(
+                                          "Order ID: ${data[index]["orderId"]}",
+                                          style: TextStyle(
+                                              fontSize: scrHeight * 0.02,
+                                              fontWeight: FontWeight.w700,
+                                              color: colorConst.secondaryColor
+
+                                          ),),
+                                        Text("15 Mar 2024 - 11 PM"),
+                                        Text("Location:"),
+                                        InkWell(
+                                          onTap: () async {
+                                            userId = data[index]["userId"];
+                                            DocumentSnapshot<Map<String,dynamic>> userr = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+                                            showCupertinoModalPopup(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                    title:
+                                                    Column(
+                                                      children: [
+                                                        Text("name:${userr.data()!['name']}"),
+                                                        Text("email:${userr.data()!['email']}"),
+                                                        Text("address:${userr.data()!['address']}"),
+                                                        // Text("${userr.data()!['image']}"),
+                                                        Text("phone:${userr.data()!['number']}"),
+                                                        // Text("${userr.data()!['favourites']}"),
+                                                      ],
+                                                    ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                            height: scrHeight * 0.04,
+                                            width: scrHeight * 0.13,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius
+                                                    .circular(scrHeight * 0.03),
+                                                color: colorConst.mainColor
+                                            ),
+                                            child: Center(
+                                              child: Text("User details",
+                                                style: TextStyle(
+                                                    fontSize: scrHeight * 0.02,
+                                                    color: colorConst
+                                                        .primaryColor
+                                                ),),
+                                            ),
+
+
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                        ),
+                      );
                     }
-                ),
-              );
-            }
-          ),
+
+
+              )
 
         ],
       ),
