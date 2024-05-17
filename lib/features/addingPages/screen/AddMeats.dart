@@ -179,10 +179,66 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                                 title: Text(data[index].category),
                                 trailing: InkWell(
                                     onTap: () {
-                                      FirebaseFirestore.instance
-                                          .collection("meatTypes").doc(widget.type)
-                                          .collection(widget.type).doc(data[index].category).delete();
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text("Are you sure you want to delete this Category?",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: scrHeight*0.02,
+                                                  fontWeight: FontWeight.w600
+                                              ),),
+                                            content: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    height: scrHeight*0.04,
+                                                    width: scrWidth*0.08,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blueGrey,
+                                                      borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                    ),
+                                                    child: Center(child: Text("No",
+                                                      style: TextStyle(
+                                                          color: Colors.white
+                                                      ),)),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                   await FirebaseFirestore.instance
+                                                        .collection("meatTypes").doc(widget.type)
+                                                        .collection(widget.type).doc(data[index].category).delete();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    height: scrHeight*0.04,
+                                                    width: scrWidth*0.08,
+                                                    decoration: BoxDecoration(
+                                                      color: colorConst.mainColor,
+                                                      borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                    ),
+                                                    child: Center(child: Text("Yes",
+                                                      style: TextStyle(
+                                                          color: Colors.white
+                                                      ),)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
                                     },
+
+
+
                                     child: Icon(CupertinoIcons.delete)),
                               );
                             }),
@@ -210,13 +266,13 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         },
                         child: meatImage != null
                             ? Container(
-                                height: scrHeight*0.2,
+                                height: scrHeight*0.1,
                                 width: scrWidth*0.1,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(image: NetworkImage(meatImage!))
                                 ),
                               )
-                            : Container(
+                            : SizedBox(
                           height: scrHeight*0.2,
                           width: scrWidth*0.1,
                           child: Icon(Icons.add_a_photo_outlined),
