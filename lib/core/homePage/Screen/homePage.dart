@@ -179,7 +179,7 @@ class _homePageState extends State<homePage> {
                                                         Text("address:${userr.data()!['address']}"),
                                                         // Text("${userr.data()!['image']}"),
                                                         Text("phone:${userr.data()!['number']}"),
-                                                        // Text("${userr.data()!['favourites']}"),
+                                                        Text("${userr.data()!['favourites']}"),
                                                       ],
                                                     ),
                                                 );
