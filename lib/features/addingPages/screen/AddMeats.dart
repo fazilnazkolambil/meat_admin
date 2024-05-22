@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/features/add_meat_types/screen/meatTypes.dart';
 import 'package:meat_admin/features/addingPages/controller/controller_page.dart';
+import 'package:meat_admin/features/listPages/meatList.dart';
 import 'package:meat_admin/models/MeatModel.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
@@ -32,6 +33,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
   TextEditingController rateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
 
   PlatformFile? pickFile;
   Future selectfile(String name) async {
@@ -94,12 +96,12 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
         rate: double.parse(rateController.text),
         description: descriptionController.text,
         id: "",
-        quantity: 1,
+        quantity: double.parse(quantityController.text),
         category: chooseCategory.toString(),
         type: widget.type
     );
     ref.watch(addMeatController).addMeats(type: widget.type, chooseCategory:chooseCategory! , meatModel: meatModel);
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypes(),), (route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatList(type: widget.type),), (route) => false);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
 
   }
@@ -112,14 +114,15 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: InkWell(
+        leading: InkWell(
           onTap: () {
-            print(meatMap!);
+            Navigator.pop(context);
           },
-          child: Text("${widget.type} Adding Page",
-              style: TextStyle(color: colorConst.primaryColor)),
+          child: Icon(CupertinoIcons.arrow_left,color: colorConst.primaryColor,),
         ),
-        backgroundColor: colorConst.mainColor,
+        title: Text("${widget.type} Adding Page",
+            style: TextStyle(color: colorConst.primaryColor)),
+        backgroundColor: colorConst.canvasColor,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -175,8 +178,16 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                             itemCount: data.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                leading: Text("${index + 1}."),
-                                title: Text(data[index].category),
+                                leading: Text("${index + 1}.",style: TextStyle(
+                                  color: colorConst.canvasColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15
+                                ),),
+                                title: Text(data[index].category,style: TextStyle(
+                                    color: colorConst.canvasColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15
+                                ),),
                                 trailing: InkWell(
                                     onTap: () {
                                       showDialog(
@@ -198,8 +209,8 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                                                     Navigator.pop(context);
                                                   },
                                                   child: Container(
-                                                    height: scrHeight*0.04,
-                                                    width: scrWidth*0.08,
+                                                    height: 30,
+                                                    width: 100,
                                                     decoration: BoxDecoration(
                                                       color: Colors.blueGrey,
                                                       borderRadius: BorderRadius.circular(scrWidth*0.03),
@@ -212,14 +223,14 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                                                 ),
                                                 InkWell(
                                                   onTap: () async {
+                                                    Navigator.pop(context);
                                                    await FirebaseFirestore.instance
                                                         .collection("meatTypes").doc(widget.type)
                                                         .collection(widget.type).doc(data[index].category).delete();
-                                                    Navigator.pop(context);
                                                   },
                                                   child: Container(
-                                                    height: scrHeight*0.04,
-                                                    width: scrWidth*0.08,
+                                                    height: 30,
+                                                    width: 100,
                                                     decoration: BoxDecoration(
                                                       color: colorConst.mainColor,
                                                       borderRadius: BorderRadius.circular(scrWidth*0.03),
@@ -239,7 +250,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
 
 
 
-                                    child: Icon(CupertinoIcons.delete)),
+                                    child: Icon(CupertinoIcons.delete,color: colorConst.red,)),
                               );
                             }),
                       );
@@ -257,8 +268,8 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
               children: [
                 loading
                     ? SizedBox(
-                    height: scrHeight * 0.2,
-                    width: scrWidth * 0.2,
+                    height: 150,
+                    width: 150,
                     child: Lottie.asset(gifs.loadingGif))
                     : InkWell(
                         onTap: () {
@@ -266,15 +277,16 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         },
                         child: meatImage != null
                             ? Container(
-                                height: scrHeight*0.1,
-                                width: scrWidth*0.1,
+                                height: 150,
+                                width: 150,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(image: NetworkImage(meatImage!))
+                                  image: DecorationImage(image: NetworkImage(meatImage!),fit: BoxFit.fill)
                                 ),
                               )
-                            : SizedBox(
-                          height: scrHeight*0.2,
-                          width: scrWidth*0.1,
+                            : Container(
+                          height: 150,
+                          width: 150,
+                          color: colorConst.canvasColor.withOpacity(0.2),
                           child: Icon(Icons.add_a_photo_outlined),
                         )
                 ),
@@ -303,7 +315,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                             borderRadius:
                             BorderRadius.circular(scrHeight * 0.03),
                             border:
-                            Border.all(color: colorConst.mainColor)),
+                            Border.all(color: colorConst.canvasColor)),
                         child: Center(
                           child: DropdownButton(
                             padding: EdgeInsets.all(scrHeight * 0.01),
@@ -331,7 +343,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                       );
                     },
                     error: (error, stackTrace) => Text(error.toString()),
-                    loading: () => Lottie.asset(gifs.loadingGif),),
+                    loading: () => SizedBox(height:30,child: Lottie.asset(gifs.loadingGif)),),
                 SizedBox(
                   height: scrHeight * 0.06,
                   width: scrWidth * 0.3,
@@ -340,25 +352,26 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
+                    cursorColor: colorConst.canvasColor,
                     decoration: InputDecoration(
-                        labelText: "Enter Name",
+                        contentPadding: EdgeInsets.all(10),
+                        labelText: "Meat Name",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
                         ),
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.red),
+                          borderSide: BorderSide(color: colorConst.canvasColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor)),
+                                BorderSide(color: colorConst.canvasColor)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                                BorderSide(color: colorConst.canvasColor))),
                   ),
                 ),
                 SizedBox(
@@ -369,9 +382,10 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
+                    cursorColor: colorConst.canvasColor,
                     decoration: InputDecoration(
-                        labelText: "Enter the ingredient",
+                      contentPadding: EdgeInsets.all(10),
+                        labelText: "Ingredients",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
                         ),
@@ -382,12 +396,12 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor)),
+                                BorderSide(color: colorConst.canvasColor)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                                BorderSide(color: colorConst.canvasColor))),
                   ),
                 ),
                 SizedBox(
@@ -397,25 +411,55 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     controller: rateController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
+                    cursorColor: colorConst.canvasColor,
                     decoration: InputDecoration(
-                        labelText: "Enter the Rate",
+                        contentPadding: EdgeInsets.all(10),
+                        labelText: "Rate",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
                         ),
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.red),
+                          borderSide: BorderSide(color: colorConst.canvasColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor)),
+                                BorderSide(color: colorConst.canvasColor)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                                BorderSide(color: colorConst.canvasColor))),
+                  ),
+                ),
+                SizedBox(
+                  height: scrHeight * 0.06,
+                  width: scrWidth * 0.3,
+                  child: TextFormField(
+                    controller: quantityController,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    cursorColor: colorConst.canvasColor,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10),
+                        labelText: "Total Quantity",
+                        labelStyle: TextStyle(
+                          color: colorConst.secondaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorConst.canvasColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(scrWidth * 0.03),
+                            borderSide:
+                                BorderSide(color: colorConst.canvasColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(scrWidth * 0.03),
+                            borderSide:
+                                BorderSide(color: colorConst.canvasColor))),
                   ),
                 ),
                 SizedBox(
@@ -425,9 +469,10 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     controller: descriptionController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
+                    cursorColor: colorConst.canvasColor,
                     decoration: InputDecoration(
-                        labelText: "Enter the Descriptions",
+                        contentPadding: EdgeInsets.all(10),
+                        labelText: "Descriptions",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
                         ),
@@ -438,12 +483,12 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor)),
+                                BorderSide(color: colorConst.canvasColor)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(scrWidth * 0.03),
                             borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                                BorderSide(color: colorConst.canvasColor))),
                   ),
                 ),
                 InkWell(
@@ -454,6 +499,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     nameController.text.isNotEmpty &&
                     ingredientsController.text.isNotEmpty &&
                     rateController.text.isNotEmpty &&
+                    quantityController.text.isNotEmpty &&
                     descriptionController.text.isNotEmpty
                     ){
                       addMeats();
@@ -478,23 +524,29 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                       // });
                     }else{
                       meatImage == null?
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select an Image!"))):
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select an Image!"))):
                       chooseCategory == null?
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select a Category!"))):
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Select a Category!"))):
                       nameController.text.isEmpty?
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter a Name!"))):
                       ingredientsController.text.isEmpty?
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter Ingredients!"))):
                       rateController.text.isEmpty?
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter the Rate!"))):
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter the description!")));
+                      quantityController.text.isEmpty?
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter the Quantity!"))):
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter the Description!")));
                     }
                   },
                   child: Container(
                     height: scrHeight * 0.07,
                     width: scrHeight * 0.2,
                     decoration: BoxDecoration(
-                        color: colorConst.mainColor,
+                        //color: colorConst.mainColor,
+                      gradient: LinearGradient(colors: [
+                        colorConst.thirdColor,
+                        colorConst.canvasColor
+                      ]),
                         borderRadius: BorderRadius.circular(scrHeight * 0.02)),
                     child: Center(
                       child: Text(

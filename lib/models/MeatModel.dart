@@ -1,7 +1,6 @@
 class MeatModel{
   String image, name, ingredients, description, id, category, type;
-  int quantity;
-  double rate;
+  double rate,quantity;
   MeatModel({
     required this.image,
     required this.name,
@@ -42,8 +41,7 @@ factory MeatModel.fromMap(Map <String, dynamic> map){
 }
 MeatModel copyWith({
     String? image, category, type, name, ingredients, description, id,
-    int? quantity,
-    double? rate
+    double? rate,quantity
 }){
     return MeatModel(
       image: image ?? this.image,

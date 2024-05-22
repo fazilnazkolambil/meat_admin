@@ -22,20 +22,8 @@ class AddMeatTypes extends ConsumerStatefulWidget {
 
 class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
 
-
-
-
-
-
-
-
-
-
   TextEditingController meat_controller = TextEditingController();
   int num = 1;
-
-
-
 
   dataSubmit(){
     MeatTypeModel categoryModel = MeatTypeModel(type: meat_controller.text, mainImage: mainImage.toString());
@@ -95,23 +83,35 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: colorConst.primaryColor,
-        title: Text("Meats"),
+        title: Text("Add Meat Types"),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+            child: Icon(Icons.arrow_back)),
       ),
       body: Column(
         children: [
-          ListTile(
-            leading: InkWell(
-              onTap: () {
-                selectfile("name");
-              },
-              child: mainImage != null ?
-              CircleAvatar(
-                backgroundImage: NetworkImage(mainImage!),
-              ):
-                  CircleAvatar(
-                    child: Icon(Icons.add_a_photo),
-                  )
+          SizedBox(
+            height: 150,
+            width: 150,
+            child:loading? Lottie.asset(gifs.loadingGif):
+            GestureDetector(
+                onTap: () {
+                  selectfile("name");
+                },
+                child: mainImage != null ?
+                CircleAvatar(
+                  backgroundImage: NetworkImage(mainImage!),
+                  radius: 70,
+                ):
+                CircleAvatar(
+                  child: Icon(Icons.add_a_photo),
+                  radius: 70,
+                )
             ),
+          ),
+          ListTile(
             title: TextFormField(
               controller: meat_controller,
               onFieldSubmitted: (value) {
@@ -151,8 +151,16 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          leading:Text("${index+1}."),
-                          title: Text(data[index].type),
+                          leading:Text("${index+1}.",style: TextStyle(
+                            color: colorConst.canvasColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15
+                          ),),
+                          title: Text(data[index].type,style: TextStyle(
+                              color: colorConst.canvasColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15
+                          ),),
                           trailing: InkWell(
                               onTap: () {
                                 showDialog(
@@ -174,8 +182,8 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
                                               Navigator.pop(context);
                                             },
                                             child: Container(
-                                              height: scrHeight*0.04,
-                                              width: scrWidth*0.1,
+                                              height: 30,
+                                              width: 100,
                                               decoration: BoxDecoration(
                                                 color: Colors.blueGrey,
                                                 borderRadius: BorderRadius.circular(scrWidth*0.03),
@@ -192,8 +200,8 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
                                               Navigator.pop(context);
                                             },
                                             child: Container(
-                                              height: scrHeight*0.04,
-                                              width: scrWidth*0.1,
+                                              height: 30,
+                                              width: 100,
                                               decoration: BoxDecoration(
                                                 color: colorConst.mainColor,
                                                 borderRadius: BorderRadius.circular(scrWidth*0.03),
@@ -211,7 +219,7 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
                                 );
                               },
                   
-                              child: Icon(CupertinoIcons.delete)),
+                              child: Icon(CupertinoIcons.delete,color: colorConst.red,)),
                         );
                       }),
                 );

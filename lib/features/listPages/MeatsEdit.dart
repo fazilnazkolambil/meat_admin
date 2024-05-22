@@ -11,6 +11,7 @@ import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import '../../main.dart';
 import '../../models/MeatModel.dart';
 import '../add_meat_types/screen/meatTypes.dart';
+import 'meatList.dart';
 
 class MeatsEdit extends StatefulWidget {
   final String type;
@@ -32,7 +33,8 @@ class MeatsEdit extends StatefulWidget {
     required this.ingredients,
     required this.description,
     required this.quantity,
-    required this.type, required this.category,
+    required this.type,
+    required this.category,
   });
 
   @override
@@ -40,7 +42,7 @@ class MeatsEdit extends StatefulWidget {
 }
 
 class _MeatsEditState extends State<MeatsEdit> {
-  String? chooseCategory;
+  //String? chooseCategory;
 
 
   TextEditingController nameController = TextEditingController();
@@ -48,6 +50,7 @@ class _MeatsEditState extends State<MeatsEdit> {
   TextEditingController rateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
 
   PlatformFile? pickFile;
   Future selectfile(String name) async {
@@ -77,26 +80,6 @@ class _MeatsEditState extends State<MeatsEdit> {
       loading = false;
     });
   }
-
-  List? meatMap = [];
-  getMeatData() async {
-    var meats = await FirebaseFirestore.instance
-        .collection("meatTypes")
-        .where("type", isEqualTo: widget.type)
-        .get();
-    meatMap = meats.docs;
-  }
-
-  addCategory() async {
-    FirebaseFirestore.instance
-        .collection("meatTypes")
-        .doc(widget.type)
-        .collection(widget.type)
-        .doc(categoryController.text)
-        .set({"category": categoryController.text}).then((value) {
-      categoryController.clear();
-    });
-  }
   MeatModel? updateMeat;
   var users;
   editMeats() async {
@@ -109,7 +92,6 @@ class _MeatsEditState extends State<MeatsEdit> {
           if(favourites[j]["id"] == widget.id){
             //favourites = favourites.map((value) => updateMeat!.toMap());
             favourites[j] = updateMeat!.toMap();
-            print(favourites);
             FirebaseFirestore.instance.collection("users").doc(users[i]["id"]).update({
                 "favourites" : favourites
             });
@@ -120,13 +102,11 @@ class _MeatsEditState extends State<MeatsEdit> {
   }
   @override
   void initState() {
-    getMeatData();
-    chooseCategory = widget.category;
     nameController.text = widget.name;
     ingredientsController.text = widget.ingredients;
     rateController.text = widget.rate;
     descriptionController.text = widget.description;
-    meatImage = widget.Image;
+    quantityController.text = widget.quantity;
     super.initState();
   }
 
@@ -134,318 +114,464 @@ class _MeatsEditState extends State<MeatsEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: InkWell(
+        leading: InkWell(
           onTap: () {
-            print(meatMap!);
+            Navigator.pop(context);
           },
-          child: Text("${widget.type} Adding Page",
-              style: TextStyle(color: colorConst.primaryColor)),
+          child: Icon(CupertinoIcons.arrow_left,color: colorConst.primaryColor,),
         ),
-        backgroundColor: colorConst.mainColor,
+        title: Text("Edit ${widget.name}",
+            style: TextStyle(color: colorConst.primaryColor)),
+        backgroundColor: colorConst.canvasColor,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-          child: Row(
-        children: [
-          // SizedBox(
-          //   height: scrHeight * 0.9,
-          //   width: scrWidth * 0.5,
-          //   child: Column(
-          //     children: [
-          //       ListTile(
-          //         title: TextFormField(
-          //           controller: categoryController,
-          //           onFieldSubmitted: (value) {
-          //             addCategory();
-          //           },
-          //           decoration: InputDecoration(
-          //               border: OutlineInputBorder(
-          //                   borderRadius: BorderRadius.circular(50)),
-          //               label: Text("${widget.type} Categories"),
-          //               hintText: "Enter the Category"),
-          //         ),
-          //         trailing: CircleAvatar(
-          //           child: InkWell(
-          //               onTap: () {
-          //                 if (categoryController.text != "") {
-          //                   addCategory();
-          //                 } else {
-          //                   ScaffoldMessenger.of(context).showSnackBar(
-          //                       SnackBar(content: Text("Please Enter Data!")));
-          //                 }
-          //               },
-          //               child: Icon(Icons.add)),
-          //         ),
-          //       ),
-          //       Expanded(
-          //         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          //             stream: FirebaseFirestore.instance
-          //                 .collection("meatTypes")
-          //                 .doc(widget.type)
-          //                 .collection(widget.type)
-          //                 .snapshots(),
-          //             builder: (context, snapshot) {
-          //               if (!snapshot.hasData) {
-          //                 return Center(child: Lottie.asset(gifs.loadingGif));
-          //               }
-          //               var data = snapshot.data!.docs;
-          //               return data.length == 0
-          //                   ? Center(child: Text("No Data!"))
-          //                   : ListView.builder(
-          //                   itemCount: data.length,
-          //                   itemBuilder: (context, index) {
-          //                     return ListTile(
-          //                       leading: Text("${index + 1}."),
-          //                       title: Text(data[index]["category"]),
-          //                       trailing: InkWell(
-          //                           onTap: () {
-          //                             FirebaseFirestore.instance
-          //                                 .collection("meatTypes")
-          //                                 .doc(widget.type)
-          //                                 .collection(widget.type)
-          //                                 .doc(data[index]["category"])
-          //                                 .delete();
-          //                           },
-          //                           child: Icon(CupertinoIcons.delete)),
-          //                     );
-          //                   });
-          //             }),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          SizedBox(
-            height: scrHeight * 0.9,
-            width: scrWidth * 0.5,
+          child: Padding(
+            padding: EdgeInsets.all(10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                loading
-                    ? SizedBox(
-                        height: scrHeight * 0.2,
-                        width: scrWidth * 0.2,
-                        child: Lottie.asset(gifs.loadingGif))
-                    : InkWell(
-                        onTap: () {
-                          selectfile("name");
-                        },
-                        child: meatImage != null
-                            ? CircleAvatar(
-                                radius: scrHeight * 0.1,
-                                backgroundImage: NetworkImage(meatImage!),
-                              )
-                            : CircleAvatar(
-                                radius: scrHeight * 0.1,
-                                child: Icon(Icons.add_a_photo_outlined),
-                              )),
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("meatTypes")
-                        .doc(widget.type)
-                        .collection(widget.type)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData)
-                        return SizedBox(
-                            height: scrHeight * 0.1,
-                            width: scrWidth * 0.1,
-                            child: Lottie.asset(gifs.loadingGif));
-                      var data = snapshot.data!.docs;
-                      return data.isEmpty
-                          ? Text("No Categories Found!")
-                          : Container(
-                              height: scrHeight * 0.06,
-                              width: scrWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(scrHeight * 0.03),
-                                  border:
-                                      Border.all(color: colorConst.mainColor)),
-                              child: Center(
-                                child: DropdownButton(
-                                  padding: EdgeInsets.all(scrHeight * 0.01),
-                                  isExpanded: true,
-                                  underline: SizedBox(),
-                                  hint: Text(
-                                    "Select Category",
-                                    style: TextStyle(
-                                        color: colorConst.secondaryColor),
-                                  ),
-                                  style: TextStyle(
-                                      color: colorConst.secondaryColor),
-                                  value: widget.category,
-                                  items: List.generate(data.length,
-                                          (index) => data[index]["category"])
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    chooseCategory = value.toString();
-                                    setState(() {});
-                                  },
-                                ),
+            // SizedBox(
+            //   height: scrHeight * 0.9,
+            //   width: scrWidth * 0.5,
+            //   child: Column(
+            //     children: [
+            //       ListTile(
+            //         title: TextFormField(
+            //           controller: categoryController,
+            //           onFieldSubmitted: (value) {
+            //             addCategory();
+            //           },
+            //           decoration: InputDecoration(
+            //               border: OutlineInputBorder(
+            //                   borderRadius: BorderRadius.circular(50)),
+            //               label: Text("${widget.type} Categories"),
+            //               hintText: "Enter the Category"),
+            //         ),
+            //         trailing: CircleAvatar(
+            //           child: InkWell(
+            //               onTap: () {
+            //                 if (categoryController.text != "") {
+            //                   addCategory();
+            //                 } else {
+            //                   ScaffoldMessenger.of(context).showSnackBar(
+            //                       SnackBar(content: Text("Please Enter Data!")));
+            //                 }
+            //               },
+            //               child: Icon(Icons.add)),
+            //         ),
+            //       ),
+            //       Expanded(
+            //         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            //             stream: FirebaseFirestore.instance
+            //                 .collection("meatTypes")
+            //                 .doc(widget.type)
+            //                 .collection(widget.type)
+            //                 .snapshots(),
+            //             builder: (context, snapshot) {
+            //               if (!snapshot.hasData) {
+            //                 return Center(child: Lottie.asset(gifs.loadingGif));
+            //               }
+            //               var data = snapshot.data!.docs;
+            //               return data.isEmpty
+            //                   ? Center(child: Text("No Data!"))
+            //                   : ListView.builder(
+            //                   itemCount: data.length,
+            //                   itemBuilder: (context, index) {
+            //                     return ListTile(
+            //                       leading: Text("${index + 1}.",style: TextStyle(
+            //                           color: colorConst.canvasColor,
+            //                           fontWeight: FontWeight.w500,
+            //                           fontSize: 15
+            //                       ),),
+            //                       title: Text(data[index]["category"],style: TextStyle(
+            //                           color: colorConst.canvasColor,
+            //                           fontWeight: FontWeight.w500,
+            //                           fontSize: 15
+            //                       ),),
+            //                       trailing: InkWell(
+            //                           onTap: () {
+            //                             showDialog(
+            //                               barrierDismissible: false,
+            //                               context: context,
+            //                               builder: (context) {
+            //                                 return AlertDialog(
+            //                                   title: Text("Are you sure you want to delete this Category?",
+            //                                     textAlign: TextAlign.center,
+            //                                     style: TextStyle(
+            //                                         fontSize: scrHeight*0.02,
+            //                                         fontWeight: FontWeight.w600
+            //                                     ),),
+            //                                   content: Row(
+            //                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //                                     children: [
+            //                                       InkWell(
+            //                                         onTap: () {
+            //                                           Navigator.pop(context);
+            //                                         },
+            //                                         child: Container(
+            //                                           height: 30,
+            //                                           width: 120,
+            //                                           decoration: BoxDecoration(
+            //                                             color: Colors.blueGrey,
+            //                                             borderRadius: BorderRadius.circular(scrWidth*0.03),
+            //                                           ),
+            //                                           child: Center(child: Text("No",
+            //                                             style: TextStyle(
+            //                                                 color: Colors.white
+            //                                             ),)),
+            //                                         ),
+            //                                       ),
+            //                                       InkWell(
+            //                                         onTap: () async {
+            //                                           Navigator.pop(context);
+            //                                           await FirebaseFirestore.instance
+            //                                               .collection("meatTypes").doc(widget.type)
+            //                                               .collection(widget.type).doc(data[index]['category']).delete();
+            //                                         },
+            //                                         child: Container(
+            //                                           height: 30,
+            //                                           width: 120,
+            //                                           decoration: BoxDecoration(
+            //                                             color: colorConst.mainColor,
+            //                                             borderRadius: BorderRadius.circular(scrWidth*0.03),
+            //                                           ),
+            //                                           child: Center(child: Text("Yes",
+            //                                             style: TextStyle(
+            //                                                 color: Colors.white
+            //                                             ),)),
+            //                                         ),
+            //                                       ),
+            //                                     ],
+            //                                   ),
+            //                                 );
+            //                               },
+            //                             );
+            //                           },
+            //
+            //
+            //
+            //                           child: Icon(CupertinoIcons.delete,color: colorConst.red,)),
+            //                     );
+            //                   });
+            //             }),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            SizedBox(
+              height: scrHeight * 0.9,
+              //width: scrWidth * 0.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  loading
+                      ? SizedBox(
+                          height: scrHeight * 0.2,
+                          width: scrWidth * 0.2,
+                          child: Lottie.asset(gifs.loadingGif))
+                      : InkWell(
+                          onTap: () {
+                            selectfile("name");
+                          },
+                          child: meatImage != null
+                              ? CircleAvatar(
+                                  radius: scrHeight * 0.1,
+                                  backgroundImage: NetworkImage(meatImage!),
+                                )
+                              : CircleAvatar(
+                                  radius: scrHeight * 0.1,
+                                  child: Center(child: Text("Change Image",style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: colorConst.canvasColor
+                                  ),)),
+                                  backgroundImage:NetworkImage(widget.Image),
+                                    onBackgroundImageError: (exception, stackTrace) => Text(stackTrace.toString()),
+                                )),
+                  // StreamBuilder(
+                  //     stream: FirebaseFirestore.instance
+                  //         .collection("meatTypes")
+                  //         .doc(widget.type)
+                  //         .collection(widget.type)
+                  //         .snapshots(),
+                  //     builder: (context, snapshot) {
+                  //       if (!snapshot.hasData)
+                  //         return SizedBox(
+                  //             height: scrHeight * 0.1,
+                  //             width: scrWidth * 0.1,
+                  //             child: Lottie.asset(gifs.loadingGif));
+                  //       var data = snapshot.data!.docs;
+                  //       return data.isEmpty
+                  //           ? Text("No Categories Found!")
+                  //           : Container(
+                  //               height: scrHeight * 0.06,
+                  //               width: scrWidth * 0.3,
+                  //               decoration: BoxDecoration(
+                  //                   borderRadius: BorderRadius.circular(scrHeight * 0.03),
+                  //                   border: Border.all(color: colorConst.mainColor)),
+                  //               child: Center(
+                  //                 child: DropdownButton(
+                  //                   padding: EdgeInsets.all(scrHeight * 0.01),
+                  //                   isExpanded: true,
+                  //                   underline: SizedBox(),
+                  //                   hint: Text(
+                  //                     "Select Category",
+                  //                     style: TextStyle(
+                  //                         color: colorConst.secondaryColor),
+                  //                   ),
+                  //                   style: TextStyle(
+                  //                       color: colorConst.secondaryColor),
+                  //                   value: widget.category,
+                  //                   items: List.generate(data.length,
+                  //                           (index) => data[index]["category"])
+                  //                       .map((e) {
+                  //                     return DropdownMenuItem(
+                  //                         value: e, child: Text(e));
+                  //                   }).toList(),
+                  //                   onChanged: (value) {
+                  //                     chooseCategory = value.toString();
+                  //                     setState(() {});
+                  //                   },
+                  //                 ),
+                  //               ),
+                  //             );
+                  //     }),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Change Name :",style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: colorConst.canvasColor
+                      )),
+                      SizedBox(
+                        width: scrWidth*0.6,
+                        child: TextFormField(
+                          controller: nameController,
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.done,
+                          cursorColor: colorConst.canvasColor,
+                          decoration: InputDecoration(
+                              labelText: "Enter Name",
+                              labelStyle: TextStyle(
+                                color: colorConst.secondaryColor,
                               ),
-                            );
-                    }),
-                SizedBox(
-                  height: scrHeight * 0.06,
-                  width: scrWidth * 0.3,
-                  child: TextFormField(
-                    controller: nameController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
-                    decoration: InputDecoration(
-                        labelText: "Enter Name",
-                        labelStyle: TextStyle(
-                          color: colorConst.secondaryColor,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorConst.red),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor))),
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: scrHeight * 0.06,
-                  width: scrWidth * 0.3,
-                  child: TextFormField(
-                    controller: ingredientsController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
-                    decoration: InputDecoration(
-                        labelText: "Enter the ingredient",
-                        labelStyle: TextStyle(
-                          color: colorConst.secondaryColor,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: scrWidth*0.3,
+                        child: Text("Change Ingredience :",style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: colorConst.canvasColor
+                        )),
+                      ),
+                      SizedBox(
+                        width: scrWidth*0.6,
+                        child: TextFormField(
+                          controller: ingredientsController,
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.done,
+                          cursorColor: colorConst.canvasColor,
+                          decoration: InputDecoration(
+                              labelText: "Enter the ingredient",
+                              labelStyle: TextStyle(
+                                color: colorConst.secondaryColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorConst.red),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor))),
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: scrHeight * 0.06,
-                  width: scrWidth * 0.3,
-                  child: TextFormField(
-                    controller: rateController,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
-                    decoration: InputDecoration(
-                        labelText: "Enter the Rate",
-                        labelStyle: TextStyle(
-                          color: colorConst.secondaryColor,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Change Rate :",style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: colorConst.canvasColor
+                      )),
+                      SizedBox(
+                        width: scrWidth*0.6,
+                        child: TextFormField(
+                          controller: rateController,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.done,
+                          cursorColor: colorConst.canvasColor,
+                          decoration: InputDecoration(
+                              labelText: "Enter the Rate",
+                              labelStyle: TextStyle(
+                                color: colorConst.secondaryColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorConst.red),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor))),
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  // height: scrHeight * 0.06,
-                  width: scrWidth * 0.3,
-                  child: TextFormField(
-                    controller: descriptionController,
-                    maxLines: 2,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.mainColor,
-                    decoration: InputDecoration(
-                        labelText: "Enter the Descriptions",
-                        labelStyle: TextStyle(
-                          color: colorConst.secondaryColor,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Change Quantity :",style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: colorConst.canvasColor
+                      )),
+                      SizedBox(
+                        width: scrWidth*0.6,
+                        child: TextFormField(
+                          controller: quantityController,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.done,
+                          cursorColor: colorConst.canvasColor,
+                          decoration: InputDecoration(
+                              labelText: "Enter the Quantity",
+                              labelStyle: TextStyle(
+                                color: colorConst.secondaryColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorConst.red),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor))),
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                                BorderSide(color: colorConst.mainColor))),
+                      ),
+                    ],
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    updateMeat = MeatModel(
-                        image: meatImage.toString(),
-                        name: nameController.text,
-                        ingredients: ingredientsController.text,
-                        rate:double.parse(rateController.text),
-                        description: descriptionController.text,
-                        id: widget.id,
-                        quantity: 1,
-                        category: categoryController.text,
-                        type: widget.type
-                    );
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: scrWidth*0.3,
+                        child: Text("Change Description :",style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: colorConst.canvasColor
+                        )),
+                      ),
+                      SizedBox(
+                        width: scrWidth*0.6,
+                        child: TextFormField(
+                          controller: descriptionController,
+                          maxLines: 2,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.done,
+                          cursorColor: colorConst.canvasColor,
+                          decoration: InputDecoration(
+                              labelText: "Enter the Descriptions",
+                              labelStyle: TextStyle(
+                                color: colorConst.secondaryColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorConst.red),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(scrWidth * 0.03),
+                                  borderSide:
+                                      BorderSide(color: colorConst.canvasColor))),
+                        ),
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                    onTap: () {
+                      updateMeat = MeatModel(
+                          image: meatImage == null?widget.Image:meatImage.toString(),
+                          name: nameController.text,
+                          ingredients: ingredientsController.text,
+                          rate:double.parse(rateController.text),
+                          description: descriptionController.text,
+                          id: widget.id,
+                          quantity: double.parse(quantityController.text),
+                          category: categoryController.text,
+                          type: widget.type
+                      );
 
-                    FirebaseFirestore.instance
-                        .collection("meatTypes")
-                        .doc(widget.type)
-                        .collection(widget.type)
-                        .doc(chooseCategory)
-                        .collection(widget.type).doc(widget.id).update(updateMeat!.toMap());
-                    editMeats();
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatTypeList(type: widget.type,),), (route) => false);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Updated!")));
-                  },
-                  child: Container(
-                    height: scrHeight * 0.07,
-                    width: scrHeight * 0.2,
-                    decoration: BoxDecoration(
-                        color: colorConst.mainColor,
-                        borderRadius: BorderRadius.circular(scrHeight * 0.02)),
-                    child: Center(
-                      child: Text(
-                        "Update",
-                        style: TextStyle(color: colorConst.primaryColor),
+                      FirebaseFirestore.instance
+                          .collection("meatTypes")
+                          .doc(widget.type)
+                          .collection(widget.type)
+                          .doc(widget.category)
+                          .collection(widget.type).doc(widget.id).update(updateMeat!.toMap());
+                      editMeats();
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatList(type: widget.type,),), (route) => false);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Updated!")));
+                    },
+                    child: Container(
+                      height: scrHeight * 0.07,
+                      width: scrHeight * 0.2,
+                      decoration: BoxDecoration(
+                        //color: colorConst.mainColor,
+                          gradient: LinearGradient(colors: [
+                            colorConst.thirdColor,
+                            colorConst.canvasColor
+                          ]),
+                          borderRadius: BorderRadius.circular(scrHeight * 0.02)),
+                      child: Center(
+                        child: Text(
+                          "Update",
+                          style: TextStyle(color: colorConst.primaryColor),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          )
-        ],
-      )),
+                ],
+              ),
+            )
+                    ],
+                  ),
+          )),
     );
   }
 }

@@ -34,7 +34,6 @@ class _homePageState extends State<homePage> {
             Image(image: AssetImage(imageConst.logo)),
             InkWell(
               onTap: (){
-
                 Navigator.push(context, MaterialPageRoute(builder: (context) => UsersPage(),));
               },
               child: Text("Users",style: TextStyle(
