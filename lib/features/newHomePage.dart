@@ -317,7 +317,8 @@ class _ScreensExample extends StatelessWidget {
                                       },
                                       child: Container(
                                         height: scrHeight * 0.04,
-                                        width: scrHeight * 0.13,
+                                        //width: scrHeight * 0.13,
+                                        padding: EdgeInsets.only(left: 10, right: 10),
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius
                                                 .circular(scrHeight * 0.03),
