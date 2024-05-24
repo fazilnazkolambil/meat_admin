@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:meat_admin/features/addingPages/AddMeats.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
+import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
 import 'package:meat_admin/features/newHomePage.dart';
 import 'package:meat_admin/firebase_options.dart';
 import 'package:meat_admin/core/homePage/Screen/homePage.dart';
@@ -33,12 +34,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     scrWidth = MediaQuery.of(context).size.width;
     scrHeight = MediaQuery.of(context).size.height;
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme:GoogleFonts.manropeTextTheme(),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus!.unfocus();
+      },
+      child: MaterialApp(
+        theme: ThemeData(
+          textTheme:GoogleFonts.manropeTextTheme(),
+        ),
+        debugShowCheckedModeBanner: false,
+        home:NewHome(),
       ),
-      debugShowCheckedModeBanner: false,
-      home:NewHome(),
     );
   }
 }

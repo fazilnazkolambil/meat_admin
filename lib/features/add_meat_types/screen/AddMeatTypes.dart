@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
@@ -78,8 +81,40 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
       loading = false;
     });
   }
+
+
+  var phonefile;
+  String phoneImage = '';
+  pickFileFromPhone(ImageSource) async {
+    final imgFile= await ImagePicker.platform.getImageFromSource(source: ImageSource);
+    phonefile=File(imgFile!.path);
+    if(mounted){
+      setState(() {
+        phonefile=File(imgFile.path);
+      });
+    }
+    uploadImage(phonefile);
+  }
+  uploadImage(File phonefile) async {
+    loading = true;
+    setState(() {
+
+    });
+    var uploadTask = await FirebaseStorage.instance
+        .ref("userImage")
+        .child(DateTime.now().toString())
+        .putFile(phonefile,SettableMetadata(
+        contentType: "image/jpeg"));
+    var getImage = await uploadTask.ref.getDownloadURL();
+    phoneImage = getImage;
+    loading = false;
+    setState(() {
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: colorConst.primaryColor,
@@ -92,7 +127,27 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
       ),
       body: Column(
         children: [
-          SizedBox(
+          isSmallScreen?
+        SizedBox(
+          height: 150,
+          width: 150,
+          child:loading? Lottie.asset(gifs.loadingGif):
+          GestureDetector(
+              onTap: () {
+                pickFileFromPhone(ImageSource.gallery);
+              },
+              child: phoneImage.isNotEmpty ?
+              CircleAvatar(
+                backgroundImage: NetworkImage(phoneImage),
+                radius: 70,
+              ):
+              CircleAvatar(
+                child: Icon(Icons.add_a_photo),
+                radius: 70,
+              )
+          ),
+        )
+          :SizedBox(
             height: 150,
             width: 150,
             child:loading? Lottie.asset(gifs.loadingGif):

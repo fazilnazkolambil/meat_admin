@@ -112,6 +112,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
     super.initState();
   }
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -142,7 +143,9 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(50)),
-                        label: Text("${widget.type} Categories"),
+                        label: Text("Add new Category",style: TextStyle(
+                          fontSize: isSmallScreen?10:15
+                        ),),
                         hintText: "Enter the Category"),
                   ),
                   trailing: CircleAvatar(
@@ -181,12 +184,12 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                                 leading: Text("${index + 1}.",style: TextStyle(
                                   color: colorConst.canvasColor,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 15
+                                  fontSize: isSmallScreen?12:15
                                 ),),
                                 title: Text(data[index].category,style: TextStyle(
                                     color: colorConst.canvasColor,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15
+                                    fontSize: isSmallScreen?12:15
                                 ),),
                                 trailing: InkWell(
                                     onTap: () {
@@ -324,7 +327,9 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                             hint: Text(
                               "Select Category",
                               style: TextStyle(
-                                  color: colorConst.secondaryColor),
+                                  color: colorConst.secondaryColor,
+                                fontSize: isSmallScreen?12:15
+                              ),
                             ),
                             style: TextStyle(
                                 color: colorConst.secondaryColor),
@@ -358,6 +363,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         labelText: "Meat Name",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
+                          fontSize: isSmallScreen?12:15
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: colorConst.canvasColor),
@@ -388,6 +394,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         labelText: "Ingredients",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
+                            fontSize: isSmallScreen?12:15
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: colorConst.red),
@@ -417,6 +424,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         labelText: "Rate",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
+                            fontSize: isSmallScreen?12:15
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: colorConst.canvasColor),
@@ -446,6 +454,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         labelText: "Total Quantity",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
+                            fontSize: isSmallScreen?12:15
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: colorConst.canvasColor),
@@ -475,6 +484,7 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                         labelText: "Descriptions",
                         labelStyle: TextStyle(
                           color: colorConst.secondaryColor,
+                            fontSize: isSmallScreen?12:15
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: colorConst.red),
