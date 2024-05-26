@@ -26,7 +26,7 @@ class imageConst{
   static const muttonbigpiece="assets/images/muttonbigpiece.jpg";
   static const muttonmediumpiece="assets/images/muttonmedium.jpg";
   static const muttoncurrycut="assets/images/muttoncurrycut.jpg";
-  static const muttonfrycut="assets/images/muttonfrycut.jpg";
+  //static const muttonfrycut="assets/images/muttonfrycut.jpg";
   static const padlock="assets/images/Padlock.png";
   static const protect="assets/images/Protect.png";
 }

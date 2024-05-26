@@ -90,7 +90,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                   ),
                   controller: search_controller,
                   decoration: InputDecoration(
-                    fillColor: colorConst.scaffoldBackgroundColor.withOpacity(0.3),
+                    fillColor: colorConst.primaryColor,
                     filled: true,
                     constraints: BoxConstraints(
                       maxHeight: scrHeight*0.07,
@@ -205,8 +205,37 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text(":${filteredUsers[index].address}"),
+                                  //title: Text(":${filteredUsers[index].address}"),
+                                  //title: Text("User Details"),
+                                  content: SizedBox(
+                                    height: 250,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Center(
+                                            child: CircleAvatar(
+                                              backgroundImage: NetworkImage(filteredUsers[index].image),
+                                              radius: 50,
+                                            ),
+                                          ),
+                                          Text("User Name: ${filteredUsers[index].name}"),
+                                          Text("User Phone Number: ${filteredUsers[index].number}"),
+                                          Text("User email: ${filteredUsers[index].email}"),
+                                          Text("User id: ${filteredUsers[index].id}"),
+                                          Container(
+                                            //height: 250,
+                                            color: colorConst.green,
+                                            child: Row(
+                                              children: [
+                                                Text("Address :"),
+                                                Text(filteredUsers[index].address.toString(),textAlign: TextAlign.center,),
 
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      )),
                                 );
                               },
                             );
@@ -220,7 +249,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                               color: colorConst.actionColor,
                             ),
                             child: Center(
-                              child: Text("Address",
+                              child: Text("User Info",
                                 style: TextStyle(
                                     fontSize:scrHeight*0.02 ,
                                     color: colorConst.primaryColor
@@ -323,7 +352,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                                 borderRadius: BorderRadius.circular(scrHeight*0.03),
                                 color: colorConst.red,
                               ),
-                              child: Center(child: Text(isSmallScreen?"Delete":"Delete User",style: TextStyle(
+                              child: Center(child: Text(isSmallScreen?"Delete":"Delete",style: TextStyle(
                                 //fontSize:scrHeight*0.02 ,
                                   color: colorConst.primaryColor
                               ))),
