@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,8 @@ class OrderStatusList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.size,
         physics: BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
@@ -51,10 +54,10 @@ class OrderStatusList extends StatelessWidget {
               mainAxisAlignment:
               MainAxisAlignment.spaceEvenly,
               children: [
-                CircleAvatar(
-                  radius: isSmallScreen ? 40 : 50,
-                  //backgroundImage:NetworkImage(data[index]["image"].isEmpty?"":data[index]["image"]),
-                ),
+                // CircleAvatar(
+                //   radius: isSmallScreen ? 40 : 50,
+                //   //backgroundImage:NetworkImage(data[index]["image"].isEmpty?"":data[index]["image"]),
+                // ),
                 Column(
                   crossAxisAlignment:
                   CrossAxisAlignment.start,
@@ -70,32 +73,287 @@ class OrderStatusList extends StatelessWidget {
                           color:
                           colorConst.primaryColor),
                     ),
-                    Text("Time: ",
-                        style: TextStyle(
-                            fontSize:
-                            isSmallScreen ? 12 : 17,
-                            fontWeight: FontWeight.w700,
-                            color: colorConst
-                                .primaryColor)),
-                    Text("Location:",
-                        style: TextStyle(
-                            fontSize:
-                            isSmallScreen ? 12 : 17,
-                            fontWeight: FontWeight.w700,
-                            color: colorConst
-                                .primaryColor)),
+                    InkWell(
+                      onTap: () {
+                        showCupertinoModalPopup(
+                            context: context,
+                            builder: (context){
+                          return AlertDialog(
+                            title: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment
+                                  .start,
+                              mainAxisAlignment:
+                              MainAxisAlignment
+                                  .spaceEvenly,
+                              children: [
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                              text: "Order Date: ",
+                                              style: TextStyle(
+                                                  color: colorConst.mainColor,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 20)),
+                                          TextSpan(
+                                              text: data.docs[index]['orderDate'],
+                                              style: const TextStyle(
+                                                  color: colorConst.canvasColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20))
+                                        ])),
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                              text: "Order Time: ",
+                                              style: TextStyle(
+                                                  color: colorConst.mainColor,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 20)),
+                                          TextSpan(
+                                              text: data.docs[index]['orderTime'],
+                                              style: const TextStyle(
+                                                  color: colorConst.canvasColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20))
+                                        ])),
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                              text: "Payment Status: ",
+                                              style: TextStyle(
+                                                  color: colorConst.mainColor,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 20)),
+                                          TextSpan(
+                                              text: data.docs[index]['paymentStatus'],
+                                              style: const TextStyle(
+                                                  color: colorConst.canvasColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20))
+                                        ])),
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                              text: "Total Price: ",
+                                              style: TextStyle(
+                                                  color: colorConst.mainColor,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 20)),
+                                          TextSpan(
+                                              text: data.docs[index]['totalPrice'].toString(),
+                                              style: const TextStyle(
+                                                  color: colorConst.canvasColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20))
+                                        ])),
+                              ],
+                            ),
+                          );
+                        }
+                        );
+                      },
+                      child: Container(
+                        height: scrHeight * 0.04,
+                        //width: scrHeight * 0.13,
+                        padding: EdgeInsets.only(
+                            left: 10, right: 10),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(
+                                scrHeight * 0.03),
+                            color:
+                            colorConst.mainColor),
+                        child: Center(
+                          child: Text(
+                            "Order details",
+                            style: TextStyle(
+                                fontSize: isSmallScreen
+                                    ? 12
+                                    : 15,
+                                color: colorConst
+                                    .primaryColor),
+                          ),
+
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        var itemsData = data.docs[index]['items'];
+                        showCupertinoModalPopup(
+                            context: context,
+                            builder: (context){
+                              return AlertDialog(
+                                content: SizedBox(
+                                  height: 500,
+                                  width: scrWidth*1,
+                                  child: ListView.separated(
+                                    itemCount: itemsData.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return SizedBox(
+                                        height: 250,
+                                        width: scrWidth*1,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment
+                                              .start,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .spaceEvenly,
+                                          children: [
+                                            RichText(
+                                                text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Item Id: ",
+                                                          style: TextStyle(
+                                                              color: colorConst.mainColor,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 20)),
+                                                      TextSpan(
+                                                          text: itemsData[index]['id'],
+                                                          style: const TextStyle(
+                                                              color: colorConst.canvasColor,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 20))
+                                                    ])),
+                                            RichText(
+                                                text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Item Ingrediants: ",
+                                                          style: TextStyle(
+                                                              color: colorConst.mainColor,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 20)),
+                                                      TextSpan(
+                                                          text: itemsData[index]['ingredients'],
+                                                          style: const TextStyle(
+                                                              color: colorConst.canvasColor,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 20))
+                                                    ])),
+                                            RichText(
+                                                text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Item Name: ",
+                                                          style: TextStyle(
+                                                              color: colorConst.mainColor,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 20)),
+                                                      TextSpan(
+                                                          text: itemsData[index]['name'],
+                                                          style: const TextStyle(
+                                                              color: colorConst.canvasColor,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 20))
+                                                    ])),
+                                            RichText(
+                                                text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Item Quantity: ",
+                                                          style: TextStyle(
+                                                              color: colorConst.mainColor,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 20)),
+                                                      TextSpan(
+                                                          text: itemsData[index]['quantity'].toString(),
+                                                          style: const TextStyle(
+                                                              color: colorConst.canvasColor,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 20))
+                                                    ])),
+                                            RichText(
+                                                text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Item Rate: ",
+                                                          style: TextStyle(
+                                                              color: colorConst.mainColor,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 20)),
+                                                      TextSpan(
+                                                          text: itemsData[index]['rate'].toString(),
+                                                          style: const TextStyle(
+                                                              color: colorConst.canvasColor,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 20))
+                                                    ])),
+                                            RichText(
+                                                text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                          text: "Item Notes: ",
+                                                          style: TextStyle(
+                                                              color: colorConst.mainColor,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 20)),
+                                                      TextSpan(
+                                                          text: itemsData[index]['notes'],
+                                                          style: const TextStyle(
+                                                              color: colorConst.canvasColor,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 20))
+                                                    ])),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    separatorBuilder: (BuildContext context, int index) {
+                                      return Divider();
+                                    },
+
+                                  ),
+                                )
+                              );
+                            }
+                        );
+                      },
+                      child: Container(
+                        height: scrHeight * 0.04,
+                        //width: scrHeight * 0.13,
+                        padding: EdgeInsets.only(
+                            left: 10, right: 10),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(
+                                scrHeight * 0.03),
+                            color:
+                            colorConst.mainColor),
+                        child: Center(
+                          child: Text(
+                            "Items",
+                            style: TextStyle(
+                                fontSize: isSmallScreen
+                                    ? 12
+                                    : 15,
+                                color: colorConst
+                                    .primaryColor),
+                          ),
+
+                        ),
+                      ),
+                    ),
                     InkWell(
                       onTap: () async {
+                        var address = data.docs[index]['deliveryAddress'];
                         //userId = data[index]["userId"];
-                        DocumentSnapshot<
-                            Map<String, dynamic>>
-                        users =
-                        await FirebaseFirestore
-                            .instance
-                            .collection('users')
-                            .doc(data.docs[index]
-                        ['userId'])
-                            .get();
+                        // DocumentSnapshot<
+                        //     Map<String, dynamic>>
+                        // users =
+                        // await FirebaseFirestore
+                        //     .instance
+                        //     .collection('')
+                        //     .doc(data.docs[index]
+                        // ['userId'])
+                        //     .get();
                         showCupertinoModalPopup(
                           context: context,
                           builder: (context) {
@@ -119,28 +377,11 @@ class OrderStatusList extends StatelessWidget {
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20)),
                                             TextSpan(
-                                                text: users.data()!['name'],
+                                                text: address['name'],
                                                 style: const TextStyle(
                                                     color: colorConst.canvasColor,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 20))
-                                          ])),
-                                  RichText(
-                                      text: TextSpan(
-                                          children: [
-                                           const TextSpan(
-                                                text: "Email: ",
-                                                style: TextStyle(
-                                                    color: colorConst.mainColor,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 20)),
-                                            TextSpan(
-                                                text: users.data()!['email'],
-                                                style:const TextStyle(
-                                                    color: colorConst.canvasColor,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 20
-                                                ))
                                           ])),
                                   RichText(
                                       text: TextSpan(
@@ -152,11 +393,13 @@ class OrderStatusList extends StatelessWidget {
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20)),
                                             TextSpan(
-                                                text: users.data()!['number'],
-                                                style: const TextStyle(
+                                                text: address['number'],
+                                                //users.data()!['email'],
+                                                style:const TextStyle(
                                                     color: colorConst.canvasColor,
                                                     fontWeight: FontWeight.w500,
-                                                    fontSize: 20))
+                                                    fontSize: 20
+                                                ))
                                           ])),
                                   RichText(
                                       text: TextSpan(
@@ -168,12 +411,68 @@ class OrderStatusList extends StatelessWidget {
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20)),
                                             TextSpan(
-                                                text: "${users.data()!['address']}",
-                                                style:const TextStyle(
+                                                text: "${address['buildingName']},"
+                                                    " ${address['street']},"
+                                                    "  ${address['town']}, ${address['pincode']},"
+                                                    ,
+                                                //users.data()!['number'],
+                                                style: const TextStyle(
                                                     color: colorConst.canvasColor,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 20))
                                           ])),
+                                  RichText(
+                                      text: TextSpan(
+                                          children: [
+                                            const TextSpan(
+                                                text: "Location: ",
+                                                style: TextStyle(
+                                                    color: colorConst.mainColor,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20)),
+                                            TextSpan(
+                                                text: address['location'],
+                                                //users.data()!['email'],
+                                                style:const TextStyle(
+                                                    color: colorConst.canvasColor,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 20
+                                                ))
+                                          ])),
+                                  RichText(
+                                      text: TextSpan(
+                                          children: [
+                                            const TextSpan(
+                                                text: "Delivery Instructions: ",
+                                                style: TextStyle(
+                                                    color: colorConst.mainColor,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20)),
+                                            TextSpan(
+                                                text: address['deliveryInstruction'],
+                                                //users.data()!['email'],
+                                                style:const TextStyle(
+                                                    color: colorConst.canvasColor,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 20
+                                                ))
+                                          ])),
+                                  // RichText(
+                                  //     text: TextSpan(
+                                  //         children: [
+                                  //          const TextSpan(
+                                  //               text: "Address: ",
+                                  //               style: TextStyle(
+                                  //                   color: colorConst.mainColor,
+                                  //                   fontWeight: FontWeight.w600,
+                                  //                   fontSize: 20)),
+                                  //           TextSpan(
+                                  //               text: "${users.data()!['address']}",
+                                  //               style:const TextStyle(
+                                  //                   color: colorConst.canvasColor,
+                                  //                   fontWeight: FontWeight.w500,
+                                  //                   fontSize: 20))
+                                  //         ])),
                                 ],
                               ),
                             );
@@ -274,7 +573,7 @@ class _OrderlistPageState extends ConsumerState<OrderlistPage> {
                       OrderStatusList(
                         data: data,
                         isSmallScreen: isSmallScreen,
-                        status: '',
+                        status: 'Ordered',
                       ),
                       OrderStatusList(
                         data: data,
