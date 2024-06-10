@@ -1,29 +1,42 @@
 import 'dart:js';
 
+import 'package:another_stepper/dto/stepper_data.dart';
+import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-
 import '../main.dart';
 
 
-class OrderStatusList extends StatelessWidget {
+class OrderStatusList extends ConsumerWidget {
   final QuerySnapshot<Map<String, dynamic>> data;
   final bool isSmallScreen;
   final String status;
 
-  const OrderStatusList({super.key,
+   OrderStatusList({super.key,
     required this.data,
     required this.isSmallScreen,
     required this.status,
   });
 
+   int selectindex = 0;
+   List a = [];
+   List b = [];
+   List c = [];
+
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final dropdownNotifier = ref.watch(dropdownProvider);
+    // final dropdownValue = dropdownNotifier.state.dropdownValue;
+    var listItems=[
+      "Packed","Out for delivery","delivered",
+    ];
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: data.size,
@@ -503,6 +516,130 @@ class OrderStatusList extends StatelessWidget {
                         ),
                       ),
                     ),
+                   Container(
+                       height: 90,
+                       width: 540,
+                     decoration: BoxDecoration(
+                         color: Colors.white,
+                         borderRadius: BorderRadius.circular(scrWidth * 0.02),
+                         border: Border.all(color: colorConst.mainColor)),
+                     child: ListView.builder(
+                       itemCount: 1,
+                       shrinkWrap: true,
+                       physics: NeverScrollableScrollPhysics(),
+                       itemBuilder: (BuildContext context, int index) {
+                         return  Container(
+                           height: scrHeight * 0.11,
+                           width: scrWidth * 0.5,
+                           decoration: BoxDecoration(
+                               borderRadius: BorderRadius.circular(scrWidth * 0.02),
+                               border: Border.all(color: colorConst.primaryColor)),
+                           child: Row(
+                             crossAxisAlignment: CrossAxisAlignment.center,
+                             mainAxisSize: MainAxisSize.min,
+                             children: [
+                               Container(
+                                 width: scrWidth * 0.11,
+                                 height: scrWidth * 0.04,
+                                 decoration: BoxDecoration(
+                                     color: colorConst.mainColor,
+                                     borderRadius: BorderRadius.circular(
+                                         scrWidth * 0.01)),
+                                 child: Center(
+                                   child: Row(
+                                     children: [
+                                       Radio(
+                                         fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                                           activeColor: colorConst.primaryColor,
+                                           value: 0,
+                                           groupValue: selectindex,
+                                           onChanged: (value) {
+
+                                           },),
+                                       Text(
+                                         "Packed\nConfirmed",
+                                         textAlign: TextAlign.center,
+                                         style: TextStyle(
+                                           color: Colors.white,
+                                           fontSize: scrWidth * 0.01,
+                                         ),
+                                       ),
+                                     ],
+                                   ),
+                                 ),
+                               ),
+                               SizedBox(
+                                 width: scrWidth * 0.015,
+                               ),
+                               Container(
+                                 width: scrWidth * 0.11,
+                                 height: scrWidth * 0.04,
+                                 decoration: BoxDecoration(
+                                     color: colorConst.mainColor,
+                                     borderRadius: BorderRadius.circular(
+                                         scrWidth * 0.01)),
+                                 child: Center(
+                                   child: Row(
+                                     children: [
+                                       Radio(
+                                         fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                                         activeColor: colorConst.primaryColor,
+                                         value: 0,
+                                         groupValue: selectindex,
+                                         onChanged: (value) {
+
+                                         },),
+                                       Text(
+                                         "Out for Delivered",
+                                         textAlign: TextAlign.center,
+                                         style: TextStyle(
+                                           color: Colors.white,
+                                           fontSize: scrWidth * 0.01,
+                                         ),
+                                       ),
+                                     ],
+                                   ),
+                                 ),
+                               ),
+                               SizedBox(
+                                 width: scrWidth * 0.015,
+                               ),
+                               Container(
+                                 width: scrWidth * 0.11,
+                                 height: scrWidth * 0.04,
+                                 decoration: BoxDecoration(
+                                     color: colorConst.mainColor,
+                                     borderRadius: BorderRadius.circular(
+                                         scrWidth * 0.01)),
+                                 child: Center(
+                                   child: Row(
+                                     children: [
+                                       Radio(
+                                         fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                                         activeColor: colorConst.primaryColor,
+                                         value: 0,
+                                         groupValue: selectindex,
+                                         onChanged: (value) {
+
+                                         },),
+                                       Text(
+                                         "Delivery",
+                                         textAlign: TextAlign.center,
+                                         style: TextStyle(
+                                           color: Colors.white,
+                                           fontSize: scrWidth * 0.01,
+                                         ),
+                                       ),
+                                     ],
+                                   ),
+                                 ),
+                               ),
+                             ],
+                           ),
+                         );
+                       },
+                     ),
+                     )
                   ],
                 )
               ],
