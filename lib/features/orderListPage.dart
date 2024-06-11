@@ -3,6 +3,7 @@ import 'dart:js';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +12,10 @@ import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import '../main.dart';
 
-
+final radioProvider = StateProvider <String?> ((ref) => null);
+var _listItems=[
+  "Ordered", "Packed","Out for delivery","delivered",
+];
 class OrderStatusList extends ConsumerWidget {
   final QuerySnapshot<Map<String, dynamic>> data;
   final bool isSmallScreen;
@@ -23,18 +27,14 @@ class OrderStatusList extends ConsumerWidget {
     required this.status,
   });
 
-   int selectindex = 0;
-   List a = [];
-   List b = [];
-   List c = [];
 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final dropdownNotifier = ref.watch(dropdownProvider);
-    // final dropdownValue = dropdownNotifier.state.dropdownValue;
-    var listItems=[
-      "Packed","Out for delivery","delivered",
+    final radioButton = ref.watch(radioProvider) ?? status;
+    var selectStatus;
+    var _listItems=[
+     "Ordered", "Packed","Out for delivery","delivered",
     ];
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
@@ -517,126 +517,186 @@ class OrderStatusList extends ConsumerWidget {
                     ),
                    Container(
                        height: scrHeight*0.115,
-                       width: 540,
+                       width: 560,
                      decoration: BoxDecoration(
-                         color: Colors.white,
+                         color: colorConst.primaryColor,
                          borderRadius: BorderRadius.circular(scrWidth * 0.015),
                          border: Border.all(color: colorConst.mainColor)),
                      child: Center(
                        child: ListView.builder(
-                         itemCount: 1,
+                         scrollDirection: Axis.horizontal,
+                         itemCount: _listItems.length,
                          shrinkWrap: true,
-                         physics: NeverScrollableScrollPhysics(),
-                         itemBuilder: (BuildContext context, int index) {
-                           return  Container(
-                             height: scrHeight * 0.11,
-                             width: scrWidth * 0.5,
-                             decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(scrWidth * 0.02),
-                                 border: Border.all(color: colorConst.primaryColor)),
-                             child: Row(
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               mainAxisSize: MainAxisSize.min,
-                               children: [
-                                 Container(
-                                   width: scrWidth * 0.11,
-                                   height: scrWidth * 0.04,
-                                   decoration: BoxDecoration(
-                                       color: colorConst.mainColor,
-                                       borderRadius: BorderRadius.circular(
-                                           scrWidth * 0.01)),
-                                   child: Center(
-                                     child: Row(
-                                       children: [
-                                         Radio(
-                                           fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
-                                             activeColor: colorConst.primaryColor,
-                                             value: 0,
-                                             groupValue: selectindex,
-                                             onChanged: (value) {
+                         physics: BouncingScrollPhysics(),
+                         itemBuilder: (BuildContext context, int index2) {
+                           return RadioMenuButton(
 
-                                             },),
-                                         Text(
-                                           "Packed\nConfirmed",
-                                           textAlign: TextAlign.center,
-                                           style: TextStyle(
-                                             color: Colors.white,
-                                             fontSize: scrWidth * 0.01,
-                                           ),
-                                         ),
-                                       ],
-                                     ),
-                                   ),
-                                 ),
-                                 SizedBox(
-                                   width: scrWidth * 0.015,
-                                 ),
-                                 Container(
-                                   width: scrWidth * 0.11,
-                                   height: scrWidth * 0.04,
-                                   decoration: BoxDecoration(
-                                       color: colorConst.mainColor,
-                                       borderRadius: BorderRadius.circular(
-                                           scrWidth * 0.01)),
-                                   child: Center(
-                                     child: Row(
-                                       children: [
-                                         Radio(
-                                           fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
-                                           activeColor: colorConst.primaryColor,
-                                           value: 0,
-                                           groupValue: selectindex,
-                                           onChanged: (value) {
+                             //style: ButtonStyle(surfaceTintColor: MaterialStatePropertyAll(colorConst.mainColor)),
+                               value: _listItems[index2] ,
+                               groupValue:  selectStatus,
+                               onChanged: (value) {
+                               selectStatus = _listItems[index2];
+                               print(value);
+                               print(selectStatus);
+                               print(data.docs[index]['orderId']);
+                               FirebaseFirestore.instance.collection("orderDetails").doc(data.docs[index]['orderId']).update({
+                                 "orderStatus" : selectStatus
+                               });
+                               },
+                               child: Text(_listItems[index2]));
 
-                                           },),
-                                         Text(
-                                           "Out for Delivered",
-                                           textAlign: TextAlign.center,
-                                           style: TextStyle(
-                                             color: Colors.white,
-                                             fontSize: scrWidth * 0.01,
-                                           ),
-                                         ),
-                                       ],
-                                     ),
-                                   ),
-                                 ),
-                                 SizedBox(
-                                   width: scrWidth * 0.015,
-                                 ),
-                                 Container(
-                                   width: scrWidth * 0.11,
-                                   height: scrWidth * 0.04,
-                                   decoration: BoxDecoration(
-                                       color: colorConst.mainColor,
-                                       borderRadius: BorderRadius.circular(
-                                           scrWidth * 0.01)),
-                                   child: Center(
-                                     child: Row(
-                                       children: [
-                                         Radio(
-                                           fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
-                                           activeColor: colorConst.primaryColor,
-                                           value: 0,
-                                           groupValue: selectindex,
-                                           onChanged: (value) {
 
-                                           },),
-                                         Text(
-                                           "Delivery",
-                                           textAlign: TextAlign.center,
-                                           style: TextStyle(
-                                             color: Colors.white,
-                                             fontSize: scrWidth * 0.01,
-                                           ),
-                                         ),
-                                       ],
-                                     ),
-                                   ),
-                                 ),
-                               ],
-                             ),
-                           );
+                           //   Container(
+                           //   height: scrHeight * 0.11,
+                           //   width: scrWidth * 0.4,
+                           //   decoration: BoxDecoration(
+                           //       borderRadius: BorderRadius.circular(scrWidth * 0.02),
+                           //       border: Border.all(color: colorConst.primaryColor)),
+                           //   child: Row(
+                           //     crossAxisAlignment: CrossAxisAlignment.center,
+                           //     mainAxisSize: MainAxisSize.min,
+                           //     children: [
+                           //       Container(
+                           //         width: scrWidth * 0.08,
+                           //         height: scrWidth * 0.04,
+                           //         decoration: BoxDecoration(
+                           //             color: colorConst.mainColor,
+                           //             borderRadius: BorderRadius.circular(
+                           //                 scrWidth * 0.01)),
+                           //         child: Center(
+                           //           child: Row(
+                           //             children: [
+                           //               Radio(
+                           //                 fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                           //                 activeColor: colorConst.primaryColor,
+                           //                 value: 0,
+                           //                 groupValue: data.docs[index][selectindex],
+                           //                 onChanged: (value) {
+                           //                   FirebaseFirestore.instance.collection('orderDetails')
+                           //                       .doc(data.docs[index]['orderId']).update(
+                           //                       {"selectindex":value});
+                           //                 },),
+                           //               Text(
+                           //                 "Ordered",
+                           //                 textAlign: TextAlign.center,
+                           //                 style: TextStyle(
+                           //                   color: Colors.white,
+                           //                   fontSize: scrWidth * 0.01,
+                           //                 ),
+                           //               ),
+                           //             ],
+                           //           ),
+                           //         ),
+                           //       ),
+                           //       SizedBox(
+                           //         width: scrWidth * 0.01,
+                           //       ),
+                           //       Container(
+                           //         width: scrWidth * 0.08,
+                           //         height: scrWidth * 0.04,
+                           //         decoration: BoxDecoration(
+                           //             color: colorConst.mainColor,
+                           //             borderRadius: BorderRadius.circular(
+                           //                 scrWidth * 0.01)),
+                           //         child: Center(
+                           //           child: Row(
+                           //             children: [
+                           //               Radio(
+                           //                 fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                           //                   activeColor: colorConst.primaryColor,
+                           //                   value: 1,
+                           //                   groupValue: data.docs[index][selectindex],
+                           //                   onChanged: (value) {
+                           //                     FirebaseFirestore.instance.collection('orderDetails')
+                           //                         .doc(data.docs[index]['orderId']).update(
+                           //                         {"selectindex":value});
+                           //                   },),
+                           //               Text(
+                           //                 "Packed",
+                           //                 textAlign: TextAlign.center,
+                           //                 style: TextStyle(
+                           //                   color: Colors.white,
+                           //                   fontSize: scrWidth * 0.01,
+                           //                 ),
+                           //               ),
+                           //             ],
+                           //           ),
+                           //         ),
+                           //       ),
+                           //       SizedBox(
+                           //         width: scrWidth * 0.01,
+                           //       ),
+                           //       Container(
+                           //         width: scrWidth * 0.08,
+                           //         height: scrWidth * 0.04,
+                           //         decoration: BoxDecoration(
+                           //             color: colorConst.mainColor,
+                           //             borderRadius: BorderRadius.circular(
+                           //                 scrWidth * 0.01)),
+                           //         child: Center(
+                           //           child: Row(
+                           //             children: [
+                           //               Radio(
+                           //                 fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                           //                 activeColor: colorConst.primaryColor,
+                           //                 value: listItems,
+                           //                 groupValue: data.docs[index][selectindex],
+                           //                 onChanged: (value) {
+                           //                   FirebaseFirestore.instance.collection('orderDetails')
+                           //                       .doc(data.docs[index]['orderId']).update({
+                           //                     "orderStatus":value
+                           //                       });
+                           //                 },),
+                           //               Text(
+                           //                 "Out for\n Delivered",
+                           //                 textAlign: TextAlign.center,
+                           //                 style: TextStyle(
+                           //                   color: Colors.white,
+                           //                   fontSize: scrWidth * 0.01,
+                           //                 ),
+                           //               ),
+                           //             ],
+                           //           ),
+                           //         ),
+                           //       ),
+                           //       SizedBox(
+                           //         width: scrWidth * 0.01,
+                           //       ),
+                           //       Container(
+                           //         width: scrWidth * 0.08,
+                           //         height: scrWidth * 0.04,
+                           //         decoration: BoxDecoration(
+                           //             color: colorConst.mainColor,
+                           //             borderRadius: BorderRadius.circular(
+                           //                 scrWidth * 0.01)),
+                           //         child: Center(
+                           //           child: Row(
+                           //             children: [
+                           //               Radio(
+                           //                 fillColor: MaterialStatePropertyAll(colorConst.primaryColor),
+                           //                 activeColor: colorConst.primaryColor,
+                           //                 value: 3,
+                           //                 groupValue: data.docs[index][selectindex],
+                           //                 onChanged: (value) {
+                           //                   FirebaseFirestore.instance.collection('orderDetails')
+                           //                       .doc(data.docs[index]['orderId']).update(
+                           //                       {"selectindex":value});
+                           //                 },),
+                           //               Text(
+                           //                 "Delivery",
+                           //                 textAlign: TextAlign.center,
+                           //                 style: TextStyle(
+                           //                   color: Colors.white,
+                           //                   fontSize: scrWidth * 0.01,
+                           //                 ),
+                           //               ),
+                           //             ],
+                           //           ),
+                           //         ),
+                           //       ),
+                           //     ],
+                           //   ),
+                           // );
                          },
                        ),
                      ),
@@ -666,7 +726,7 @@ class _OrderlistPageState extends ConsumerState<OrderlistPage> {
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return DefaultTabController(
-      length: 3,
+      length: _listItems.length,
       child: Scaffold(
         body: Column(
           children: [
@@ -691,40 +751,17 @@ class _OrderlistPageState extends ConsumerState<OrderlistPage> {
                     borderRadius: BorderRadius.circular(20)),
                 indicatorPadding: EdgeInsets.symmetric(
                     horizontal: isSmallScreen ? -scrWidth*0.08 : -100),
-                tabs: [
-                  Text("Running"),
-                  Text(
-                    "Delivered",
-                    style: TextStyle(color: colorConst.green),
-                  ),
-                  Text(
-                    "Canceled",
-                    style: TextStyle(color: colorConst.red),
-                  ),
-                ]),
+                tabs: List.generate(_listItems.length, (index) => Text(_listItems[index]))),
             Expanded(
               child: ref.watch(orderStreamProvider).when(
                   data: (data){
                     return
                       data.docs.isEmpty? Center(child: Text("No Orders")):
-                    TabBarView(children: [
-                      OrderStatusList(
-                        data: data,
-                        isSmallScreen: isSmallScreen,
-                        status: 'Ordered',
-                      ),
-                      OrderStatusList(
-                        data: data,
-                        isSmallScreen: isSmallScreen,
-                        status: 'Delivered',
-                      ),
-                      OrderStatusList(
-                        data: data,
-                        isSmallScreen: isSmallScreen,
-                        status: 'Canceled',
-                      ),
-
-                    ]);
+                    TabBarView(children: List.generate(_listItems.length, (index) =>  OrderStatusList(
+                      data: data,
+                      isSmallScreen: isSmallScreen,
+                      status: _listItems[index],
+                    ),));
                   },
                   error: (error, stackTrace) => Center(child: Text(error.toString()),),
                   loading: () {
