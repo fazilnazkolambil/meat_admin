@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meat_admin/core/colorPage.dart';
-import 'package:readmore/readmore.dart';
 
 import '../../main.dart';
 
@@ -454,7 +453,11 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
                                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                     children: [
                                                       Text(data[index]['category']),
-                                                      Icon(CupertinoIcons.chevron_down)
+                                                      InkWell(
+                                                        onTap: (){
+
+                                                        },
+                                                          child: Icon(CupertinoIcons.chevron_down))
                                                     ],
                                                   )),
                                             );
