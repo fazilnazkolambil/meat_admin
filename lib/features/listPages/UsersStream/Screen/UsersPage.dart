@@ -60,6 +60,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   @override
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
+    final isHalfScreen = MediaQuery.of(context).size.width < 900;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       floatingActionButton: SizedBox(
@@ -77,6 +78,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                   textInputAction: TextInputAction.done,
                   //onChanged: (value) => _search(value),
                   onChanged: (value) {
+                    //FirebaseFirestore.instance.collection("users").
                     // _search2(value,data);
                     _search(value);
                     search = true;
@@ -137,7 +139,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
               physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   mainAxisExtent:270,
-                  crossAxisCount: isSmallScreen?1:3,
+                  crossAxisCount: isSmallScreen?1:isHalfScreen?2:3,
                   mainAxisSpacing: scrHeight*0.03,
                   crossAxisSpacing:scrHeight*0.03,
                   childAspectRatio: 2
@@ -208,7 +210,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                                   //title: Text(":${filteredUsers[index].address}"),
                                   //title: Text("User Details"),
                                   content: SizedBox(
-                                    height: 250,
+                                    height: 350,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -225,11 +227,11 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                                           Text("User id: ${filteredUsers[index].id}"),
                                           Container(
                                             //height: 250,
-                                            color: colorConst.green,
+                                            //color: colorConst.green,
                                             child: Row(
                                               children: [
                                                 Text("Address :"),
-                                                Text(filteredUsers[index].address.toString(),textAlign: TextAlign.center,),
+                                                //Text(filteredUsers[index].address.toString(),textAlign: TextAlign.center,),
 
                                               ],
                                             ),

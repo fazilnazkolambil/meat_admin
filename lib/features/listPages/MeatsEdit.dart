@@ -545,7 +545,8 @@ class _MeatsEditState extends State<MeatsEdit> {
                           .doc(widget.category)
                           .collection(widget.type).doc(widget.id).update(updateMeat!.toMap());
                       editMeats();
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatList(type: widget.type,),), (route) => false);
+                      Navigator.pop(context);
+                      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatList(type: widget.type,),), (route) => false);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Updated!")));
                     },
                     child: Container(

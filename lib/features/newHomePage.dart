@@ -181,7 +181,7 @@ class _Screens extends StatelessWidget {
           case 0:
             return const OrderlistPage();
           case 1:
-            return const MeatTypeList(type: "",);
+            return const MeatTypeList();
           case 2:
             return const UsersPage();
           default:

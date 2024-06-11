@@ -14,7 +14,7 @@ import '../../main.dart';
 import '../add_meat_types/screen/AddMeatTypes.dart';
 
 class MeatTypeList extends StatefulWidget {
-  const MeatTypeList({super.key, required type});
+  const MeatTypeList({super.key});
 
   @override
   State<MeatTypeList> createState() => _MeatTypeListState();

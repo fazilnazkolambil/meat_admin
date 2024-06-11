@@ -101,7 +101,8 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
         type: widget.type
     );
     ref.watch(addMeatController).addMeats(type: widget.type, chooseCategory:chooseCategory! , meatModel: meatModel);
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatList(type: widget.type),), (route) => false);
+    //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MeatList(type: widget.type),), (route) => false);
+    Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Item Added!")));
 
   }
@@ -174,7 +175,6 @@ class _AddMeatsState extends ConsumerState<AddMeats> {
                 //     })
                 ref.watch(streamCategoryControllerProvider(widget.type)).when(
                     data: (data) {
-                      print(data);
                       return
                       Expanded(
                         child: ListView.builder(

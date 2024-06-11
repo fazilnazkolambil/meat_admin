@@ -43,7 +43,7 @@ class _homePageState extends State<homePage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MeatTypeList(type: "",),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MeatTypeList()));
               },
               child: Text("Meats",style: TextStyle(
                   fontSize: scrHeight*0.03,
