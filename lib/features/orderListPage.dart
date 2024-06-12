@@ -54,7 +54,6 @@ class OrderStatusList extends ConsumerWidget {
         itemCount: data.docs.where((element) => element["orderStatus"] == status).length,
         physics: BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-        print(data.docs[index]['orderId']);
         String dateString = '${data.docs[index]['orderDate']},${data.docs[index]['orderTime']}';//
         DateFormat dateFormat = DateFormat("EEEE, MMMM d, y,h:mm a"); //
         DateTime dateTime = dateFormat.parse(dateString);
@@ -533,7 +532,7 @@ class OrderStatusList extends ConsumerWidget {
                                  context: context,
                                  builder: (context) {
                                    return AlertDialog(
-                                     title: Text("Are you sure you want to remove this order permanently?",
+                                     title: Text("Are you sure you want to permanently remove this order?",
                                        textAlign: TextAlign.center,
                                        style: TextStyle(
                                            fontSize: scrHeight*0.02,
@@ -627,8 +626,6 @@ class OrderStatusList extends ConsumerWidget {
                                  //     "orderStatus" : _listItems.last
                                  //   });
                                  // } else{
-                                 print(data.docs[index]['orderId']);
-                                 print(nextStatus);
                                    await FirebaseFirestore.instance.collection('orderDetails').doc(data.docs[index]['orderId']).update({
                                      "orderStatus" : nextStatus
                                    });
@@ -683,6 +680,7 @@ class OrderStatusList extends ConsumerWidget {
 final orderStreamProvider = StreamProvider.family((ref, String status) {
   return FirebaseFirestore.instance.collection("orderDetails").where("orderStatus",isEqualTo: status).snapshots();
 });
+final indexProvider = StateProvider <int?> ((ref) => null);
 
 class OrderlistPage extends ConsumerStatefulWidget {
   const OrderlistPage({super.key});
@@ -693,12 +691,13 @@ class OrderlistPage extends ConsumerStatefulWidget {
 
 class _OrderlistPageState extends ConsumerState<OrderlistPage> {
 
-  int currentIndex = 0;
+  //int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     final isHalfScreen = MediaQuery.of(context).size.width < 1000;
+    final currentIndex = ref.watch(indexProvider) ?? 0;
     return DefaultTabController(
       length: _listItems.length,
       child: Scaffold(
@@ -725,16 +724,13 @@ class _OrderlistPageState extends ConsumerState<OrderlistPage> {
                     borderRadius: BorderRadius.circular(20)),
                 indicatorPadding: EdgeInsets.symmetric(
                     horizontal: isSmallScreen ? -scrWidth*0.08 : -100),
-                tabs: List.generate(_listItems.length, (index) => Text(_listItems[index])),
+                tabs: List.generate(_listItems.length, (index) => Text('${_listItems[index]}')),
               onTap: (value) {
-                currentIndex=value;
-                setState(() {
-
-                });
+                ref.read(indexProvider.notifier).update((state) => value);
               },
             ),
             Expanded(
-              child: ref.watch(orderStreamProvider(_listItems[currentIndex!])).when(
+              child: ref.watch(orderStreamProvider(_listItems[currentIndex])).when(
                   data: (data){
                     return
                       data.docs.isEmpty? Center(child: Text("No Orders")):
