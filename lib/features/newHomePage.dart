@@ -6,10 +6,12 @@ import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
+import 'package:meat_admin/features/settings/settinngsPage.dart';
 import 'package:meat_admin/main.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../bannerPage.dart';
 import 'orderListPage.dart';
 
 class NewHome extends StatefulWidget {
@@ -156,6 +158,10 @@ class SideBarModel extends StatelessWidget {
           icon: Icons.wallpaper,
           label: 'Banners',
         ),
+        SidebarXItem(
+          icon: Icons.settings,
+          label: 'Settings',
+        ),
       ],
     );
   }
@@ -184,6 +190,10 @@ class _Screens extends StatelessWidget {
             return const MeatTypeList();
           case 2:
             return const UsersPage();
+          case 3:
+            return const BannerPage();
+          case 4:
+            return const settingsPage();
           default:
             return Text(
               pageTitle,
@@ -205,6 +215,8 @@ String _getTitleByIndex(int index) {
       return 'Users';
     case 3:
       return 'Banners';
+    case 4:
+      return 'Settings';
     default:
       return 'No page found';
   }
