@@ -11,7 +11,7 @@ import 'package:meat_admin/main.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../bannerPage.dart';
+import '../BannerPage.dart';
 import 'orderListPage.dart';
 
 class NewHome extends StatefulWidget {
