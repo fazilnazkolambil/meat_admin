@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
 import 'package:meat_admin/features/newHomePage.dart';
+import 'package:meat_admin/features/settings/settingsPage.dart';
 import 'package:meat_admin/firebase_options.dart';
 import 'package:meat_admin/core/homePage/Screen/homePage.dart';
 import 'package:meat_admin/models/MeatModel.dart';

@@ -1,5 +1,3 @@
-import 'dart:js';
-
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,7 +47,7 @@ class OrderStatusList extends ConsumerWidget {
     }
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: isSmallScreen || isHalfScreen?2:4
+          crossAxisCount: isSmallScreen || isHalfScreen?1:4
       ),
         itemCount: data.docs.where((element) => element["orderStatus"] == status).length,
         physics: BouncingScrollPhysics(),

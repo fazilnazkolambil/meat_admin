@@ -6,7 +6,7 @@ import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
-import 'package:meat_admin/features/settings/settinngsPage.dart';
+import 'package:meat_admin/features/settings/settingsPage.dart';
 import 'package:meat_admin/main.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

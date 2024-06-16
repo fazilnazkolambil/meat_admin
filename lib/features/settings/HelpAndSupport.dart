@@ -1,10 +1,10 @@
-import 'dart:js_interop';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
+import 'package:meat_admin/core/imageConst.dart';
 
 import '../../main.dart';
 
@@ -15,7 +15,6 @@ class HelpAndSupport extends StatefulWidget {
   @override
   State<HelpAndSupport> createState() => _HelpAndSupportState();
 }  String? chooseCategory;
-  String? chooseCategory1;
 
 class _HelpAndSupportState extends State<HelpAndSupport> {
   TextEditingController TextController = TextEditingController();
@@ -35,7 +34,6 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
       "questions":FieldValue.arrayUnion([{
         "Question" : questionController.text,
         "Answer" : answerController.text,
-       //"category" : chooseCategory.toString(),
       }])
     }).then((value) {
       questionController.clear();
@@ -72,24 +70,21 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: SizedBox(
-                        height:scrHeight*0.07,
-                        child: TextFormField(
-                          controller: categoryController,
-                          onFieldSubmitted: (value) {
-                            addCategory();
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              label: Text("Add new Category",style: TextStyle(
-                                  fontSize: isSmallScreen?10:15
-                              ),),
-                              hintText: "Enter the Category",
-                              hintStyle: TextStyle(
-                                  fontSize: isSmallScreen?10:15
-                              )),
-                        ),
+                      title: TextFormField(
+                        controller: categoryController,
+                        onFieldSubmitted: (value) {
+                          addCategory();
+                        },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            label: Text("Add new Category",style: TextStyle(
+                                fontSize: isSmallScreen?10:15
+                            ),),
+                            hintText: "Enter the Category",
+                            hintStyle: TextStyle(
+                                fontSize: isSmallScreen?10:15
+                            )),
                       ),
                       trailing: CircleAvatar(
                         child: InkWell(
@@ -107,10 +102,13 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
                     StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
                      stream: FirebaseFirestore.instance.collection("settings").doc(widget.name).collection(widget.name).snapshots(),
                         builder: (context, snapshot) {
+                       if(!snapshot.hasData){
+                         return Center(child: Lottie.asset(gifs.loadingGif,height:100 ));
+                       }
                      var data=snapshot.data!.docs;
                      return SizedBox(
                        width: 500,
-                       height: scrHeight*0.8,
+                       height: scrHeight*0.7,
                        child: ListView.builder(
                         itemCount: data.length,
                         itemBuilder: (context, index) {
@@ -194,41 +192,46 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
               )
               ,):
             SizedBox(
-              width: scrHeight*0.6,
+              width: isSmallScreen?scrWidth*0.9:scrWidth*0.4,
+              height: scrHeight*0.8,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextFormField(
-                    controller: TextController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.done,
-                    cursorColor: colorConst.canvasColor,
-                    onFieldSubmitted: (value) {
-                      settingsData();
-                    },
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(10),
-                        labelText:"Enter ${widget.name}",
-                        labelStyle: TextStyle(
-                            color: colorConst.secondaryColor,
-                            fontSize: isSmallScreen?10:15
-                          // isSmallScreen?12:15
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: colorConst.canvasColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                            BorderSide(color: colorConst.canvasColor)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.circular(scrWidth * 0.03),
-                            borderSide:
-                            BorderSide(color: colorConst.canvasColor))),
+                  SizedBox(
+                    width: isSmallScreen?scrWidth*0.9:350,
+                    child: TextFormField(
+                      controller: TextController,
+                      maxLines: 3,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.done,
+                      cursorColor: colorConst.canvasColor,
+                      onFieldSubmitted: (value) {
+                        settingsData();
+                      },
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          labelText:"Enter ${widget.name}",
+                          labelStyle: TextStyle(
+                              color: colorConst.secondaryColor,
+                              fontSize: isSmallScreen?10:15
+                            // isSmallScreen?12:15
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: colorConst.canvasColor),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.circular(scrWidth * 0.03),
+                              borderSide:
+                              BorderSide(color: colorConst.canvasColor)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.circular(scrWidth * 0.03),
+                              borderSide:
+                              BorderSide(color: colorConst.canvasColor))),
+                    ),
                   ),
-                  SizedBox(height: 20,),
                   InkWell(
                     onTap: (){
                       if(
@@ -254,237 +257,253 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
                                     fontWeight: FontWeight.w600,
                                     fontSize: scrHeight * 0.02)))),
                   ),
+                  if(isSmallScreen)
+                    StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
+                        stream: FirebaseFirestore.instance.collection('settings')
+                            .doc(widget.name).collection(widget.name).snapshots(),
+                        builder: (context, snapshot) {
+                          if(!snapshot.hasData){
+                            return Center(child: Lottie.asset(gifs.loadingGif,height: scrWidth*0.3),);
+                          }
+                          var data = snapshot.data!.docs;
+                          return data.isEmpty?
+                          Center(child: Text("No ${widget.name}"),)
+                              :Center(
+                            child: Center(child: Text(data[0]['Text'])),
+                          );
+                        }
+                    ),
                 ],
               ),
             ),
+             //if(!isSmallScreen)
              Column(
                     children: [
                       widget.name=="FAQs"?
-                      Column(
-                        children: [
-                          SizedBox(
-                              width: scrWidth*0.4,
-                              child: Column(
-                                  children: [
-                                    StreamBuilder<QuerySnapshot>(
-                                        stream: FirebaseFirestore.instance.collection("settings").doc(widget.name).collection(widget.name).snapshots(),
-                                        builder: (context, snapshot) {
-                                          var data=snapshot.data!.docs;
-                                          return data.isEmpty?Text('No Categories found')
-                                              :Container(
-                                            height: scrHeight * 0.06,
-                                            width: scrHeight * 0.6,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(scrHeight * 0.03),
-                                                border:
-                                                Border.all(color: colorConst.canvasColor)),
-                                            child: Center(
-                                              child: DropdownButton(
-                                                padding: EdgeInsets.all(scrHeight * 0.01),
-                                                isExpanded: true,
-                                                underline: SizedBox(),
-                                                hint: Text(
-                                                  "Select Category",
-                                                  style: TextStyle(
-                                                      color: colorConst.secondaryColor,
-                                                      fontSize: isSmallScreen?12:15
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                width: scrWidth*0.4,
+                                child: Column(
+                                    children: [
+                                      StreamBuilder<QuerySnapshot>(
+                                          stream: FirebaseFirestore.instance.collection("settings").doc(widget.name).collection(widget.name).snapshots(),
+                                          builder: (context, snapshot) {
+                                            if(!snapshot.hasData){
+                                              return Center(child: Text("Loading..."),);
+                                            }
+                                            var data=snapshot.data!.docs;
+                                            return data.isEmpty?Text('No Categories found')
+                                                :Container(
+                                              height: scrHeight * 0.06,
+                                              width: scrHeight * 0.6,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(scrHeight * 0.03),
+                                                  border:
+                                                  Border.all(color: colorConst.canvasColor)),
+                                              child: Center(
+                                                child: DropdownButton(
+                                                  padding: EdgeInsets.all(scrHeight * 0.01),
+                                                  isExpanded: true,
+                                                  underline: SizedBox(),
+                                                  hint: Text(
+                                                    "Select Category",
+                                                    style: TextStyle(
+                                                        color: colorConst.secondaryColor,
+                                                        fontSize: isSmallScreen?12:15
+                                                    ),
                                                   ),
+                                                  style: TextStyle(
+                                                      color: colorConst.secondaryColor),
+                                                  value: chooseCategory,
+                                                  items: List.generate(data.length,
+                                                          (index) => data[index]['category']).map((e) {
+                                                    return DropdownMenuItem(
+                                                        value: e, child: Text(e));
+                                                  }).toList(),
+                                                  onChanged: (value) {
+                                                    chooseCategory = value.toString();
+                                                    setState(() {});
+                                                  },
                                                 ),
-                                                style: TextStyle(
-                                                    color: colorConst.secondaryColor),
-                                                value: chooseCategory,
-                                                items: List.generate(data.length,
-                                                        (index) => data[index]['category']).map((e) {
-                                                  return DropdownMenuItem(
-                                                      value: e, child: Text(e));
-                                                }).toList(),
-                                                onChanged: (value) {
-                                                  chooseCategory = value.toString();
-                                                  setState(() {});
-                                                },
                                               ),
+                                            );
+                                          }
+                                      ),
+                                      SizedBox(height: scrHeight*0.05,),
+                                      SizedBox(
+                                        height: scrHeight*0.06,
+                                        width: scrHeight*0.6,
+                                        child: TextFormField(
+                                          controller: questionController,
+                                          keyboardType: TextInputType.text,
+                                          textCapitalization: TextCapitalization.words,
+                                          textInputAction: TextInputAction.done,
+                                          cursorColor: colorConst.canvasColor,
+                                          decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.all(10),
+                                              labelText:"Enter Question",
+                                              labelStyle: TextStyle(
+                                                  color: colorConst.secondaryColor,
+                                                  fontSize: isSmallScreen?10:15
+                                                // isSmallScreen?12:15
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(color: colorConst.canvasColor),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(scrWidth * 0.03),
+                                                  borderSide:
+                                                  BorderSide(color: colorConst.canvasColor)),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(scrWidth * 0.03),
+                                                  borderSide:
+                                                  BorderSide(color: colorConst.canvasColor))),
+                                        ),
+                                      ),
+                                      SizedBox(height: scrHeight*0.03,),
+                                      SizedBox(
+                                        height: scrHeight*0.06,
+                                        width: scrHeight*0.6,
+                                        child: TextFormField(
+                                          controller: answerController,
+                                          keyboardType: TextInputType.text,
+                                          textCapitalization: TextCapitalization.words,
+                                          textInputAction: TextInputAction.done,
+                                          cursorColor: colorConst.canvasColor,
+                                          decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.all(10),
+                                              labelText:"Enter Answer",
+                                              labelStyle: TextStyle(
+                                                  color: colorConst.secondaryColor,
+                                                  fontSize: isSmallScreen?10:15
+                                                // isSmallScreen?12:15
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(color: colorConst.canvasColor),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(scrWidth * 0.03),
+                                                  borderSide:
+                                                  BorderSide(color: colorConst.canvasColor)),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(scrWidth * 0.03),
+                                                  borderSide:
+                                                  BorderSide(color: colorConst.canvasColor))),
+                                        ),
+                                      ),
+                                      SizedBox(height: scrHeight*0.03,),
+                                      InkWell(
+                                        onTap: (){
+                                          if(
+                                          chooseCategory != null &&
+                                          questionController.text !=""&&
+                                              answerController.text !=""
+                                          ){
+                                            addQN();
+                                          }
+                                          else{
+                                            chooseCategory == null? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please choose Category!"))):
+                                            questionController.text==""?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Question"))):
+                                            answerController.text==""?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Answer"))):
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter details")));
+                                          }
+                                        },
+                                        child: Container(
+                                            height: scrHeight * 0.05,
+                                            width: scrHeight * 0.1,
+                                            decoration: BoxDecoration(
+                                              color: colorConst.canvasColor,
+                                              borderRadius:
+                                              BorderRadius.circular(scrHeight * 0.07),
                                             ),
+                                            child: Center(
+                                                child: Text("Submit",
+                                                    style: TextStyle(
+                                                        color: colorConst.primaryColor,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: scrHeight * 0.02)))),
+                                      ),
+                                    ],
+                                )
+                              ),
+                            SizedBox(height: 20,),
+                            Container(
+                               height: scrHeight*0.4,
+                               width: scrWidth*0.5,
+                              color: Colors.green,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      height: scrHeight*0.4,
+                                      width: scrWidth*0.5,
+                                      child: StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
+                                        stream: FirebaseFirestore.instance.collection('settings').doc(widget.name).collection(widget.name).snapshots(),
+                                        builder: (context, snapshot) {
+                                          if(!snapshot.hasData){
+                                            return CircularProgressIndicator();
+                                          }
+                                          var data = snapshot.data!.docs;
+                                          return ListView.separated(
+                                            itemCount: 2,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  tap = !tap;
+                                                  setState(() {
+                        
+                                                  });
+                                                },
+                                                child: SizedBox(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      children: [
+                                                        Text(data[index]['category']),
+                                                        InkWell(
+                                                          onTap: (){
+                        
+                                                          },
+                                                            child: Icon(CupertinoIcons.chevron_down))
+                                                      ],
+                                                    )),
+                                              );
+                                            },
+                                            separatorBuilder: (BuildContext context, int index) => SizedBox(),
                                           );
                                         }
-                                    ),
-                                    SizedBox(height: scrHeight*0.05,),
-                                    Container(
-                                      height: scrHeight*0.06,
-                                      width: scrHeight*0.6,
-                                      child: TextFormField(
-                                        controller: questionController,
-                                        keyboardType: TextInputType.text,
-                                        textCapitalization: TextCapitalization.words,
-                                        textInputAction: TextInputAction.done,
-                                        cursorColor: colorConst.canvasColor,
-                                        decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.all(10),
-                                            labelText:"Enter Question",
-                                            labelStyle: TextStyle(
-                                                color: colorConst.secondaryColor,
-                                                fontSize: isSmallScreen?10:15
-                                              // isSmallScreen?12:15
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: colorConst.canvasColor),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(scrWidth * 0.03),
-                                                borderSide:
-                                                BorderSide(color: colorConst.canvasColor)),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(scrWidth * 0.03),
-                                                borderSide:
-                                                BorderSide(color: colorConst.canvasColor))),
                                       ),
                                     ),
-                                    SizedBox(height: scrHeight*0.03,),
-                                    Container(
-                                      height: scrHeight*0.06,
-                                      width: scrHeight*0.6,
-                                      child: TextFormField(
-                                        controller: answerController,
-                                        keyboardType: TextInputType.text,
-                                        textCapitalization: TextCapitalization.words,
-                                        textInputAction: TextInputAction.done,
-                                        cursorColor: colorConst.canvasColor,
-                                        decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.all(10),
-                                            labelText:"Enter Answer",
-                                            labelStyle: TextStyle(
-                                                color: colorConst.secondaryColor,
-                                                fontSize: isSmallScreen?10:15
-                                              // isSmallScreen?12:15
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: colorConst.canvasColor),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(scrWidth * 0.03),
-                                                borderSide:
-                                                BorderSide(color: colorConst.canvasColor)),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(scrWidth * 0.03),
-                                                borderSide:
-                                                BorderSide(color: colorConst.canvasColor))),
-                                      ),
-                                    ),
-                                    SizedBox(height: scrHeight*0.03,),
-                                    InkWell(
-                                      onTap: (){
-                                        if(
-                                        widget.name=="FAQs"?
-                                        questionController.text !=""&&
-                                            answerController.text !="":
-                                        TextController.text!=""
-                                        //formkey.currentState!.validate()
-
-                                        ){
-                                          widget.name=="FAQs"?addQN():
-                                          settingsData();
-                                        }
-                                        else if(widget.name=="FAQs"){
-                                          //TextController.text==""?
-                                          questionController.text==""?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Question"))):
-                                          answerController.text==""?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Answer"))):
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter details")));
-                                        }
-                                        else{
-                                          TextController.text==""?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Text"))):
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter details")));
-                                        }
-                                      },
-                                      child: Container(
-                                          height: scrHeight * 0.05,
-                                          width: scrHeight * 0.1,
-                                          decoration: BoxDecoration(
-                                            color: colorConst.canvasColor,
-                                            borderRadius:
-                                            BorderRadius.circular(scrHeight * 0.07),
-                                          ),
-                                          child: Center(
-                                              child: Text("Submit",
-                                                  style: TextStyle(
-                                                      color: colorConst.primaryColor,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: scrHeight * 0.02)))),
-                                    ),
-                            ],
-                          )
-                            ),
-                          SizedBox(height: 20,),
-                          Divider(),
-                          Container(
-                             height: scrHeight*0.4,
-                             width: scrWidth*0.5,
-                            //color: Colors.green,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(
-                                    height: scrHeight*0.4,
-                                    width: scrWidth*0.5,
-                                    child: StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
-                                      stream: FirebaseFirestore.instance.collection('settings').doc(widget.name).collection(widget.name).snapshots(),
-                                      builder: (context, snapshot) {
-                                        if(!snapshot.hasData){
-                                          return CircularProgressIndicator();
-                                        }
-                                        var data = snapshot.data!.docs;
-                                        return ListView.separated(
-                                          itemCount: 2,
-                                          itemBuilder: (BuildContext context, int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                tap = !tap;
-                                                setState(() {
-
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      Text(data[index]['category']),
-                                                      InkWell(
-                                                        onTap: (){
-
-                                                        },
-                                                          child: Icon(CupertinoIcons.chevron_down))
-                                                    ],
-                                                  )),
-                                            );
-                                          },
-                                          separatorBuilder: (BuildContext context, int index) => SizedBox(),
-                                        );
-                                      }
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ):
+                          isSmallScreen?SizedBox():
                       StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
                         stream: FirebaseFirestore.instance.collection('settings')
                           .doc(widget.name).collection(widget.name).snapshots(),
                         builder: (context, snapshot) {
+                          if(!snapshot.hasData){
+                            return Center(child: Lottie.asset(gifs.loadingGif,width: 300),);
+                          }
                             var data = snapshot.data!.docs;
                           return data.isEmpty?
                               Center(child: Text("No ${widget.name}"),)
-                          :Center(
-                            child: SizedBox(
-                              width: scrWidth*0.5,
-                              child: Text(data[0]['Text'])
-                            ),
+                          :SizedBox(
+                            height: scrHeight*0.8,
+                            width: scrWidth*0.3,
+                            child: Center(child: Text(data[0]['Text'],textAlign: TextAlign.center,)),
                           );
                         }
                       ),
