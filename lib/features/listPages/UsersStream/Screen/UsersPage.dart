@@ -210,33 +210,73 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                                   //title: Text(":${filteredUsers[index].address}"),
                                   //title: Text("User Details"),
                                   content: SizedBox(
-                                    height: 350,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Center(
-                                            child: CircleAvatar(
-                                              backgroundImage: NetworkImage(filteredUsers[index].image),
-                                              radius: 50,
+                                    //height: 350,
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Center(
+                                              child: filteredUsers[index].image.isNotEmpty?
+                                              CircleAvatar(
+                                                backgroundImage:
+                                                NetworkImage(filteredUsers[index].image.toString()),
+                                                radius: 40,
+                                              )
+                                                  : CircleAvatar(
+                                                backgroundImage:
+                                                AssetImage(imageConst.logo),
+                                                radius: 40,
+                                              ),
                                             ),
-                                          ),
-                                          Text("User Name: ${filteredUsers[index].name}"),
-                                          Text("User Phone Number: ${filteredUsers[index].number}"),
-                                          Text("User email: ${filteredUsers[index].email}"),
-                                          Text("User id: ${filteredUsers[index].id}"),
-                                          Container(
-                                            //height: 250,
-                                            //color: colorConst.green,
-                                            child: Row(
-                                              children: [
-                                                Text("Address :"),
-                                                //Text(filteredUsers[index].address.toString(),textAlign: TextAlign.center,),
-
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                            Text("User Name: ${filteredUsers[index].name}"),
+                                            Text("User Phone Number: ${filteredUsers[index].number}"),
+                                            Text("User email: ${filteredUsers[index].email}"),
+                                            Text("User id: ${filteredUsers[index].id}"),
+                                            Center(child: Text("Address",style: TextStyle(
+                                              fontWeight: FontWeight.bold
+                                            ),)),
+                                            SizedBox(
+                                              height: 200,
+                                                width: 250,
+                                                child: ListView.separated(
+                                                  separatorBuilder: (context, index) => Divider(),
+                                                itemCount: filteredUsers[index].address.length,
+                                                  itemBuilder: (context, index2) {
+                                                  var address = filteredUsers[index].address;
+                                                    return Column(
+                                                      children: [
+                                                        SingleChildScrollView(
+                                                          scrollDirection: Axis.horizontal,
+                                                          child: Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text('${address[index2]['type']} : ',style: TextStyle(
+                                                                color: colorConst.mainColor
+                                                              ),),
+                                                              SizedBox(
+                                                                width: 200,
+                                                                child: Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text('${address[index2]['buildingName']}, '
+                                                                         '${address[index2]['street']}, '
+                                                                        '${address[index2]['town']}, '
+                                                                        '${address[index2]['pincode']}'
+                                                                    ),
+                                                                    Text('Location : ${address[index2]['location']}')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    );
+                                                  },),
+                                            )
+                                          ],
+                                        ),
                                       )),
                                 );
                               },
@@ -324,7 +364,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                                         ),
                                         InkWell(
                                           onTap: () async {
-                                            FirebaseFirestore.instance.collection("users").doc(filteredUsers[index]['id']).delete();
+                                            FirebaseFirestore.instance.collection("users").doc(filteredUsers[index].id).delete();
                                             Navigator.pop(context);
                                           },
                                           child: Container(

@@ -141,65 +141,67 @@ class _settingsPageState extends State<settingsPage> {
                                  ),),
                                ),
                              ),
-                             IconButton(
-                                 onPressed: () {
-                                   showDialog(
-                                     barrierDismissible: false,
-                                     context: context,
-                                     builder: (context) {
-                                       return AlertDialog(
-                                         title: Text("Are you sure you want to delete this Option?",
-                                           textAlign: TextAlign.center,
-                                           style: TextStyle(
-                                               fontSize: scrHeight*0.02,
-                                               fontWeight: FontWeight.w600
-                                           ),),
-                                         content: Row(
-                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                           children: [
-                                             InkWell(
-                                               onTap: () {
-                                                 Navigator.pop(context);
-                                               },
-                                               child: Container(
-                                                 height: 30,
-                                                 width: 100,
-                                                 decoration: BoxDecoration(
-                                                   color: Colors.blueGrey,
-                                                   borderRadius: BorderRadius.circular(scrWidth*0.03),
-                                                 ),
-                                                 child: Center(child: Text("No",
-                                                   style: TextStyle(
-                                                       color: Colors.white
-                                                   ),)),
-                                               ),
-                                             ),
-                                             InkWell(
-                                               onTap: () async {
-                                                 await FirebaseFirestore.instance.collection('settings').doc(data[index]['Text']).delete();
-                                                 Navigator.pop(context);
-                                               },
-                                               child: Container(
-                                                 height: 30,
-                                                 width: 100,
-                                                 decoration: BoxDecoration(
-                                                   color: colorConst.mainColor,
-                                                   borderRadius: BorderRadius.circular(scrWidth*0.03),
-                                                 ),
-                                                 child: Center(child: Text("Yes",
-                                                   style: TextStyle(
-                                                       color: Colors.white
-                                                   ),)),
-                                               ),
-                                             ),
-                                           ],
-                                         ),
-                                       );
-                                     },
-                                   );
-                                 },
-                                 icon: Icon(CupertinoIcons.delete,color: colorConst.red,)
-                             )
+                             /// DELETE OPTION
+
+                             // IconButton(
+                             //     onPressed: () {
+                             //       showDialog(
+                             //         barrierDismissible: false,
+                             //         context: context,
+                             //         builder: (context) {
+                             //           return AlertDialog(
+                             //             title: Text("Are you sure you want to delete this Option?",
+                             //               textAlign: TextAlign.center,
+                             //               style: TextStyle(
+                             //                   fontSize: scrHeight*0.02,
+                             //                   fontWeight: FontWeight.w600
+                             //               ),),
+                             //             content: Row(
+                             //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                             //               children: [
+                             //                 InkWell(
+                             //                   onTap: () {
+                             //                     Navigator.pop(context);
+                             //                   },
+                             //                   child: Container(
+                             //                     height: 30,
+                             //                     width: 100,
+                             //                     decoration: BoxDecoration(
+                             //                       color: Colors.blueGrey,
+                             //                       borderRadius: BorderRadius.circular(scrWidth*0.03),
+                             //                     ),
+                             //                     child: Center(child: Text("No",
+                             //                       style: TextStyle(
+                             //                           color: Colors.white
+                             //                       ),)),
+                             //                   ),
+                             //                 ),
+                             //                 InkWell(
+                             //                   onTap: () async {
+                             //                     await FirebaseFirestore.instance.collection('settings').doc(data[index]['Text']).delete();
+                             //                     Navigator.pop(context);
+                             //                   },
+                             //                   child: Container(
+                             //                     height: 30,
+                             //                     width: 100,
+                             //                     decoration: BoxDecoration(
+                             //                       color: colorConst.mainColor,
+                             //                       borderRadius: BorderRadius.circular(scrWidth*0.03),
+                             //                     ),
+                             //                     child: Center(child: Text("Yes",
+                             //                       style: TextStyle(
+                             //                           color: Colors.white
+                             //                       ),)),
+                             //                   ),
+                             //                 ),
+                             //               ],
+                             //             ),
+                             //           );
+                             //         },
+                             //       );
+                             //     },
+                             //     icon: Icon(CupertinoIcons.delete,color: colorConst.red,)
+                             // )
                            ],
                          ),
                        ),
