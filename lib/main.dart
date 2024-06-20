@@ -8,6 +8,7 @@ import 'package:meat_admin/features/Banner/BannerPage.dart';
 // import 'package:meat_admin/features/addingPages/AddMeats.dart';
 import 'package:meat_admin/features/listPages/MeatTypeList.dart';
 import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
+import 'package:meat_admin/features/listPages/splashScreen.dart';
 import 'package:meat_admin/features/newHomePage.dart';
 import 'package:meat_admin/features/settings/settingsPage.dart';
 import 'package:meat_admin/firebase_options.dart';
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
           textTheme:GoogleFonts.manropeTextTheme(),
         ),
         debugShowCheckedModeBanner: false,
-        home:NewHome()
+        home:settingsPage()
       ),
     );
   }

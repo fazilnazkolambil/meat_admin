@@ -22,7 +22,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   TextEditingController search_controller = TextEditingController();
   List filteredUsers =[];
   bool search = false;
-  List blockedUsers = [];
+  //List blockedUsers = [];
   List userData = [];
 
   void _search (String value){
@@ -305,15 +305,64 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                         children: [
                           InkWell(
                             onTap: () {
-                              HapticFeedback.lightImpact();
-                              if(blockedUsers.contains(filteredUsers[index].id)){
-                                blockedUsers.remove(filteredUsers[index].id);
-                              }else{
-                                blockedUsers.add(filteredUsers[index].id);
-                              }
-                              setState(() {
-
-                              });
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(userData[index].blocked?"Are you sure you want to unblock this User?"
+                                        :"Are you sure you want to block this User?",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: scrHeight*0.02,
+                                          fontWeight: FontWeight.w600
+                                      ),),
+                                    content: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blueGrey,
+                                              borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                            ),
+                                            child: Center(child: Text("No",
+                                              style: TextStyle(
+                                                  color: Colors.white
+                                              ),)),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            HapticFeedback.lightImpact();
+                                            await FirebaseFirestore.instance.collection('users').doc(userData[index].id).update({
+                                              "blocked" : userData[index].blocked? false:true
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                              color: colorConst.mainColor,
+                                              borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                            ),
+                                            child: Center(child: Text("Yes",
+                                              style: TextStyle(
+                                                  color: Colors.white
+                                              ),)),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
                             },
                             child: Container(
                               height: scrHeight*0.04,
@@ -321,9 +370,12 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                               //padding:EdgeInsets.only(left: 10,right: 10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(scrHeight*0.03),
-                                color: blockedUsers.contains(filteredUsers[index].id)?colorConst.green:colorConst.red,
+                                color: userData[index].blocked?colorConst.green:
+                                colorConst.red,
                               ),
-                              child: Center(child: Text(blockedUsers.contains(filteredUsers[index].id)?"UnBlock":"Block",style: TextStyle(
+                              child: Center(child: Text(
+                                  userData[index].blocked?"UnBlock":
+                                  "Block",style: TextStyle(
                                 //fontSize:scrHeight*0.02 ,
                                   color: colorConst.primaryColor
                               ))),

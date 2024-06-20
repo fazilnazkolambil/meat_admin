@@ -12,6 +12,7 @@ import 'package:sidebarx/sidebarx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'Banner/BannerPage.dart';
+import 'listPages/dashBoardPage.dart';
 import 'orderListPage.dart';
 
 class NewHome extends StatefulWidget {
@@ -143,6 +144,10 @@ class SideBarModel extends StatelessWidget {
       },
       items: const [
         SidebarXItem(
+          icon: Icons.dashboard_customize_outlined,
+          label: 'DashBoard',
+        ),
+        SidebarXItem(
           icon: Icons.timer_sharp,
           label: 'Orders',
         ),
@@ -177,7 +182,6 @@ class _Screens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final isSmallScreen = MediaQuery.of(context).size.width < 600;
     final theme = Theme.of(context);
     return AnimatedBuilder(
       animation: controller,
@@ -185,14 +189,16 @@ class _Screens extends StatelessWidget {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
           case 0:
-            return const OrderlistPage();
+            return const DashBoardPage();
           case 1:
-            return const MeatTypeList();
+            return const OrderlistPage();
           case 2:
-            return const UsersPage();
+            return const MeatTypeList();
           case 3:
-            return const BannerPage();
+            return const UsersPage();
           case 4:
+            return const BannerPage();
+          case 5:
             return const settingsPage();
           default:
             return Text(

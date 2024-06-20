@@ -6,6 +6,7 @@ import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/addingPages/screen/AddMeats.dart';
 import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
+import 'package:meat_admin/features/listPages/splashScreen.dart';
 
 import 'package:meat_admin/features/settings/HelpAndSupport.dart';
 
@@ -19,9 +20,6 @@ class settingsPage extends StatefulWidget {
 }
 
 class _settingsPageState extends State<settingsPage> {
-  @override
- 
-
   TextEditingController settingsController = TextEditingController();
   settingsData(){
     FirebaseFirestore.instance.collection("settings").doc(settingsController.text).set({
@@ -103,7 +101,8 @@ class _settingsPageState extends State<settingsPage> {
             stream: FirebaseFirestore.instance.collection("settings").snapshots(),
             builder: (context, snapshot) {
              if(!snapshot.hasData){
-               return Center(child: Lottie.asset(gifs.loadingGif),);
+               return SizedBox(
+                   height:300,child: Center(child: Lottie.asset(gifs.loadingGif),));
              }
              var data=snapshot.data!.docs;
              return Expanded(
@@ -120,6 +119,7 @@ class _settingsPageState extends State<settingsPage> {
                          height: 50,
                          margin: EdgeInsets.symmetric(horizontal: isSmallScreen?30:scrWidth*0.2),
                          decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(10),
                              border: Border.all(color: colorConst.mainColor),
                            gradient: LinearGradient(colors: [
                              colorConst.mainColor,
@@ -142,66 +142,66 @@ class _settingsPageState extends State<settingsPage> {
                                ),
                              ),
                              /// DELETE OPTION
-
-                             // IconButton(
-                             //     onPressed: () {
-                             //       showDialog(
-                             //         barrierDismissible: false,
-                             //         context: context,
-                             //         builder: (context) {
-                             //           return AlertDialog(
-                             //             title: Text("Are you sure you want to delete this Option?",
-                             //               textAlign: TextAlign.center,
-                             //               style: TextStyle(
-                             //                   fontSize: scrHeight*0.02,
-                             //                   fontWeight: FontWeight.w600
-                             //               ),),
-                             //             content: Row(
-                             //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                             //               children: [
-                             //                 InkWell(
-                             //                   onTap: () {
-                             //                     Navigator.pop(context);
-                             //                   },
-                             //                   child: Container(
-                             //                     height: 30,
-                             //                     width: 100,
-                             //                     decoration: BoxDecoration(
-                             //                       color: Colors.blueGrey,
-                             //                       borderRadius: BorderRadius.circular(scrWidth*0.03),
-                             //                     ),
-                             //                     child: Center(child: Text("No",
-                             //                       style: TextStyle(
-                             //                           color: Colors.white
-                             //                       ),)),
-                             //                   ),
-                             //                 ),
-                             //                 InkWell(
-                             //                   onTap: () async {
-                             //                     await FirebaseFirestore.instance.collection('settings').doc(data[index]['Text']).delete();
-                             //                     Navigator.pop(context);
-                             //                   },
-                             //                   child: Container(
-                             //                     height: 30,
-                             //                     width: 100,
-                             //                     decoration: BoxDecoration(
-                             //                       color: colorConst.mainColor,
-                             //                       borderRadius: BorderRadius.circular(scrWidth*0.03),
-                             //                     ),
-                             //                     child: Center(child: Text("Yes",
-                             //                       style: TextStyle(
-                             //                           color: Colors.white
-                             //                       ),)),
-                             //                   ),
-                             //                 ),
-                             //               ],
-                             //             ),
-                             //           );
-                             //         },
-                             //       );
-                             //     },
-                             //     icon: Icon(CupertinoIcons.delete,color: colorConst.red,)
-                             // )
+                             if(index >= 5)
+                             IconButton(
+                                 onPressed: () {
+                                   showDialog(
+                                     barrierDismissible: false,
+                                     context: context,
+                                     builder: (context) {
+                                       return AlertDialog(
+                                         title: Text("Are you sure you want to delete this Option?",
+                                           textAlign: TextAlign.center,
+                                           style: TextStyle(
+                                               fontSize: scrHeight*0.02,
+                                               fontWeight: FontWeight.w600
+                                           ),),
+                                         content: Row(
+                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                           children: [
+                                             InkWell(
+                                               onTap: () {
+                                                 Navigator.pop(context);
+                                               },
+                                               child: Container(
+                                                 height: 30,
+                                                 width: 100,
+                                                 decoration: BoxDecoration(
+                                                   color: Colors.blueGrey,
+                                                   borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                 ),
+                                                 child: Center(child: Text("No",
+                                                   style: TextStyle(
+                                                       color: Colors.white
+                                                   ),)),
+                                               ),
+                                             ),
+                                             InkWell(
+                                               onTap: () async {
+                                                 await FirebaseFirestore.instance.collection('settings').doc(data[index]['Text']).delete();
+                                                 Navigator.pop(context);
+                                               },
+                                               child: Container(
+                                                 height: 30,
+                                                 width: 100,
+                                                 decoration: BoxDecoration(
+                                                   color: colorConst.mainColor,
+                                                   borderRadius: BorderRadius.circular(scrWidth*0.03),
+                                                 ),
+                                                 child: Center(child: Text("Yes",
+                                                   style: TextStyle(
+                                                       color: Colors.white
+                                                   ),)),
+                                               ),
+                                             ),
+                                           ],
+                                         ),
+                                       );
+                                     },
+                                   );
+                                 },
+                                 icon: Icon(CupertinoIcons.delete,color: colorConst.red,)
+                             )
                            ],
                          ),
                        ),
@@ -212,7 +212,30 @@ class _settingsPageState extends State<settingsPage> {
                  },),
              );
            }
-         )
+         ),
+            InkWell(
+              hoverColor: colorConst.primaryColor,
+              onTap: () {
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SplashScreen(),), (route) => false);
+              },
+              child: Container(
+                height: 40,
+                width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: colorConst.actionColor),
+                  gradient: LinearGradient(colors: [
+                    colorConst.canvasColor,
+                    colorConst.actionColor
+                  ])
+                ),
+                child: Center(child: Text('Log Out',style: TextStyle(
+                  color: colorConst.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15
+                ),),),
+              ),
+            )
           ],
         ),
       ),
