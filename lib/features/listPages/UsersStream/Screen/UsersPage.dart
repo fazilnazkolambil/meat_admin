@@ -394,7 +394,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                                 borderRadius: BorderRadius.circular(scrHeight*0.03),
                                 color: colorConst.red,
                               ),
-                              child: Center(child: Text(isSmallScreen?"Delete":"Delete",style: TextStyle(
+                              child: Center(child: Text("Delete",style: TextStyle(
                                 //fontSize:scrHeight*0.02 ,
                                   color: colorConst.primaryColor
                               ))),

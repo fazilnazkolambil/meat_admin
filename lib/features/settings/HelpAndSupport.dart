@@ -182,10 +182,14 @@ class _HelpAndSupportState extends ConsumerState<HelpAndSupport> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
+                                                  chooseCategory = null;
                                                   Navigator.pop(context);
                                                   await FirebaseFirestore.instance
                                                       .collection("settings").doc(widget.name)
                                                       .collection(widget.name).doc(data[index]["category"]).delete();
+                                                  setState(() {
+
+                                                  });
                                                 },
                                                 child: Container(
                                                   height: 30,
