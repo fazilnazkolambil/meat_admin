@@ -6,18 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meat_admin/features/Banner/BannerPage.dart';
 // import 'package:meat_admin/features/addingPages/AddMeats.dart';
-import 'package:meat_admin/features/listPages/MeatTypeList.dart';
-import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
-import 'package:meat_admin/features/listPages/splashScreen.dart';
-import 'package:meat_admin/features/newHomePage.dart';
+import 'package:meat_admin/features/Meats/screen/MeatTypeList.dart';
+import 'package:meat_admin/features/UserPage/UsersPage.dart';
+import 'package:meat_admin/features/IntroPages/splashScreen.dart';
+import 'package:meat_admin/features/IntroPages/newHomePage.dart';
 import 'package:meat_admin/features/settings/settingsPage.dart';
 import 'package:meat_admin/firebase_options.dart';
 import 'package:meat_admin/core/homePage/Screen/homePage.dart';
 import 'package:meat_admin/models/MeatModel.dart';
-
-import 'features/add_meat_types/screen/AddMeatTypes.dart';
-import 'features/addingPages/screen/AddMeats.dart';
-import 'features/listPages/meatList.dart';
+import 'features/Meats/screen/AddMeats.dart';
+import 'features/Meats/screen/meatList.dart';
 
 // import 'features/addingPages/meatTypes.dart';
 
@@ -46,7 +44,7 @@ class MyApp extends StatelessWidget {
           textTheme:GoogleFonts.manropeTextTheme(),
         ),
         debugShowCheckedModeBanner: false,
-        home:settingsPage()
+        home:SplashScreen()
       ),
     );
   }

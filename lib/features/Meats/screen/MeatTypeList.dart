@@ -5,13 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
+import 'package:meat_admin/features/Meats/screen/meatList.dart';
 
-import 'package:meat_admin/unWanted/ChickenList.dart';
-import 'package:meat_admin/features/listPages/meatList.dart';
-import 'package:meat_admin/unWanted/MuttonList.dart';
 
-import '../../main.dart';
-import '../add_meat_types/screen/AddMeatTypes.dart';
+import '../../../main.dart';
+import 'AddMeatTypes.dart';
 
 class MeatTypeList extends StatefulWidget {
   const MeatTypeList({super.key});

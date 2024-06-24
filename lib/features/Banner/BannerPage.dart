@@ -7,7 +7,9 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
+import 'package:meat_admin/features/IntroPages/newHomePage.dart';
 import 'package:meat_admin/main.dart';
+import 'package:meat_admin/models/BannerModel.dart';
 
 class BannerPage extends StatefulWidget {
   const BannerPage({super.key});
@@ -27,21 +29,21 @@ class _BannerPageState extends State<BannerPage> {
             (value) => mainName_controller.clear());
   }
 
-  TextEditingController headline_controller = TextEditingController();
-  TextEditingController subHeadline_controller = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController subtitleController = TextEditingController();
 
-  headLine() {
-    FirebaseFirestore.instance.collection("banner").doc("AppHeadlines").update({
-      "Heading": FieldValue.arrayUnion([
+  headLine() async {
+    await FirebaseFirestore.instance.collection("banner").doc("adds").update({
+      "introTexts": FieldValue.arrayUnion([
         {
-          "headLine": headline_controller.text,
-          "subHeadline": subHeadline_controller.text
+          "title": titleController.text,
+          "subTitle": subtitleController.text
         }
       ])
     }).then(
       (value) {
-        headline_controller.clear();
-        subHeadline_controller.clear();
+        titleController.clear();
+        subtitleController.clear();
       },
     );
     ScaffoldMessenger.of(context)
@@ -49,7 +51,7 @@ class _BannerPageState extends State<BannerPage> {
   }
 
   int num = 1;
-  int  itemCount = 3;
+
   bool submit = false;
 
   PlatformFile? pickFile;
@@ -68,12 +70,66 @@ class _BannerPageState extends State<BannerPage> {
   String? mainImage;
   bool loading = false;
   List  images  = [];
+  int  itemCount = 0;
+  bool noData = false;
   getImages() async {
     loading = true;
-    var data = await FirebaseFirestore.instance.collection('banner').doc('images').get();
-    itemCount = data['images'].length;
-    images = data['images'];
-    loading = false;
+    var data = await FirebaseFirestore.instance.collection('banner').doc('adds').get();
+    if(data.exists){
+      itemCount = data['images'].length;
+      images = data['images'];
+      loading = false;
+    }else{
+      noData = true;
+      showAdaptiveDialog(
+        barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Add Banners?"),
+              content: Text("Add a Banner Collection before continuing"),
+              actions: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => NewHome(),), (route) => false);
+                  },
+                  child: Text("Not now",style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: colorConst.actionColor
+                                )),
+                ),
+                InkWell(
+                  onTap: () async {
+                    var data = await FirebaseFirestore.instance.collection('banner').doc('adds').set(
+                      BannerModel(
+                          logo: '',
+                          name: '',
+                          images: [],
+                          introTexts: []
+                      ).toMap()
+                    );
+                    noData = false;
+                    setState(() {
+
+                    });
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Collection added successfully!")));
+                  },
+                  child: Text("Add",style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: colorConst.mainColor
+                  )),
+                ),
+
+              ]
+            );
+          },
+      );
+      itemCount = 3;
+      loading = false;
+    }
     setState(() {
 
     });
@@ -104,7 +160,14 @@ class _BannerPageState extends State<BannerPage> {
   @override
   Widget build(BuildContext context) {
     var isSmallScreen = MediaQuery.of(context).size.width < 600;
-    return Scaffold(
+    return noData?
+        Scaffold(
+          backgroundColor: colorConst.primaryColor,
+          body: Center(
+            child:Lottie.asset(gifs.loadingGif)
+          ),
+        ):
+    Scaffold(
       body: Padding(
         padding:  EdgeInsets.all(10),
         child: Row(
@@ -208,47 +271,47 @@ class _BannerPageState extends State<BannerPage> {
                     )),
                     SizedBox(height: 20,),
                     SizedBox(
-                      height: scrHeight * 0.07,
                       width: isSmallScreen? scrWidth*0.9:scrWidth*0.4,
                       child: TextFormField(
-                        controller: headline_controller,
+                        controller: titleController,
+                        maxLength: 100,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(50)),
-                            label: const Text("Headline"),
+                            label: const Text("Enter title here"),
                         ),
                       ),
                     ),
                     SizedBox(height: 20,),
                     SizedBox(
-                      height: scrHeight * 0.07,
                       width: isSmallScreen? scrWidth*0.9:scrWidth*0.4,
                       child: TextFormField(
-                        controller: subHeadline_controller,
+                        controller: subtitleController,
+                        maxLength: 200,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(50)),
-                            label: const Text("SubHeadline"),
+                            label: const Text("Enter subtitle here"),
                         ),
                       ),
                     ),
                     SizedBox(height: 20,),
                     InkWell(
                       onTap: () {
-                        if (headline_controller.text != "" &&
-                            subHeadline_controller.text != "") {
+                        if (titleController.text != "" &&
+                            subtitleController.text != "") {
                           headLine();
                         } else {
-                          headline_controller.text == ""
+                          titleController.text == ""
                               ? ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Please enter Headline")))
-                              : subHeadline_controller.text == ""
+                                  const SnackBar(content: Text("Please enter a title!")))
+                              : subtitleController.text == ""
                                   ? ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text("Please enter Subheadline")))
+                                          content: Text("Please enter a subtitle!")))
                                   : ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text("Please enter details")));
+                                          content: Text("Please enter valid details")));
                         }
                       },
                       child: Container(
@@ -272,35 +335,33 @@ class _BannerPageState extends State<BannerPage> {
                       child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                           stream: FirebaseFirestore.instance
                               .collection("banner")
-                              .doc("AppHeadlines")
+                              .doc("adds")
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Center(
-                                child: Text("No Data Found"),
+                                child: Lottie.asset(gifs.loadingGif,height: isSmallScreen?100:200),
                               );
                             }
-
                             var data = snapshot.data!.data();
-                            List headlines = data!["Heading"];
-
-                            return headlines.isEmpty
+                            List introText = data!["introTexts"];
+                            return introText.isEmpty
                                 ? Center(
-                                    child: Text("No added Headlines"),
+                                    child: Text("No data found!"),
                                   )
                                 : ListView.builder(
-                                    itemCount: headlines.length,
+                                    itemCount: introText.length,
                                     itemBuilder: (BuildContext context, int index) {
                                       return ListTile(
                                         title: Text(
-                                          headlines[index]["headLine"],
+                                          introText[index]["title"],
                                           style: TextStyle(
                                               color: colorConst.canvasColor,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 15),
                                         ),
                                         subtitle: Text(
-                                          headlines[index]["subHeadline"],
+                                          introText[index]["subTitle"],
                                           style: TextStyle(
                                               color: colorConst.canvasColor,
                                               fontSize: 15),
@@ -340,8 +401,8 @@ class _BannerPageState extends State<BannerPage> {
                                                       ),
                                                       InkWell(
                                                         onTap: () async {
-                                                         await FirebaseFirestore.instance.collection("banner").doc('AppHeadlines').update({
-                                                            'Heading' : FieldValue.arrayRemove([headlines[index]])
+                                                         await FirebaseFirestore.instance.collection("banner").doc('adds').update({
+                                                            'introTexts' : FieldValue.arrayRemove([introText[index]])
                                                           });
                                                           Navigator.pop(context);
                                                         },
@@ -395,7 +456,7 @@ class _BannerPageState extends State<BannerPage> {
                           submit == true?
                           InkWell(
                             onTap: () async {
-                              await FirebaseFirestore.instance.collection('banner').doc('images').update({
+                              await FirebaseFirestore.instance.collection('banner').doc('adds').update({
                                 "images" : images
                               });
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Images added successfully!")));
@@ -565,8 +626,8 @@ class _BannerPageState extends State<BannerPage> {
                           childAspectRatio: 1.4
                       ),
                       itemBuilder: (BuildContext context, int index) {
-                        return loading?
-                        Lottie.asset(gifs.loadingGif):
+                        return
+                          loading? Lottie.asset(gifs.loadingGif):
                         InkWell(
                             onTap: () async{
                               selectfile("name");
@@ -719,7 +780,7 @@ class _BannerPageState extends State<BannerPage> {
                       submit == true?
                       InkWell(
                         onTap: () async {
-                          await FirebaseFirestore.instance.collection('banner').doc('images').update({
+                          await FirebaseFirestore.instance.collection('banner').doc('adds').update({
                             "images" : images
                           });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Updated successfully!")));

@@ -4,16 +4,16 @@ import 'package:lottie/lottie.dart';
 import 'package:meat_admin/MeatPage.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/listPages/MeatTypeList.dart';
-import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
+import 'package:meat_admin/features/Meats/screen/MeatTypeList.dart';
+import 'package:meat_admin/features/UserPage/UsersPage.dart';
 import 'package:meat_admin/features/settings/settingsPage.dart';
 import 'package:meat_admin/main.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'Banner/BannerPage.dart';
-import 'listPages/dashBoardPage.dart';
-import 'orderListPage.dart';
+import '../Banner/BannerPage.dart';
+import '../DashBoardPage/dashBoardPage.dart';
+import '../OrderPage/orderListPage.dart';
 
 class NewHome extends StatefulWidget {
   const NewHome({super.key});

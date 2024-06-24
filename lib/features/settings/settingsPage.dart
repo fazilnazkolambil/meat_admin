@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/addingPages/screen/AddMeats.dart';
-import 'package:meat_admin/features/listPages/UsersStream/Screen/UsersPage.dart';
-import 'package:meat_admin/features/listPages/splashScreen.dart';
+import 'package:meat_admin/features/Meats/screen/AddMeats.dart';
+import 'package:meat_admin/features/UserPage/UsersPage.dart';
+import 'package:meat_admin/features/IntroPages/splashScreen.dart';
 
 import 'package:meat_admin/features/settings/HelpAndSupport.dart';
 

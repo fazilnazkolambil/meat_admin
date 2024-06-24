@@ -5,10 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/listPages/MeatsEdit.dart';
+import 'package:meat_admin/features/Meats/screen/MeatsEdit.dart';
 import 'package:meat_admin/main.dart';
 
-import '../addingPages/screen/AddMeats.dart';
+import 'AddMeats.dart';
 
 class MeatList extends StatefulWidget {
   final String type;

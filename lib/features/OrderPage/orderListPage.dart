@@ -9,11 +9,11 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import '../main.dart';
+import '../../main.dart';
 
 
 var _listItems=[
-  "Ordered", "Packed","Out for delivery","delivered",
+  "Ordered", "Packed","Out for delivery","Delivered",
 ];
 
 class OrderStatusList extends ConsumerWidget {
@@ -52,9 +52,8 @@ class OrderStatusList extends ConsumerWidget {
         itemCount: data.docs.where((element) => element["orderStatus"] == status).length,
         physics: BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-        String dateString = '${data.docs[index]['orderDate']},${data.docs[index]['orderTime']}';//
-        DateFormat dateFormat = DateFormat("EEEE, MMMM d, y,h:mm a"); //
-        DateTime dateTime = dateFormat.parse(dateString);
+          var selectedDate = DateFormat.MMMEd().format(DateTime.parse(data.docs[index]['selectedTime']));
+          var selectedTime = DateFormat.jm().format(DateTime.parse(data.docs[index]['selectedTime']));
           return Container(
             //height: 70,
             margin: EdgeInsets.all(scrHeight * 0.01),
@@ -110,7 +109,7 @@ class OrderStatusList extends ConsumerWidget {
                                               fontWeight: FontWeight.w600,
                                               fontSize: 20)),
                                       TextSpan(
-                                          text: data.docs[index]['orderDate'],
+                                          text: selectedDate,
                                           style: const TextStyle(
                                               color: colorConst.canvasColor,
                                               fontWeight: FontWeight.w500,
@@ -126,7 +125,7 @@ class OrderStatusList extends ConsumerWidget {
                                               fontWeight: FontWeight.w600,
                                               fontSize: 20)),
                                       TextSpan(
-                                          text: data.docs[index]['orderTime'],
+                                          text: selectedTime,
                                           style: const TextStyle(
                                               color: colorConst.canvasColor,
                                               fontWeight: FontWeight.w500,
@@ -259,7 +258,7 @@ class OrderStatusList extends ConsumerWidget {
                                                           fontWeight: FontWeight.w600,
                                                           fontSize: 20)),
                                                   TextSpan(
-                                                      text: '${itemsData[index]['quantity']} KG',
+                                                      text: '${itemsData[index]['qty']} KG',
                                                       style: const TextStyle(
                                                           color: colorConst.canvasColor,
                                                           fontWeight: FontWeight.w500,
@@ -291,7 +290,7 @@ class OrderStatusList extends ConsumerWidget {
                                                           fontWeight: FontWeight.w600,
                                                           fontSize: 20)),
                                                   TextSpan(
-                                                      text: itemsData[index]['rate'].toString(),
+                                                      text: "${itemsData[index]['rate'] * itemsData[index]['qty']}",
                                                       style: const TextStyle(
                                                           color: colorConst.canvasColor,
                                                           fontWeight: FontWeight.w500,

@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/listPages/MeatTypeList.dart';
+import 'package:meat_admin/features/Meats/screen/MeatTypeList.dart';
 
-import '../../main.dart';
-import '../../models/MeatModel.dart';
-import '../add_meat_types/screen/meatTypes.dart';
+import '../../../main.dart';
+import '../../../models/MeatModel.dart';
 import 'meatList.dart';
 
 class MeatsEdit extends StatefulWidget {

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
-import 'package:meat_admin/features/newHomePage.dart';
+import 'package:meat_admin/features/IntroPages/newHomePage.dart';
 
 import '../../main.dart';
 
@@ -65,6 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment:CrossAxisAlignment.center,
                         children: [
+                          SizedBox(height: 50,),
                           Image(image: AssetImage(imageConst.mainIcon),height:isSmallScreen?100:150),
                           SizedBox(height: 20,),
                           Text("Meat Shop",style: TextStyle(

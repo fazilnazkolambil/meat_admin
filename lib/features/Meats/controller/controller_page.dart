@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meat_admin/features/addingPages/repository/Add_meats_repository.dart';
+import 'package:meat_admin/features/Meats/repository/Add_meats_repository.dart';
 import 'package:meat_admin/models/CategoryModel.dart';
 import 'package:meat_admin/models/MeatModel.dart';
 

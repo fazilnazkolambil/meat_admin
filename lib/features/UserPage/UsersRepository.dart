@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meat_admin/core/provider/provider_page.dart';
 
-import '../../../../models/userModel.dart';
+import '../../models/userModel.dart';
 
 final repositoryProvider =
     Provider((ref) => UsersRepository(firestore: ref.watch(firestoreprovider)));

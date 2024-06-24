@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meat_admin/features/listPages/UsersStream/Repository/UsersRepository.dart';
+import 'package:meat_admin/features/UserPage/UsersRepository.dart';
 import 'package:meat_admin/models/userModel.dart';
 final controllerProvider=Provider((ref) => UsersController(repository: ref.watch(repositoryProvider)));
 
