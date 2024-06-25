@@ -29,21 +29,21 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
   int num = 1;
 
   dataSubmit(){
-    MeatTypeModel categoryModel = MeatTypeModel(type: meat_controller.text, mainImage: mainImage.toString());
-
-    ref.watch(meatTypesController).meatAdd(categoryModel);
-
-    meat_controller.clear();
-    mainImage=null;
+    if(
+    meat_controller.text !="" &&
+        mainImage != null
+    ){
+      MeatTypeModel categoryModel = MeatTypeModel(type: meat_controller.text, mainImage: mainImage.toString());
+      ref.watch(meatTypesController).meatAdd(categoryModel);
+      meat_controller.clear();
+      mainImage=null;
+    }else{
+      mainImage == null ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Select an Image!"))):
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Data!")));
+    }
     setState(() {
 
     });
-    // FirebaseFirestore.instance.collection("meatTypes").doc(meat_controller.text).set({
-    //   "type" : meat_controller.text,
-    //   "mainImage": mainImage
-    // }).then((value) =>
-    //     meat_controller.clear()
-    // );
 
   }
 
@@ -183,16 +183,7 @@ class _AddMeatTypesState extends ConsumerState<AddMeatTypes> {
             trailing: CircleAvatar(
               child: InkWell(
                   onTap: () {
-                    if(
-                    meat_controller.text !="" &&
-                    mainImage != null
-                    ){
-                      dataSubmit();
-                    }else{
-                      mainImage == null ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Select an Image!"))):
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter Data!")));
-                    }
-
+                    dataSubmit();
                   },
                   child: Icon(Icons.add)),
             ),

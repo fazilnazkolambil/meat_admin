@@ -9,6 +9,7 @@ import 'package:meat_admin/features/UserPage/UsersPage.dart';
 import 'package:meat_admin/features/IntroPages/splashScreen.dart';
 
 import 'package:meat_admin/features/settings/HelpAndSupport.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 
@@ -216,7 +217,63 @@ class _settingsPageState extends State<settingsPage> {
             InkWell(
               hoverColor: colorConst.primaryColor,
               onTap: () {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SplashScreen(),), (route) => false);
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Are you sure you want to Logout?",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: scrHeight*0.02,
+                            fontWeight: FontWeight.w600
+                        ),),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey,
+                                borderRadius: BorderRadius.circular(scrWidth*0.03),
+                              ),
+                              child: Center(child: Text("No",
+                                style: TextStyle(
+                                    color: Colors.white
+                                ),)),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              SharedPreferences prefs = await  SharedPreferences.getInstance();
+                              prefs.remove('loggedIn');
+                              prefs.remove('currentUser');
+                              currentUser='';
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SplashScreen(),), (route) => false);
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: colorConst.mainColor,
+                                borderRadius: BorderRadius.circular(scrWidth*0.03),
+                              ),
+                              child: Center(child: Text("Yes",
+                                style: TextStyle(
+                                    color: Colors.white
+                                ),)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
               },
               child: Container(
                 height: 40,

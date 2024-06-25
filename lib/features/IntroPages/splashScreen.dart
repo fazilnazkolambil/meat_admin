@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,9 +9,12 @@ import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
 import 'package:meat_admin/features/IntroPages/newHomePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 
+
+String currentUser = '';
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -20,17 +25,50 @@ class _SplashScreenState extends State<SplashScreen>
    AnimationController? _controller;
    Animation<double>? _animation;
    bool loaded = false;
-   TextEditingController _userName = TextEditingController();
-   TextEditingController _password = TextEditingController();
-   logIn () async {
-     if(_userName.text.isNotEmpty && _password.text.isNotEmpty){
-       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NewHome(),));
+   TextEditingController userEmailController = TextEditingController();
+   TextEditingController passwordController = TextEditingController();
+   bool loggedIn = false;
+   checkLoggedIn () async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     loggedIn = prefs.getBool('loggedIn') ?? false;
+   }
+
+
+   login () async {
+     if(userEmailController.text.isNotEmpty && passwordController.text.isNotEmpty){
+         var roles = await FirebaseFirestore.instance.collection('admins').get();
+         for(int i = 0; i < roles.size; i++) {
+           var admins = await FirebaseFirestore.instance.collection('admins')
+               .doc(roles.docs[i]['role'])
+               .collection(roles.docs[i]['role']).get();
+           if(admins.docs.isNotEmpty){
+             var adminLogin = await FirebaseFirestore.instance.collection('admins')
+                 .doc(roles.docs[i]['role'])
+                 .collection(roles.docs[i]['role']).where("userEmail", isEqualTo: userEmailController.text).get();
+             if(adminLogin.docs.isNotEmpty){
+               var password = adminLogin.docs[0]['password'];
+               if(password == passwordController.text){
+                 Navigator.push(context, MaterialPageRoute(builder: (context) => NewHome()));
+                 SharedPreferences prefs = await SharedPreferences.getInstance();
+                 prefs.setBool("loggedIn", true);
+                 prefs.setString('currentUser', adminLogin.docs[0]['role']);
+               }else{
+                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wrong Password!!')));
+               }
+             }else{
+               //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No Admins found!')));
+             }
+           }
+         }
      }else{
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter valid Details!")));
+       userEmailController.text.isEmpty?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email cannot be empty!'))):
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Password cannot be empty!')));
      }
+
    }
   @override
   void initState() {
+     checkLoggedIn();
     super.initState();
     _controller = AnimationController(
       vsync: this,
@@ -39,6 +77,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
     Timer(Duration(seconds: 3), () {
+      loggedIn?Navigator.push(context, MaterialPageRoute(builder: (context) => NewHome(),)):
       _controller!.forward();
       loaded = true;
     });
@@ -86,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 children: [
                                   SizedBox(height: 20),
                                   TextFormField(
-                                    controller: _userName,
+                                    controller: userEmailController,
                                     textInputAction: TextInputAction.done,
                                     style: TextStyle(
                                         fontSize: scrWidth*0.04,
@@ -100,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen>
                                         ),
                                         filled: true,
                                         fillColor: colorConst.primaryColor,
-                                        hintText: "UserName",
+                                        hintText: "Email",
                                         border:OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: colorConst.red
@@ -122,7 +161,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   ),
                                   SizedBox(height: scrWidth*0.04,),
                                   TextFormField(
-                                    controller: _password,
+                                    controller: passwordController,
                                     textInputAction: TextInputAction.done,
                                     obscureText: true,
                                     style: TextStyle(
@@ -164,7 +203,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   SizedBox(height: 20),
                                   GestureDetector(
                                     onTap: (){
-                                      logIn();
+                                      login();
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -205,7 +244,7 @@ class _SplashScreenState extends State<SplashScreen>
                             width: scrWidth*0.3,
                             height: 50,
                             child: TextFormField(
-                              controller: _userName,
+                              controller: userEmailController,
                               textInputAction: TextInputAction.done,
                               style: TextStyle(
                                   fontSize: 15,
@@ -215,7 +254,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   prefixIcon: Icon(CupertinoIcons.person),
                                   filled: true,
                                   fillColor: colorConst.primaryColor,
-                                  hintText: "UserName",
+                                  hintText: "Email",
                                   hintStyle: TextStyle(
                                     fontSize: 15
                                   ),
@@ -243,7 +282,7 @@ class _SplashScreenState extends State<SplashScreen>
                             width: scrWidth*0.3,
                             height: 50,
                             child: TextFormField(
-                              controller: _password,
+                              controller: passwordController,
                               obscureText: true,
                               textInputAction: TextInputAction.done,
                               style: TextStyle(
@@ -281,7 +320,7 @@ class _SplashScreenState extends State<SplashScreen>
                           SizedBox(height: 20,),
                           GestureDetector(
                             onTap: (){
-                              logIn();
+                              login();
                             },
                             child: Container(
                               width: 200,

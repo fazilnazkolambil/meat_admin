@@ -168,6 +168,7 @@ class _BannerPageState extends State<BannerPage> {
           ),
         ):
     Scaffold(
+      backgroundColor: colorConst.primaryColor,
       body: Padding(
         padding:  EdgeInsets.all(10),
         child: Row(

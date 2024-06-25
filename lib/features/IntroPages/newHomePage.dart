@@ -4,13 +4,16 @@ import 'package:lottie/lottie.dart';
 import 'package:meat_admin/MeatPage.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
+import 'package:meat_admin/features/IntroPages/splashScreen.dart';
 import 'package:meat_admin/features/Meats/screen/MeatTypeList.dart';
 import 'package:meat_admin/features/UserPage/UsersPage.dart';
 import 'package:meat_admin/features/settings/settingsPage.dart';
 import 'package:meat_admin/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../AdminPages/AddAdminPage.dart';
 import '../Banner/BannerPage.dart';
 import '../DashBoardPage/dashBoardPage.dart';
 import '../OrderPage/orderListPage.dart';
@@ -26,6 +29,16 @@ class _NewHomeState extends State<NewHome> {
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
 
+  getPrefs () async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    currentUser = prefs.getString('currentUser') ?? '';
+    print(currentUser);
+  }
+  @override
+  void initState() {
+    getPrefs();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
@@ -142,7 +155,9 @@ class SideBarModel extends StatelessWidget {
           ),
         );
       },
-      items: const [
+
+      items: const
+      [
         SidebarXItem(
           icon: Icons.dashboard_customize_outlined,
           label: 'DashBoard',
@@ -162,6 +177,10 @@ class SideBarModel extends StatelessWidget {
         SidebarXItem(
           icon: Icons.wallpaper,
           label: 'Banners',
+        ),
+        SidebarXItem(
+          icon: Icons.person_outline,
+          label: 'Admins',
         ),
         SidebarXItem(
           icon: Icons.settings,
@@ -199,7 +218,9 @@ class _Screens extends StatelessWidget {
           case 4:
             return const BannerPage();
           case 5:
-            return const settingsPage();
+            return const AddAdminPage();
+          case 6:
+            return  const settingsPage();
           default:
             return Text(
               pageTitle,

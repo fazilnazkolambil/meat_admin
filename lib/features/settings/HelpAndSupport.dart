@@ -17,9 +17,11 @@ class HelpAndSupport extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<HelpAndSupport> createState() => _HelpAndSupportState();
-}  String? chooseCategory;
+}
+
 
 class _HelpAndSupportState extends ConsumerState<HelpAndSupport> {
+  String? chooseCategory;
   TextEditingController TextController = TextEditingController();
   TextEditingController questionController = TextEditingController();
   TextEditingController answerController = TextEditingController();

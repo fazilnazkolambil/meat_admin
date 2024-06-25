@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
+import 'package:meat_admin/features/IntroPages/splashScreen.dart';
 import 'package:meat_admin/features/UserPage/UsersControllerPage.dart';
 import 'package:meat_admin/main.dart';
 import 'package:meat_admin/models/userModel.dart';
@@ -22,7 +23,6 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   TextEditingController search_controller = TextEditingController();
   List filteredUsers =[];
   bool search = false;
-  //List blockedUsers = [];
   List userData = [];
 
   void _search (String value){
@@ -78,8 +78,6 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                   textInputAction: TextInputAction.done,
                   //onChanged: (value) => _search(value),
                   onChanged: (value) {
-                    //FirebaseFirestore.instance.collection("users").
-                    // _search2(value,data);
                     _search(value);
                     search = true;
                     setState(() {
