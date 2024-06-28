@@ -32,7 +32,6 @@ class _NewHomeState extends State<NewHome> {
   getPrefs () async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     currentUser = prefs.getString('currentUser') ?? '';
-    print(currentUser);
   }
   @override
   void initState() {

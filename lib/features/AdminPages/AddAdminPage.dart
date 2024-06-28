@@ -54,11 +54,12 @@ class _AddAdminPageState extends State<AddAdminPage> {
           "password": passwordController.text,
           "role": chooseAdmin.toString()
         }).then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$chooseAdmin added Successfully")));
           chooseAdmin = null;
           usernameController.clear();
           passwordController.clear();
           confirmPasswordController.clear();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Admin added Successfully")));
+
         });
       }else{
         chooseAdmin == null? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Choose an Admin type!"))):

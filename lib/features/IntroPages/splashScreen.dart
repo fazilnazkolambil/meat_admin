@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:meat_admin/core/colorPage.dart';
 import 'package:meat_admin/core/imageConst.dart';
@@ -13,14 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 
-
+final errorCheckProvider = StateProvider <bool?> ((ref) => null);
 String currentUser = '';
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
    AnimationController? _controller;
    Animation<double>? _animation;
@@ -33,15 +34,10 @@ class _SplashScreenState extends State<SplashScreen>
      loggedIn = prefs.getBool('loggedIn') ?? false;
    }
 
-
    login () async {
      if(userEmailController.text.isNotEmpty && passwordController.text.isNotEmpty){
          var roles = await FirebaseFirestore.instance.collection('admins').get();
          for(int i = 0; i < roles.size; i++) {
-           var admins = await FirebaseFirestore.instance.collection('admins')
-               .doc(roles.docs[i]['role'])
-               .collection(roles.docs[i]['role']).get();
-           if(admins.docs.isNotEmpty){
              var adminLogin = await FirebaseFirestore.instance.collection('admins')
                  .doc(roles.docs[i]['role'])
                  .collection(roles.docs[i]['role']).where("userEmail", isEqualTo: userEmailController.text).get();
@@ -49,20 +45,21 @@ class _SplashScreenState extends State<SplashScreen>
                var password = adminLogin.docs[0]['password'];
                if(password == passwordController.text){
                  Navigator.push(context, MaterialPageRoute(builder: (context) => NewHome()));
+                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${roles.docs[i]['role']} logged in successfully!')));
                  SharedPreferences prefs = await SharedPreferences.getInstance();
                  prefs.setBool("loggedIn", true);
                  prefs.setString('currentUser', adminLogin.docs[0]['role']);
                }else{
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wrong Password!!')));
+                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wrong Password!')));
                }
+               ref.read(errorCheckProvider.notifier).update((state) => false);
              }else{
-               //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No Admins found!')));
+               ref.read(errorCheckProvider.notifier).update((state) => true);
              }
-           }
          }
      }else{
-       userEmailController.text.isEmpty?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email cannot be empty!'))):
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Password cannot be empty!')));
+       userEmailController.text.isEmpty?ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Enter the email!'))):
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Enter the password!')));
      }
 
    }
@@ -85,6 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+     final noAdmin = ref.watch(errorCheckProvider) ?? false;
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return Scaffold(
       backgroundColor:colorConst.primaryColor,
@@ -148,13 +146,13 @@ class _SplashScreenState extends State<SplashScreen>
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(scrWidth*0.03),
                                             borderSide: BorderSide(
-                                                color: colorConst.secondaryColor.withOpacity(0.1)
+                                                color: noAdmin?colorConst.red:colorConst.secondaryColor.withOpacity(0.1)
                                             )
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(scrWidth*0.03),
                                             borderSide: BorderSide(
-                                                color: colorConst.secondaryColor.withOpacity(0.1)
+                                                color: noAdmin?colorConst.red:colorConst.secondaryColor.withOpacity(0.1)
                                             )
                                         )
                                     ),
@@ -266,13 +264,13 @@ class _SplashScreenState extends State<SplashScreen>
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                          color: colorConst.secondaryColor.withOpacity(0.1)
+                                          color: noAdmin?colorConst.red:colorConst.secondaryColor.withOpacity(0.1)
                                       )
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                          color: colorConst.secondaryColor.withOpacity(0.1)
+                                          color: noAdmin?colorConst.red:colorConst.secondaryColor.withOpacity(0.1)
                                       )
                                   )
                               ),
